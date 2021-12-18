@@ -1,0 +1,3365 @@
+{
+    "allSpells": [
+        {
+            "keep": true,
+            "recipe": "D",
+            "color": "D",
+            "name": "Stab",
+            "totalCost": 1,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 66,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "B",
+            "color": "B",
+            "name": "Wave",
+            "totalCost": 1,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 81
+        },
+        {
+            "keep": true,
+            "recipe": "W",
+            "color": "W",
+            "name": "Prayer",
+            "totalCost": 1,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                }
+            ],
+            "damage": 69,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": true,
+            "recipe": "R",
+            "color": "R",
+            "name": "Meteorite",
+            "totalCost": 1,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                }
+            ],
+            "damage": 109
+        },
+        {
+            "keep": true,
+            "recipe": "G",
+            "color": "G",
+            "name": "Feather Nova",
+            "totalCost": 1,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 52,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "Y",
+            "color": "Y",
+            "name": "Quake",
+            "totalCost": 1,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 78
+        },
+        {
+            "keep": true,
+            "recipe": "DG",
+            "color": "G",
+            "name": "Arrow Hex",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 165,
+            "spellEffect": "poison"
+        },
+        {
+            "keep": true,
+            "recipe": "BG",
+            "color": "B",
+            "name": "Aqua",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 138
+        },
+        {
+            "keep": true,
+            "recipe": "BW",
+            "color": "W",
+            "name": "Protecting Blue",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 179,
+            "spellEffect": "increase defense"
+        },
+        {
+            "keep": true,
+            "recipe": "DR",
+            "color": "D",
+            "name": "Screaming Meteor",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 195,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "WY",
+            "color": "W",
+            "name": "Rock Spear",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 121,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "RY",
+            "color": "Y",
+            "name": "Fiery Resist",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 114,
+            "spellEffect": "increase defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BR",
+            "color": "B",
+            "name": "Searing Pursute",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 110,
+            "spellEffect": "none"
+        },
+        {
+            "keep": false,
+            "recipe": "GY",
+            "color": "Y",
+            "name": "Vines Fist",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 138,
+            "spellEffect": "increase defense"
+        },
+        {
+            "keep": false,
+            "recipe": "DW",
+            "color": "W",
+            "name": "Psalm",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 151,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": false,
+            "recipe": "BD",
+            "color": "B",
+            "name": "Gloom Of Ice",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 145
+        },
+        {
+            "keep": true,
+            "recipe": "RW",
+            "color": "R",
+            "name": "Sizzle",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 157,
+            "spellEffect": "none"
+        },
+        {
+            "keep": false,
+            "recipe": "GR",
+            "color": "R",
+            "name": "Dragon",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 172,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "BY",
+            "color": "Y",
+            "name": "Mud Blizzard",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 135
+        },
+        {
+            "keep": true,
+            "recipe": "DY",
+            "color": "D",
+            "name": "Peel Flesh",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 132,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "GW",
+            "color": "G",
+            "name": "Falcon's Agility",
+            "totalCost": 2,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 149,
+            "spellEffect": "poison"
+        },
+        {
+            "keep": true,
+            "recipe": "DDG",
+            "color": "D",
+            "name": "Gruesome Thoughts",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                }
+            ],
+            "damage": 190,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BDG",
+            "color": "G",
+            "name": "Ritual Ice Fauna",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                }
+            ],
+            "damage": 146
+        },
+        {
+            "keep": true,
+            "recipe": "BBW",
+            "color": "B",
+            "name": "Slate Knowledge",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                }
+            ],
+            "damage": 234,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "DRY",
+            "color": "Y",
+            "name": "Erupting Wraith Cascade",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 224
+        },
+        {
+            "keep": true,
+            "recipe": "RWY",
+            "color": "R",
+            "name": "Magma Punch",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                }
+            ],
+            "damage": 208,
+            "spellEffect": "burn"
+        },
+        {
+            "keep": true,
+            "recipe": "BGW",
+            "color": "W",
+            "name": "Snow Mother's Soul",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                }
+            ],
+            "damage": 171,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": true,
+            "recipe": "DGR",
+            "color": "R",
+            "name": "Choke Bang",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                }
+            ],
+            "damage": 170,
+            "spellEffect": "increase attack"
+        },
+        {
+            "keep": true,
+            "recipe": "WWY",
+            "color": "W",
+            "name": "Judgement",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                }
+            ],
+            "damage": 318,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "BGR",
+            "color": "R",
+            "name": "Organic Flash",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                }
+            ],
+            "damage": 235,
+            "spellEffect": "burn"
+        },
+        {
+            "keep": false,
+            "recipe": "GGY",
+            "color": "G",
+            "name": "Wood",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 210
+        },
+        {
+            "keep": false,
+            "recipe": "DWY",
+            "color": "Y",
+            "name": "Of Light Voodoo Titan",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 200,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "DRR",
+            "color": "R",
+            "name": "Of The Sun Dimension",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 228
+        },
+        {
+            "keep": true,
+            "recipe": "BRY",
+            "color": "B",
+            "name": "Barbaric Prism",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 237,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "GRY",
+            "color": "G",
+            "name": "Ranger",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 240,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "BDW",
+            "color": "W",
+            "name": "Glacial Hymn",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                }
+            ],
+            "damage": 216,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": true,
+            "recipe": "DGW",
+            "color": "G",
+            "name": "Ancient Roots of Darkness",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 207
+        },
+        {
+            "keep": true,
+            "recipe": "DRW",
+            "color": "D",
+            "name": "Ritual",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 209,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "GRW",
+            "color": "W",
+            "name": "Heal Flame Of the Forest",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                }
+            ],
+            "damage": 223,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": true,
+            "recipe": "BGY",
+            "color": "B",
+            "name": "Rain Fable",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 226,
+            "spellEffect": "freeze"
+        },
+        {
+            "keep": true,
+            "recipe": "BDR",
+            "color": "R",
+            "name": "Smoke Choke",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 261,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "GYY",
+            "color": "Y",
+            "name": "Potion Desert",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                }
+            ],
+            "damage": 233,
+            "spellEffect": "increase defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BDY",
+            "color": "B",
+            "name": "Fin",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                }
+            ],
+            "damage": 225
+        },
+        {
+            "keep": true,
+            "recipe": "BRW",
+            "color": "R",
+            "name": "Salamander",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 199,
+            "spellEffect": "increase attack"
+        },
+        {
+            "keep": true,
+            "recipe": "DGY",
+            "color": "G",
+            "name": "Phase Claw",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 222
+        },
+        {
+            "keep": true,
+            "recipe": "GWY",
+            "color": "G",
+            "name": "Glaring Roots",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                }
+            ],
+            "damage": 250
+        },
+        {
+            "keep": true,
+            "recipe": "BWY",
+            "color": "B",
+            "name": "Faith Calculation",
+            "totalCost": 3,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 155
+        },
+        {
+            "keep": false,
+            "recipe": "DDGW",
+            "color": "D",
+            "name": "Abyss",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                }
+            ],
+            "damage": 256,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BDGW",
+            "color": "G",
+            "name": "Blood Wager",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                }
+            ],
+            "damage": 284,
+            "spellEffect": "poison"
+        },
+        {
+            "keep": true,
+            "recipe": "DGRY",
+            "color": "Y",
+            "name": "Fortunate Earth Shadow",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                }
+            ],
+            "damage": 305,
+            "spellEffect": "increase defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BGWY",
+            "color": "W",
+            "name": "Beaming Tale",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                }
+            ],
+            "damage": 303
+        },
+        {
+            "keep": true,
+            "recipe": "DRWY",
+            "color": "Y",
+            "name": "Demi Yellow Flamestrike",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                }
+            ],
+            "damage": 289
+        },
+        {
+            "keep": true,
+            "recipe": "BDGR",
+            "color": "B",
+            "name": "Sinister Sight",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                }
+            ],
+            "damage": 205,
+            "spellEffect": "freeze"
+        },
+        {
+            "keep": true,
+            "recipe": "BGRY",
+            "color": "R",
+            "name": "Transmutation",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                }
+            ],
+            "damage": 236,
+            "spellEffect": "increase defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BGGY",
+            "color": "G",
+            "name": "Plant Illusion",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 307,
+            "spellEffect": "decrease attack"
+        },
+        {
+            "keep": false,
+            "recipe": "DWWY",
+            "color": "W",
+            "name": "Phase Flash",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 158,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": true,
+            "recipe": "BDRW",
+            "color": "R",
+            "name": "Fire Gargoyle's Tradition",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                }
+            ],
+            "damage": 292,
+            "spellEffect": "burn"
+        },
+        {
+            "keep": true,
+            "recipe": "DGWY",
+            "color": "Y",
+            "name": "Earth Dragon's Green Demi",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                }
+            ],
+            "damage": 304,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "GRYY",
+            "color": "Y",
+            "name": "Empty Bones",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": 0,
+                    "y": -4
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": 4,
+                    "y": -4
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -4,
+                    "y": -4
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                },
+                {
+                    "x": -4,
+                    "y": 4
+                }
+            ],
+            "damage": 281,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "DGRW",
+            "color": "G",
+            "name": "Fauna Geist's Serenity",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 197
+        },
+        {
+            "keep": true,
+            "recipe": "BDRY",
+            "color": "D",
+            "name": "Of Ice Bones",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 244,
+            "spellEffect": "decrease defense"
+        },
+        {
+            "keep": true,
+            "recipe": "BRWY",
+            "color": "R",
+            "name": "Dip Smite Rock Inferno",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 503,
+            "spellEffect": "burn"
+        },
+        {
+            "keep": true,
+            "recipe": "GRWY",
+            "color": "Y",
+            "name": "Strategic Titan",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                }
+            ],
+            "damage": 342
+        },
+        {
+            "keep": false,
+            "recipe": "BDGY",
+            "color": "G",
+            "name": "Of Frost Deal Dodge",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 274,
+            "spellEffect": "poison"
+        },
+        {
+            "keep": true,
+            "recipe": "BGRW",
+            "color": "B",
+            "name": "Sun River Blade",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                }
+            ],
+            "damage": 293
+        },
+        {
+            "keep": true,
+            "recipe": "BDWY",
+            "color": "Y",
+            "name": "Wine Fist Horn Later",
+            "totalCost": 4,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                }
+            ],
+            "damage": 313,
+            "spellEffect": "none"
+        },
+        {
+            "keep": true,
+            "recipe": "BDGWY",
+            "color": "B",
+            "name": "Hydro Necro",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 314,
+            "spellEffect": "heal"
+        },
+        {
+            "keep": true,
+            "recipe": "BDGRY",
+            "color": "R",
+            "name": "Roots Resist Pyroblast Bite Riddle",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                }
+            ],
+            "damage": 311,
+            "spellEffect": "increase attack"
+        },
+        {
+            "keep": false,
+            "recipe": "BGRWY",
+            "color": "R",
+            "name": "Rapid Soul Of the Sun Siren's",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                }
+            ],
+            "damage": 459
+        },
+        {
+            "keep": true,
+            "recipe": "DGRWY",
+            "color": "D",
+            "name": "Gruesome Agility",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": 0,
+                    "y": -4
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": -2
+                },
+                {
+                    "x": 3,
+                    "y": -3
+                },
+                {
+                    "x": 4,
+                    "y": -4
+                },
+                {
+                    "x": -2,
+                    "y": -2
+                },
+                {
+                    "x": -3,
+                    "y": -3
+                },
+                {
+                    "x": -4,
+                    "y": -4
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                },
+                {
+                    "x": -4,
+                    "y": 4
+                }
+            ],
+            "damage": 249,
+            "spellEffect": "increase attack"
+        },
+        {
+            "keep": true,
+            "recipe": "BDGRW",
+            "color": "D",
+            "name": "Haunting Mirror Shards",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "x": 0,
+                    "y": 5
+                },
+                {
+                    "x": 0,
+                    "y": -2
+                },
+                {
+                    "x": 0,
+                    "y": -3
+                },
+                {
+                    "x": 0,
+                    "y": -4
+                },
+                {
+                    "x": 0,
+                    "y": -5
+                }
+            ],
+            "damage": 443
+        },
+        {
+            "keep": true,
+            "recipe": "BGGRY",
+            "color": "G",
+            "name": "Petrified Snake Spear",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                }
+            ],
+            "damage": 362
+        },
+        {
+            "keep": true,
+            "recipe": "BGRYY",
+            "color": "Y",
+            "name": "Earth Dragon's Herbal Calculation",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "x": -2,
+                    "y": 2
+                },
+                {
+                    "x": -3,
+                    "y": 3
+                },
+                {
+                    "x": -4,
+                    "y": 4
+                }
+            ],
+            "damage": 414
+        },
+        {
+            "keep": true,
+            "recipe": "BDRWY",
+            "color": "B",
+            "name": "Gargoyle's List",
+            "totalCost": 5,
+            "pattern": [
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": 2
+                },
+                {
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "x": 0,
+                    "y": 4
+                }
+            ],
+            "damage": 387,
+            "spellEffect": "freeze"
+        },
+        {
+            "keep": true,
+            "recipe": "BDGRWY",
+            "color": "D",
+            "name": "\"No One Said Anything About Warlocks!\"",
+            "totalCost": 6,
+            "pattern": [
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": -2,
+                    "y": 0
+                },
+                {
+                    "x": 2,
+                    "y": 0
+                },
+                {
+                    "x": -3,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": -4,
+                    "y": 0
+                },
+                {
+                    "x": 4,
+                    "y": 0
+                }
+            ],
+            "damage": 548,
+            "spellEffect": "none"
+        }
+    ]
+}

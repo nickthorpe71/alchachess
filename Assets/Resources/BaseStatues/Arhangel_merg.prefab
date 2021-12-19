@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1440980098485089960}
   m_Layer: 0
-  m_Name: Arhangel_merg
+  m_Name: Arhangel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

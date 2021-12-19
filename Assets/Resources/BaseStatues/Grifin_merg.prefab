@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 49963092938565619}
   m_Layer: 0
-  m_Name: Grifin_merg
+  m_Name: Grifin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

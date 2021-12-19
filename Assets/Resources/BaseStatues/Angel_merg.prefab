@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 209858178150442977}
   m_Layer: 0
-  m_Name: Angel_merg
+  m_Name: Angel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2923305265936879233}
   m_Layer: 0
-  m_Name: Pegasus_merg
+  m_Name: Pegasus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -24,7 +24,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6042117755913076701}
   m_Layer: 0
-  m_Name: Guard_merg
+  m_Name: Guard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

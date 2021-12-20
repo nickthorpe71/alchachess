@@ -57,8 +57,8 @@ namespace Calc
             return tilesCopy;
         }
 
-        public static Tile GetTileData(GameObject tile, Board board)
-        => BoardC.GetTile(board.tiles, (int)tile.transform.position.x, (int)tile.transform.position.z);
+        public static Tile GetTileDataByPos(Vector3 tilePos, Board board)
+        => BoardC.GetTile(board.tiles, (int)tilePos.x, (int)tilePos.z);
 
         public static Tile GetTile(Tile[][] tiles, int x, int y) => tiles[y][x];
 
@@ -146,7 +146,7 @@ namespace Calc
                 int y = (int)pathStart.y + ((int)direction.y * step);
                 Tile nextTile = tiles[y][x];
 
-                if (nextTile.element != 'N' && nextTile.isHighlighted)
+                if (nextTile.element != 'N' && nextTile.isHighlighted && nextTile.contents == TileContents.Element)
                     result += nextTile.element;
             }
 

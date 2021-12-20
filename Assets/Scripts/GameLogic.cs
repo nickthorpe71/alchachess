@@ -58,7 +58,7 @@ public class GameLogic : MonoBehaviour
     public void TileClick(GameObject clicked)
     {
         // Get tile data for clicked tile
-        Tile newClickedTile = BoardC.GetTileData(clicked, board);
+        Tile newClickedTile = BoardC.GetTileDataByPos(clicked.transform.position, board);
 
         // check if clicked tile has an element or is a human player tile
         if (newClickedTile.contents == TileContents.Piece && newClickedTile.piece.player == humanPlayer)
@@ -112,7 +112,7 @@ public class GameLogic : MonoBehaviour
         if (hovered == null)
             return;
 
-        Tile newHover = BoardC.GetTileData(hovered, board);
+        Tile newHover = BoardC.GetTileDataByPos(hovered.transform.position, board);
 
         // if nothing has been hovered yet
         if (currentHover == null)

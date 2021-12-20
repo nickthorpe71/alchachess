@@ -114,40 +114,45 @@ public class GameLogic : MonoBehaviour
 
         Tile newHover = BoardC.GetTileDataByPos(hovered.transform.position, board);
 
+        // if we are hovering on the same thing as before
+        if (currentHover != null && new Vector3(newHover.x, 0, newHover.y) == new Vector3(currentHover.x, 0, currentHover.y))
+            return;
+
         // if nothing has been hovered yet
         if (currentHover == null)
         {
             board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newHover.x, newHover.y, TileState.isHovered, true);
             currentHover = board.tiles[newHover.y][newHover.x];
         }
-        // if we are hovering on the same thing as before
-        else if (new Vector3(newHover.x, 0, newHover.y) == new Vector3(currentHover.x, 0, currentHover.y))
-        {
-            return;
-        }
+
         // if we are hovering on a new thing
+        // Set old hovered to not hovered
+        board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, currentHover.x, currentHover.y, TileState.isHovered, false);
+
+        // Set new Hovered to hovered
+        board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newHover.x, newHover.y, TileState.isHovered, true);
+        currentHover = board.tiles[newHover.y][newHover.x];
+
+        // check if it's a piece or element
+        if (currentHover.contents == TileContents.Piece)
+        {
+            ui.spellView.Toggle(false);
+            ui.pieceView.UpdateView(currentHover.piece);
+        }
+        else if (currentHover.contents == TileContents.Element)
+        {
+            ui.pieceView.Toggle(false);
+            // TODO: check which tiles should be set to AOE (pattern from calculated spell)
+
+            // check if a piece is clicked and if so display spell
+            if (currentClicked != null)
+                ui.spellView.UpdateView(SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles)));
+            else
+                ui.spellView.Toggle(false);
+        }
         else
         {
-            // Set old hovered to not hovered
-            board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, currentHover.x, currentHover.y, TileState.isHovered, false);
-
-            // Set new Hovered to hovered
-            board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newHover.x, newHover.y, TileState.isHovered, true);
-            currentHover = board.tiles[newHover.y][newHover.x];
-
-            // check if it's a piece or element
-            if (currentHover.contents == TileContents.Piece)
-            {
-                // display peice data
-                Debug.Log("Piece Data!");
-            }
-            else if (currentHover.contents == TileContents.Element)
-            {
-                // check which tiles should be set to AOE (pattern from calculated spell)
-                // check if a piece is clicked and if so display spell
-                if (currentClicked != null)
-                    ui.UpdateSpellView(SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles)));
-            }
+            ui.ToggleAllUI(false);
         }
 
         graphics.UpdateTileGraphics(board.tiles);

@@ -6,13 +6,13 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> data = new Dictionary<PieceLabel, Piece>()
         {
-            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, PieceElement.Green, 1124, 1, 112, 400, 5),
-            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, PieceElement.Red, 594, 1, 212, 86, 5),
-            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, PieceElement.Dark, 777, 1, 155, 186, 6),
-            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, PieceElement.None, 666, 1, 242, 150, 6),
-            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, PieceElement.White, 777, 1, 155, 186, 6),
-            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, PieceElement.Blue, 594, 1, 212, 86, 5),
-            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, PieceElement.Yellow, 1124, 1, 112, 400, 5)
+            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, 'G', 1124, 1, 112, 400, 3),
+            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, 'R', 594, 1, 212, 86, 4),
+            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, 'D', 777, 1, 155, 186, 5),
+            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, 'N', 666, 1, 242, 150, 5),
+            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, 'W', 777, 1, 155, 186, 5),
+            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, 'B', 594, 1, 212, 86, 4),
+            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, 'Y', 1124, 1, 112, 400, 3)
         };
     }
 
@@ -20,7 +20,7 @@ namespace Data
     {
         public PieceLabel label;
         public PieceColor color;
-        public PieceElement element;
+        public char element;
         public int health;
         public int level;
         public int attack;
@@ -29,7 +29,7 @@ namespace Data
 
         public PlayerToken player;
 
-        public Piece(PieceLabel _label, PieceColor _color, PieceElement _element, int _health, int _level, int _attack, int _defense, int _moveDistance)
+        public Piece(PieceLabel _label, PieceColor _color, char _element, int _health, int _level, int _attack, int _defense, int _moveDistance)
         {
             label = _label;
             color = _color;
@@ -46,6 +46,7 @@ namespace Data
             label = _label;
             color = _color;
             health = PieceBaseStats.data[_label].health;
+            element = PieceBaseStats.data[_label].element;
             level = PieceBaseStats.data[_label].level;
             attack = PieceBaseStats.data[_label].attack;
             defense = PieceBaseStats.data[_label].defense;
@@ -70,17 +71,6 @@ namespace Data
     {
         Black,
         White,
-        None
-    }
-
-    public enum PieceElement
-    {
-        Dark,
-        White,
-        Red,
-        Blue,
-        Yellow,
-        Green,
         None
     }
 }

@@ -199,7 +199,6 @@ namespace Calc
             => String.Format("Pieces/{0}", Enum.GetName(typeof(PieceLabel), label));
 
     }
-
     public static class SpellC
     {
         public static Spell GetSpellByRecipe(string recipe)
@@ -219,7 +218,6 @@ namespace Calc
             return null;
         }
     }
-
     public static class GraphicsC
     {
         public static void LoopTileGraphicsWithIndexes(TileGraphic[][] graphics, Action<TileGraphic, int, int> f)

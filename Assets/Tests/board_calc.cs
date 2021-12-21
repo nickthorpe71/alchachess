@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
-using System;
 using System.Collections.Generic;
+using System;
 using Data;
 using Calc;
 
@@ -75,49 +75,25 @@ public class board_calc
     }
 
     [Test]
-    public void AddHighlightData_returns_highlighted_tiles()
+    public void PossibleMoves_returns_currect_list_of_Vector2s()
     {
         // arrange
         Board board = new Board();
-        Tile selectedTile = new Tile(1, 0, PieceLabel.Esa, PieceColor.White, PlayerToken.P1);
-        int numHighlightedTiles = 0;
-
-        // act
-        board.tiles = BoardC.AddHighlightData(board.tiles, selectedTile);
-        for (int y = 0; y < board.tiles.Length; y++)
-            for (int x = 0; x < board.tiles[y].Length; x++)
-                if (board.tiles[y][x].isHighlighted)
-                    numHighlightedTiles++;
-
-        // assert
-        Assert.AreEqual(12, numHighlightedTiles);
-    }
-
-    [Test]
-    public void PossibleMoves_returns_currect_list_of_Vector3s()
-    {
-        // arrange
-        Board board = new Board();
-        Tile selectedTile = new Tile(1, 0, PieceLabel.Esa, PieceColor.White, PlayerToken.P1);
-        List<Vector3> expected = new List<Vector3>
+        Tile selectedTile = board.tiles[0][1];
+        List<Vector2> expected = new List<Vector2>
         {
-            new Vector3(1,0,1),
-            new Vector3(2,0,1),
-            new Vector3(0,0,0),
-            new Vector3(0,0,1),
-            new Vector3(1,0,2),
-            new Vector3(3,0,2),
-            new Vector3(1,0,3),
-            new Vector3(4,0,3),
-            new Vector3(1,0,4),
-            new Vector3(5,0,4),
-            new Vector3(1,0,5),
-            new Vector3(6,0,5)
-
+            new Vector2(1,1),
+            new Vector2(2,1),
+            new Vector2(0,0),
+            new Vector2(0,1),
+            new Vector2(1,2),
+            new Vector2(3,2),
+            new Vector2(1,3),
+            new Vector2(4,3)
         };
 
         // act
-        List<Vector3> result = BoardC.PossibleMoves(board.tiles, selectedTile);
+        List<Vector2> result = BoardC.PossibleMoves(board.tiles, selectedTile);
 
         // assert
         Assert.AreEqual(expected, result);
@@ -128,7 +104,7 @@ public class board_calc
     {
         // arrange
         Board board = new Board();
-        Vector3 location = new Vector3(1, 0, 2);
+        Vector2 location = new Vector2(1, 2);
 
         // act
         bool result = BoardC.CanTraverse(board.tiles, location);
@@ -142,7 +118,7 @@ public class board_calc
     {
         // arrange
         Board board = new Board();
-        Vector3 location = new Vector3(2, 0, 0);
+        Vector2 location = new Vector2(2, 0);
 
         // act
         bool result = BoardC.CanTraverse(board.tiles, location);
@@ -182,7 +158,7 @@ public class board_calc
     {
         // arrange
         Board board = new Board();
-        Vector3 location = new Vector3(1, 0, 0);
+        Vector2 location = new Vector3(1, 0);
 
         // act
         bool result = BoardC.TileHasPiece(board.tiles, location);
@@ -196,7 +172,7 @@ public class board_calc
     {
         // arrange
         Board board = new Board();
-        Vector3 location = new Vector3(1, 0, 1);
+        Vector2 location = new Vector3(1, 1);
 
         // act
         bool result = BoardC.TileHasPiece(board.tiles, location);
@@ -227,73 +203,6 @@ public class board_calc
     }
 
     [Test]
-    public void RemoveStateFromAllTiles_clears_state()
-    {
-        // arrange
-        Board board = new Board();
-        board.tiles[1][1].isHighlighted = true;
-        board.tiles[1][6].isHovered = true;
-        board.tiles[0][1].isClicked = true;
-        board.tiles[2][2].isAOE = true;
-
-        // act
-        board.tiles = BoardC.RemoveStateFromAllTiles(board.tiles, TileState.isHighlighted);
-        board.tiles = BoardC.RemoveStateFromAllTiles(board.tiles, TileState.isHovered);
-        board.tiles = BoardC.RemoveStateFromAllTiles(board.tiles, TileState.isClicked);
-        board.tiles = BoardC.RemoveStateFromAllTiles(board.tiles, TileState.isAOE);
-
-
-        // assert
-        Assert.AreEqual(false, board.tiles[1][1].isHighlighted);
-        Assert.AreEqual(false, board.tiles[1][6].isHovered);
-        Assert.AreEqual(false, board.tiles[0][1].isClicked);
-        Assert.AreEqual(false, board.tiles[2][2].isAOE);
-    }
-
-    [Test]
-    public void SetTileState_sets_state()
-    {
-        // arrange
-        Board board = new Board();
-
-        Tile highlighted = board.tiles[1][1];
-        Tile hovered = board.tiles[1][6];
-        Tile clicked = board.tiles[0][1];
-        Tile aoe = board.tiles[2][2];
-
-        int numStatesChecked = 4;
-        var allStates = Enum.GetValues(typeof(TileState));
-
-        // act
-        highlighted = BoardC.SetTileState(highlighted, TileState.isHighlighted, true);
-        hovered = BoardC.SetTileState(hovered, TileState.isHovered, true);
-        clicked = BoardC.SetTileState(clicked, TileState.isClicked, true);
-        aoe = BoardC.SetTileState(aoe, TileState.isAOE, true);
-
-        // assert
-        Assert.AreEqual(true, highlighted.isHighlighted);
-        Assert.AreEqual(true, hovered.isHovered);
-        Assert.AreEqual(true, clicked.isClicked);
-        Assert.AreEqual(true, aoe.isAOE);
-
-        // make sure all states are checked
-        Assert.AreEqual(numStatesChecked, allStates.Length);
-    }
-
-    [Test]
-    public void UpdateTileStateOnBoard_sets_state()
-    {
-        // arrange
-        Board board = new Board();
-
-        // act
-        board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, 1, 1, TileState.isHovered, true);
-
-        // assert
-        Assert.AreEqual(true, board.tiles[1][1].isHovered);
-    }
-
-    [Test]
     public void SetTileContents_sets_contents()
     {
         // arrange
@@ -305,5 +214,37 @@ public class board_calc
 
         // assert
         Assert.AreEqual(TileContents.Piece, testTile.contents);
+    }
+
+    [Test]
+    public void ChangeTilesState_changes_state_on_all_tiles()
+    {
+        // arrange
+        Board board = new Board();
+        List<TileState> states = new List<TileState>
+        {
+            TileState.isClicked,
+            TileState.isHovered,
+            TileState.isHighlighted,
+            TileState.isAOE
+        };
+
+        int numStatesChecked = states.Count;
+        var allStates = Enum.GetValues(typeof(TileState));
+
+        // act
+        board.tiles = BoardC.ChangeTilesState(board.tiles, states, true);
+
+        // assert
+        BoardC.LoopTiles(board.tiles, tile =>
+        {
+            Assert.AreEqual(true, tile.isClicked);
+            Assert.AreEqual(true, tile.isHovered);
+            Assert.AreEqual(true, tile.isHighlighted);
+            Assert.AreEqual(true, tile.isAOE);
+        });
+
+        // make sure all states are checked
+        Assert.AreEqual(numStatesChecked, allStates.Length);
     }
 }

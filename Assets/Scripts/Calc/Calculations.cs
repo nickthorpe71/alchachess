@@ -62,23 +62,59 @@ namespace Calc
 
         public static Tile GetTile(Tile[][] tiles, int x, int y) => tiles[y][x];
 
-        public static Tile[][] AddHighlightData(Tile[][] tiles, Tile selectedTile)
+        public static Tile[][] ChangeTilesState(Tile[][] tiles, List<TileState> states, bool newState, List<Vector2> toChange)
         {
-            List<Vector3> toHighlight = PossibleMoves(tiles, selectedTile);
-
             Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
 
-            for (int i = 0; i < toHighlight.Count; i++)
+            for (int i = 0; i < toChange.Count; i++)
             {
-                tilesCopy[(int)toHighlight[i].z][(int)toHighlight[i].x].isHighlighted = true;
+                if (states.Contains(TileState.isClicked))
+                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isClicked = newState;
+                if (states.Contains(TileState.isHovered))
+                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isHovered = newState;
+                if (states.Contains(TileState.isHighlighted))
+                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isHighlighted = newState;
+                if (states.Contains(TileState.isAOE))
+                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isAOE = newState;
             }
 
             return tilesCopy;
         }
 
-        public static List<Vector3> PossibleMoves(Tile[][] tiles, Tile selectedTile)
+        public static Tile[][] ChangeTilesState(Tile[][] tiles, List<TileState> states, bool newState)
+            => MapTiles(tiles, (tile) =>
+                {
+                    Tile tileCopy = tile.Clone();
+
+                    if (states.Contains(TileState.isClicked))
+                        tileCopy.isClicked = newState;
+                    if (states.Contains(TileState.isHovered))
+                        tileCopy.isHovered = newState;
+                    if (states.Contains(TileState.isHighlighted))
+                        tileCopy.isHighlighted = newState;
+                    if (states.Contains(TileState.isAOE))
+                        tileCopy.isAOE = newState;
+
+                    return tileCopy;
+                });
+
+        public static List<Vector2> CalculateAOEPatterns(List<V2Import> pattern, Tile tile)
         {
-            List<Vector3> possibleMoves = new List<Vector3>();
+            List<Vector2> result = new List<Vector2>();
+
+            // TODO: only add if in bounds
+
+            for (int i = 0; i < pattern.Count; i++)
+            {
+                result.Add(new Vector2((float)(tile.x + pattern[i].x), (float)(tile.y + pattern[i].y)));
+            }
+
+            return result;
+        }
+
+        public static List<Vector2> PossibleMoves(Tile[][] tiles, Tile selectedTile)
+        {
+            List<Vector2> possibleMoves = new List<Vector2>();
 
             int startX = selectedTile.x;
             int startY = selectedTile.y;
@@ -88,15 +124,15 @@ namespace Calc
 
             for (int layer = 1; layer <= moveDistance; layer++)
             {
-                List<Vector3> directions = new List<Vector3>(){
-                    new Vector3(startX, 0, startY + layer),
-                    new Vector3(startX + layer, 0, startY + layer),
-                    new Vector3(startX + layer, 0, startY),
-                    new Vector3(startX + layer, 0, startY - layer),
-                    new Vector3(startX, 0, startY - layer),
-                    new Vector3(startX - layer, 0, startY - layer),
-                    new Vector3(startX - layer, 0, startY),
-                    new Vector3(startX - layer, 0, startY + layer)
+                List<Vector2> directions = new List<Vector2>(){
+                    new Vector2(startX, startY + layer),
+                    new Vector2(startX + layer, startY + layer),
+                    new Vector2(startX + layer, startY),
+                    new Vector2(startX + layer, startY - layer),
+                    new Vector2(startX, startY - layer),
+                    new Vector2(startX - layer, startY - layer),
+                    new Vector2(startX - layer, startY),
+                    new Vector2(startX - layer, startY + layer)
                 };
 
                 // remove any active directions that have a piece
@@ -112,7 +148,7 @@ namespace Calc
             return possibleMoves;
         }
 
-        public static bool CanTraverse(Tile[][] tiles, Vector3 location)
+        public static bool CanTraverse(Tile[][] tiles, Vector2 location)
         {
             if (!InBounds(location))
                 return false;
@@ -122,11 +158,11 @@ namespace Calc
             return true;
         }
 
-        public static bool InBounds(Vector3 locaiton)
-            => (locaiton.x < Const.BOARD_WIDTH) && (locaiton.x >= 0) && (locaiton.z < Const.BOARD_HEIGHT) && (locaiton.z >= 0);
+        public static bool InBounds(Vector2 locaiton)
+            => (locaiton.x < Const.BOARD_WIDTH) && (locaiton.x >= 0) && (locaiton.y < Const.BOARD_HEIGHT) && (locaiton.y >= 0);
 
-        public static bool TileHasPiece(Tile[][] tiles, Vector3 location)
-            => tiles[(int)location.z][(int)location.x].contents == TileContents.Piece;
+        public static bool TileHasPiece(Tile[][] tiles, Vector2 location)
+            => tiles[(int)location.y][(int)location.x].contents == TileContents.Piece;
 
         public static string GetRecipeByPath(Tile pathStart, Tile pathEnd, Tile[][] tiles)
         {
@@ -151,39 +187,6 @@ namespace Calc
             }
 
             return result;
-        }
-
-        public static Tile[][] RemoveStateFromAllTiles(Tile[][] tiles, TileState state) => MapTiles(tiles, (tile) => SetTileState(tile.Clone(), state, false));
-
-        public static Tile SetTileState(Tile current, TileState state, bool newVal)
-        {
-            Tile copy = current.Clone();
-
-            switch (state)
-            {
-                case TileState.isClicked:
-                    copy.isClicked = newVal;
-                    break;
-                case TileState.isHovered:
-                    copy.isHovered = newVal;
-                    break;
-                case TileState.isHighlighted:
-                    copy.isHighlighted = newVal;
-                    break;
-                case TileState.isAOE:
-                    copy.isAOE = newVal;
-                    break;
-            }
-
-            return copy;
-        }
-
-        public static Tile[][] UpdateTileStateOnBoard(Tile[][] tiles, int x, int y, TileState state, bool newState)
-        {
-            return BoardC.MapTiles(tiles, (tile)
-                    => (tile.x == x && tile.y == y)
-                    ? BoardC.SetTileState(tile, state, newState)
-                    : tile);
         }
 
         public static Tile SetTileContents(Tile current, TileContents newContents)

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 using Actions;
 using Calc;
@@ -60,48 +61,77 @@ public class GameLogic : MonoBehaviour
         // Get tile data for clicked tile
         Tile newClickedTile = BoardC.GetTileDataByPos(clicked.transform.position, board);
 
-        // check if clicked tile has an element or is a human player tile
+        // check if clicked tile has a piece owned by human player
         if (newClickedTile.contents == TileContents.Piece && newClickedTile.piece.player == humanPlayer)
         {
             // Reset temporary states
-            board.tiles = BoardC.RemoveStateFromAllTiles(board.tiles, TileState.isHighlighted);
-            board.tiles = BoardC.RemoveStateFromAllTiles(board.tiles, TileState.isAOE);
+            board.tiles = BoardC.ChangeTilesState(board.tiles, new List<TileState> { TileState.isAOE, TileState.isHighlighted }, false);
 
             // if nothing currently clicked
             if (currentClicked == null)
             {
-                board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newClickedTile.x, newClickedTile.y, TileState.isClicked, true);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isClicked },
+                    true,
+                    new List<Vector2> { new Vector2(newClickedTile.x, newClickedTile.y) }
+                );
                 currentClicked = board.tiles[newClickedTile.y][newClickedTile.x];
 
-                // update highlight data
-                board.tiles = BoardC.AddHighlightData(board.tiles, currentClicked);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isHighlighted },
+                    true,
+                    BoardC.PossibleMoves(board.tiles, currentClicked)
+                );
             }
             // if clicked the thing that is currently clicked
             else if (new Vector3(newClickedTile.x, 0, newClickedTile.y) == new Vector3(currentClicked.x, 0, currentClicked.y))
             {
-                board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, currentClicked.x, currentClicked.y, TileState.isClicked, false);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isClicked },
+                    false,
+                    new List<Vector2> { new Vector2(currentClicked.x, currentClicked.y) }
+                );
                 currentClicked = null;
             }
             // if we clicked a new piece
             else
             {
                 // switch isClicked state on previously selected tile to false
-                board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, currentClicked.x, currentClicked.y, TileState.isClicked, false);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isClicked },
+                    false,
+                    new List<Vector2> { new Vector2(currentClicked.x, currentClicked.y) }
+                );
 
                 // switch previously selected tile to newly selected tile (which has isClicked state of true)
-                board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newClickedTile.x, newClickedTile.y, TileState.isClicked, true);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isClicked },
+                    true,
+                    new List<Vector2> { new Vector2(newClickedTile.x, newClickedTile.y) }
+                );
                 currentClicked = board.tiles[newClickedTile.y][newClickedTile.x];
 
                 // update highlight data
-                board.tiles = BoardC.AddHighlightData(board.tiles, currentClicked);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isHighlighted },
+                    true,
+                    BoardC.PossibleMoves(board.tiles, currentClicked)
+                );
             }
         }
-        else if (currentClicked.contents == TileContents.Element)
+        // if we clicked an element or empty tile
+        else
         {
-            if (currentClicked == null)
-                return;
-            // cast spells
-            Debug.Log("SPELLS!");
+            if (currentClicked == null) return;
+            // remove all state from all tiles
+            // take control away from player
+            ExecuteMove();
         }
 
         graphics.UpdateTileGraphics(board.tiles);
@@ -118,19 +148,41 @@ public class GameLogic : MonoBehaviour
         if (currentHover != null && new Vector3(newHover.x, 0, newHover.y) == new Vector3(currentHover.x, 0, currentHover.y))
             return;
 
+        // on new hover remove all AOE markeres
+        board.tiles = BoardC.ChangeTilesState(
+            board.tiles,
+            new List<TileState> { TileState.isAOE },
+            false
+        );
+
         // if nothing has been hovered yet
         if (currentHover == null)
         {
-            board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newHover.x, newHover.y, TileState.isHovered, true);
+            board.tiles = BoardC.ChangeTilesState(
+                board.tiles,
+                new List<TileState> { TileState.isHovered },
+                true,
+                new List<Vector2> { new Vector2(newHover.x, newHover.y) }
+            );
             currentHover = board.tiles[newHover.y][newHover.x];
         }
 
         // if we are hovering on a new thing
         // Set old hovered to not hovered
-        board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, currentHover.x, currentHover.y, TileState.isHovered, false);
+        board.tiles = BoardC.ChangeTilesState(
+            board.tiles,
+            new List<TileState> { TileState.isHovered },
+            false,
+            new List<Vector2> { new Vector2(currentHover.x, currentHover.y) }
+        );
 
         // Set new Hovered to hovered
-        board.tiles = BoardC.UpdateTileStateOnBoard(board.tiles, newHover.x, newHover.y, TileState.isHovered, true);
+        board.tiles = BoardC.ChangeTilesState(
+            board.tiles,
+            new List<TileState> { TileState.isHovered },
+            true,
+            new List<Vector2> { new Vector2(newHover.x, newHover.y) }
+        );
         currentHover = board.tiles[newHover.y][newHover.x];
 
         // check if it's a piece or element
@@ -139,29 +191,85 @@ public class GameLogic : MonoBehaviour
             ui.spellView.Toggle(false);
             ui.pieceView.UpdateView(currentHover.piece);
         }
-        else if (currentHover.contents == TileContents.Element)
-        {
-            ui.pieceView.Toggle(false);
-            // TODO: check which tiles should be set to AOE (pattern from calculated spell)
-
-            // check if a piece is clicked and if so display spell
-            if (currentClicked != null)
-                ui.spellView.UpdateView(SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles)));
-            else
-                ui.spellView.Toggle(false);
-        }
         else
         {
-            ui.ToggleAllUI(false);
+            Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
+            ui.pieceView.Toggle(false);
+
+            // if piece is clicked and there are elements in our path
+            if (currentClicked != null && potentialSpell != null)
+            {
+                ui.spellView.UpdateView(potentialSpell);
+                board.tiles = BoardC.ChangeTilesState(
+                    board.tiles,
+                    new List<TileState> { TileState.isAOE },
+                    true,
+                    BoardC.CalculateAOEPatterns(potentialSpell.pattern, currentHover)
+                );
+            }
+            else
+                ui.ToggleAllUI(false);
         }
 
         graphics.UpdateTileGraphics(board.tiles);
+    }
+
+    public void ExecuteMove()
+    {
+        // Check for spell
+        bool pathHasSpell = false;
+        Spell selectedSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
+        if (selectedSpell != null) pathHasSpell = true;
+
+        if (!pathHasSpell)
+        {
+
+        }
+        else
+        {
+            // !! each phase has a data section and an animation section
+            // each phase should have an end event function that is called when its complete
+            // if each phase is a function that thakes the next phase as a function then we can chain phases
+
+            // -- Move Phase
+            // move the piece graphically
+            // update board with new positions
+            // once piece graphic reaches destination cast spell
+
+            // -- Cast Phase
+            // if spell parameter is not null
+            // calculate damage/deaths/effects caused by spell
+            // update effected piece stats
+            // play spell animation
+            // remove/play death animations of newly dead pieces
+            // update board to have correct pieces 
+            // update tiles to have correct tile contents
+
+            // -- Upkeep Phase
+            // restore all elements to the field 
+            // remove dead pieces from the board
+            // calculate exp gained by piece that just moved
+
+            // -- Level Up Phase
+            // if a piece levels up
+            // calculate new stats
+            // play level up animation
+            // play stat increment animation or display new stats
+
+            // -- New Player Turn Phase
+            // increment turn counter
+            // switch current player token
+            // give control to the correct player
+            // wait for input
+        }
+
+
+        Debug.Log(selectedSpell.name);
     }
 }
 
 // BUGS: 
 /*
-- potential spells stays displayed after it displays once
 - spell UI fields bleed into each other
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
     - caused by no checking douplicates in permutation function?

@@ -7,33 +7,6 @@ using Data;
 
 namespace Calc
 {
-    public static class GeneralC
-    {
-        public static T[] RemoveAt<T>(this T[] source, int index)
-        {
-            T[] result = new T[source.Length - 1];
-            if (index > 0)
-                Array.Copy(source, 0, result, 0, index);
-
-            if (index < source.Length - 1)
-                Array.Copy(source, index + 1, result, index, source.Length - index - 1);
-
-            return result;
-        }
-
-        public static List<T> CreateList<T>(params T[] values)
-        {
-            return new List<T>(values);
-        }
-
-        public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
-        {
-            if (length == 1) return list.Select(t => new T[] { t });
-
-            return GetPermutations(list, length - 1)
-                .SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
-        }
-    }
     public static class BoardC
     {
         public static void LoopTiles(Tile[][] tiles, Action<Tile> f)
@@ -194,40 +167,6 @@ namespace Calc
             Tile copy = current.Clone();
             copy.contents = newContents;
             return copy;
-        }
-    }
-    public static class PieceC
-    {
-        public static string GetPathByLabel(PieceLabel label)
-            => String.Format("Pieces/{0}", Enum.GetName(typeof(PieceLabel), label));
-
-    }
-    public static class SpellC
-    {
-        public static Spell GetSpellByRecipe(string recipe)
-        {
-            if (recipe == "")
-                return null;
-
-            var allPerms = GeneralC.GetPermutations(recipe, recipe.Length).ToList();
-
-            for (int i = 0; i < allPerms.Count; i++)
-            {
-                string perm = new string(allPerms[i].ToArray());
-                if (AllSpells.data.ContainsKey(perm))
-                    return AllSpells.data[perm];
-            }
-
-            return null;
-        }
-    }
-    public static class GraphicsC
-    {
-        public static void LoopTileGraphicsWithIndexes(TileGraphic[][] graphics, Action<TileGraphic, int, int> f)
-        {
-            for (int y = 0; y < graphics.Length; y++)
-                for (int x = 0; x < graphics[y].Length; x++)
-                    f(graphics[y][x], x, y);
         }
     }
 }

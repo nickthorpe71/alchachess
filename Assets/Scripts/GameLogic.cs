@@ -47,6 +47,7 @@ public class GameLogic : MonoBehaviour
     void Update()
     {
         Player.HandleInput(this);
+        graphics.PieceMovementUpdate();
     }
 
     // --- Logic ---
@@ -125,13 +126,22 @@ public class GameLogic : MonoBehaviour
                 );
             }
         }
-        // if we clicked an element or empty tile
-        else
+        // if we clicked an element or empty tile which is highlighted
+        else if (currentClicked != null && currentHover.isHighlighted)
         {
-            if (currentClicked == null) return;
             // remove all state from all tiles
+            board.tiles = BoardC.ChangeTilesState(
+                board.tiles,
+                new List<TileState> { TileState.isAOE, TileState.isClicked, TileState.isHighlighted, TileState.isHovered },
+                false
+            );
+
+
             // take control away from player
-            ExecuteMove();
+
+            ExecuteMove(currentClicked, currentHover);
+            currentClicked = null;
+            currentHover = null;
         }
 
         graphics.UpdateTileGraphics(board.tiles);
@@ -199,7 +209,12 @@ public class GameLogic : MonoBehaviour
             // if piece is clicked and there are elements in our path
             if (currentClicked != null && potentialSpell != null)
             {
+                // TODO: display damage / effects that would be done if this piece would be selected
+
+                // show stats of potential spell
                 ui.spellView.UpdateView(potentialSpell);
+
+                // show potenetial spell AOE
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isAOE },
@@ -214,12 +229,19 @@ public class GameLogic : MonoBehaviour
         graphics.UpdateTileGraphics(board.tiles);
     }
 
-    public void ExecuteMove()
+    public void ExecuteMove(Tile start, Tile end)
     {
         // Check for spell
         bool pathHasSpell = false;
+        // this spell will need to be determined in a later phase
         Spell selectedSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
         if (selectedSpell != null) pathHasSpell = true;
+
+        // TODO: 
+        // - make orbs disapear and play animaiton when walked over
+        // - replace debug log with cast phase
+        // 
+        MovePhase(start, end, () => { Debug.Log("made it"); });
 
         if (!pathHasSpell)
         {
@@ -264,11 +286,30 @@ public class GameLogic : MonoBehaviour
         }
 
 
-        Debug.Log(selectedSpell.name);
+        // Debug.Log(selectedSpell.name);
+    }
+
+    private void MovePhase(Tile start, Tile end, Action nextPhase)
+    {
+        // --- Data -- 
+        Tile startTile = start.Clone();
+        Tile endTile = end.Clone();
+
+        Vector2 startPos = new Vector2(startTile.x, startTile.y);
+        Vector2 endPos = new Vector2(endTile.x, endTile.y);
+
+        // update piece data and contents state of start and end tiles
+        TileContents newStartContents = (startTile.element != 'N') ? TileContents.Element : TileContents.Empty;
+        board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, startPos, newStartContents, null);
+        board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, endPos, TileContents.Piece, startTile.piece);
+
+        // --- Graphics ---
+        graphics.MovePieceGraphic(startPos, endPos, nextPhase);
+
     }
 }
 
-// BUGS: 
+// BUGS:
 /*
 - spell UI fields bleed into each other
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)

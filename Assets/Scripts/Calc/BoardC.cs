@@ -79,7 +79,9 @@ namespace Calc
 
             for (int i = 0; i < pattern.Count; i++)
             {
-                result.Add(new Vector2((float)(tile.x + pattern[i].x), (float)(tile.y + pattern[i].y)));
+                Vector2 toAdd = new Vector2((float)(tile.x + pattern[i].x), (float)(tile.y + pattern[i].y));
+                if (InBounds(toAdd))
+                    result.Add(toAdd);
             }
 
             return result;
@@ -162,11 +164,18 @@ namespace Calc
             return result;
         }
 
-        public static Tile SetTileContents(Tile current, TileContents newContents)
+        public static Tile[][] ChangeTileContents(Tile[][] tiles, Vector2 position, TileContents newContents)
         {
-            Tile copy = current.Clone();
-            copy.contents = newContents;
-            return copy;
+            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+            tilesCopy[(int)position.y][(int)position.x].contents = newContents;
+            return tilesCopy;
+        }
+
+        public static Tile[][] UpdatePieceDataOnTile(Tile[][] tiles, Vector2 position, TileContents newContents, Piece newPieceData)
+        {
+            Tile[][] tilesCopy = ChangeTileContents(tiles, position, newContents);
+            tilesCopy[(int)position.y][(int)position.x].piece = newPieceData;
+            return tilesCopy;
         }
     }
 }

@@ -203,17 +203,30 @@ public class board_calc
     }
 
     [Test]
-    public void SetTileContents_sets_contents()
+    public void ChangeTileContents_sets_contents()
     {
         // arrange
         Board board = new Board();
-        Tile testTile = board.tiles[0][0];
 
         // act
-        testTile = BoardC.SetTileContents(testTile, TileContents.Piece);
+        board.tiles = BoardC.ChangeTileContents(board.tiles, new Vector2(0, 0), TileContents.Piece);
 
         // assert
-        Assert.AreEqual(TileContents.Piece, testTile.contents);
+        Assert.AreEqual(TileContents.Piece, board.tiles[0][0].contents);
+    }
+
+    [Test]
+    public void UpdatePieceDataOnTile_sets_contents_and_piece_data()
+    {
+        // arrange
+        Board board = new Board();
+
+        // act
+        board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, new Vector2(0, 0), TileContents.Piece, board.tiles[0][1].piece);
+
+        // assert
+        Assert.AreEqual(TileContents.Piece, board.tiles[0][0].contents);
+        Assert.AreEqual(board.tiles[0][0].piece.label, board.tiles[0][1].piece.label);
     }
 
     [Test]

@@ -1,5 +1,6 @@
 using Calc;
 using Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,14 @@ public class Graphics : MonoBehaviour
         ['Y'] = "Elements/Yellow"
     };
     private List<GameObject> activePieces = new List<GameObject>();
+
+    // Piece Movement
+    private bool pieceIsMoving = false;
+    private GameObject targetPiece;
+    private Vector3 newPosition;
+    private float moveSpeed = 2;
+    private Action postMoveAction;
+
 
     // --- Init ---
     public void CollectTileGraphics()
@@ -68,6 +77,8 @@ public class Graphics : MonoBehaviour
         newPiece.transform.eulerAngles = rotation;
 
         newPiece.GetComponent<SetBaseColor>().SetColor(piece.color == PieceColor.White ? whiteMat : blackMat);
+
+        activePieces.Add(newPiece);
     }
 
     private void InstantiateElement(char element, int x, int y)
@@ -85,7 +96,12 @@ public class Graphics : MonoBehaviour
         {
             Tile currentTile = tiles[y][x];
 
-            if (currentTile.isClicked)
+            if (currentTile.isAOE)
+            {
+                graphic.AOE();
+                return;
+            }
+            else if (currentTile.isClicked)
             {
                 graphic.Click();
                 return;
@@ -100,15 +116,35 @@ public class Graphics : MonoBehaviour
                 graphic.Highlight();
                 return;
             }
-            else if (currentTile.isAOE)
-            {
-                graphic.AOE();
-                return;
-            }
             else
             {
                 graphic.Reset();
             }
         });
+    }
+
+    public void PieceMovementUpdate()
+    {
+        if (!pieceIsMoving) return;
+
+        float step = moveSpeed * Time.deltaTime;
+        targetPiece.transform.position = Vector3.MoveTowards(targetPiece.transform.position, newPosition, step);
+
+        if (targetPiece.transform.position == newPosition)
+        {
+            pieceIsMoving = false;
+            postMoveAction();
+            targetPiece = null;
+            postMoveAction = null;
+        }
+    }
+
+    // --- Actions ---
+    public void MovePieceGraphic(Vector2 start, Vector2 end, Action postMove)
+    {
+        targetPiece = GraphicsC.GetPieceByPosition(activePieces, start);
+        newPosition = new Vector3(end.x, 0, end.y);
+        postMoveAction = postMove;
+        pieceIsMoving = true;
     }
 }

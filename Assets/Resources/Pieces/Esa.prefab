@@ -984,6 +984,7 @@ GameObject:
   m_Component:
   - component: {fileID: 820532895871805464}
   - component: {fileID: 2841293644754434256}
+  - component: {fileID: -1870551692599255113}
   m_Layer: 0
   m_Name: Esa
   m_TagString: Piece
@@ -1024,3 +1025,16 @@ MonoBehaviour:
   - {fileID: 820532895228966777}
   - {fileID: 820532895228966779}
   - {fileID: 820532895228966773}
+--- !u!65 &-1870551692599255113
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820532895871805471}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.87402326, y: 2.3273783, z: 1.4799993}
+  m_Center: {x: -0.026185084, y: 1.6886015, z: -0.0039113895}

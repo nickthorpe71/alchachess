@@ -984,6 +984,7 @@ GameObject:
   m_Component:
   - component: {fileID: 22508373547447170}
   - component: {fileID: 6205612867288065234}
+  - component: {fileID: 7008115153455595052}
   m_Layer: 0
   m_Name: AngelOfEden
   m_TagString: Piece
@@ -1024,3 +1025,16 @@ MonoBehaviour:
   - {fileID: 22508373450484776}
   - {fileID: 22508373450484778}
   - {fileID: 22508373450484772}
+--- !u!65 &7008115153455595052
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22508373547447171}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6146765, y: 2.327378, z: 0.68338346}
+  m_Center: {x: 0.0025038826, y: 1.6886017, z: 0.08757959}

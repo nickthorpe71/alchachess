@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class ElementGraphic : MonoBehaviour
 {
-    public GameObject destroyAnim;
-    private void OnCollisionEnter(Collision other)
+    [SerializeField] public GameObject destroyAnimPrefab;
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Piece")
         {
-            Instantiate(destroyAnim, transform.position, Quaternion.identity);
-            Destroy(this);
+            GameObject destroyAnim = Instantiate(destroyAnimPrefab, transform.position, Quaternion.identity);
+            Destroy(destroyAnim, 2);
+            gameObject.SetActive(false);
         }
     }
 }

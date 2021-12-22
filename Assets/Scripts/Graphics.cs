@@ -87,7 +87,9 @@ public class Graphics : MonoBehaviour
         string path = "Elements/" + element;
         Vector3 pos = new Vector3(x, 0.5f, y);
         GameObject newElement = Instantiate(Resources.Load(path) as GameObject);
+        GameObject elementDestroyAnim = Resources.Load("Elements/DestroyAnimations/" + element + "DestroyAnim") as GameObject;
         newElement.transform.position = pos;
+        newElement.GetComponent<ElementGraphic>().destroyAnimPrefab = elementDestroyAnim;
         activeElements.Add(newElement);
     }
 

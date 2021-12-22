@@ -36,7 +36,7 @@ public class GameLogic : MonoBehaviour
 
         ui = GetComponent<GameUI>();
 
-        currentTurn = RandomizeFirstTurn();
+        // currentTurn = RandomizeFirstTurn();
     }
 
     private void Start()
@@ -236,10 +236,6 @@ public class GameLogic : MonoBehaviour
         Spell selectedSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
         if (selectedSpell != null) pathHasSpell = true;
 
-        // TODO: 
-        // - make orbs disapear and play animaiton when walked over
-        // - replace debug log with cast phase
-        // 
         MovePhase(start, end, () => { Debug.Log("made it"); });
 
         if (!pathHasSpell)
@@ -304,7 +300,6 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         graphics.MovePieceGraphic(startPos, endPos, nextPhase);
-
     }
 }
 

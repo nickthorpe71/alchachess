@@ -6,13 +6,13 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> data = new Dictionary<PieceLabel, Piece>()
         {
-            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, 'G', 1124, 1, 112, 400, 3),
-            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, 'R', 594, 1, 212, 86, 4),
-            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, 'D', 777, 1, 155, 186, 5),
-            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, 'N', 666, 1, 242, 150, 5),
-            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, 'W', 777, 1, 155, 186, 5),
-            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, 'B', 594, 1, 212, 86, 4),
-            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, 'Y', 1124, 1, 112, 400, 3)
+            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, 'G', 1124, 1, 1, 3),
+            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, 'R', 594, 1, 1.1f, 4),
+            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, 'D', 777, 1, 1.15f, 5),
+            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, 'N', 666, 1, 1.2f, 5),
+            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, 'W', 777, 1, 1.15f, 5),
+            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, 'B', 594, 1, 1.1f, 4),
+            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, 'Y', 1124, 1, 1, 3)
         };
     }
 
@@ -21,22 +21,21 @@ namespace Data
         public PieceLabel label;
         public PieceColor color;
         public char element;
-        public int health;
+        public float health;
         public int level;
-        public int attack;
-        public int defense;
+        public float attack;
         public int moveDistance;
+        public string spellEffect = "";
 
         public PlayerToken player;
 
-        public Piece(PieceLabel _label, PieceColor _color, char _element, int _health, int _level, int _attack, int _defense, int _moveDistance)
+        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, int _level, float _attack, int _moveDistance)
         {
             label = _label;
             color = _color;
             health = _health;
             level = _level;
             attack = _attack;
-            defense = _defense;
             moveDistance = _moveDistance;
             player = PlayerToken.NA;
         }
@@ -49,7 +48,6 @@ namespace Data
             element = PieceBaseStats.data[_label].element;
             level = PieceBaseStats.data[_label].level;
             attack = PieceBaseStats.data[_label].attack;
-            defense = PieceBaseStats.data[_label].defense;
             moveDistance = PieceBaseStats.data[_label].moveDistance;
             player = _player;
         }

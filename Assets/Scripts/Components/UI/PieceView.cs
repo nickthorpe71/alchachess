@@ -12,7 +12,6 @@ public class PieceView : MonoBehaviour, IToggle
     public TMP_Text player;
     public TMP_Text health;
     public TMP_Text attack;
-    public TMP_Text defense;
     public TMP_Text moveDistance;
 
     public void Toggle(bool isDisplayed)
@@ -35,7 +34,6 @@ public class PieceView : MonoBehaviour, IToggle
         player.text = Enum.GetName(typeof(PlayerToken), peice.player);
         health.text = peice.health.ToString();
         attack.text = peice.attack.ToString();
-        defense.text = peice.defense.ToString();
         moveDistance.text = peice.moveDistance.ToString();
     }
 }

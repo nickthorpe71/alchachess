@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Actions;
@@ -230,63 +231,51 @@ public class GameLogic : MonoBehaviour
 
     public void ExecuteMove(Tile start, Tile end)
     {
-        // Check for spell
-        bool pathHasSpell = false;
-        // this spell will need to be determined in a later phase
-        Spell selectedSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
-        if (selectedSpell != null) pathHasSpell = true;
+        MovePhase(start, end, CastPhase);
 
-        MovePhase(start, end, () => { Debug.Log("made it"); });
+        // !! each phase has a data section and an animation section
+        // each phase should have an end event function that is called when its complete
+        // if each phase is a function that thakes the next phase as a function then we can chain phases
 
-        if (!pathHasSpell)
-        {
+        // -- Move Phase
+        // move the piece graphically
+        // update board with new positions
+        // once piece graphic reaches destination cast spell
 
-        }
-        else
-        {
-            // !! each phase has a data section and an animation section
-            // each phase should have an end event function that is called when its complete
-            // if each phase is a function that thakes the next phase as a function then we can chain phases
+        // -- Cast Phase
+        // if spell parameter is not null
+        // calculate damage/deaths/effects caused by spell
+        // update effected piece stats
+        // play spell animation
+        // remove/play death animations of newly dead pieces
+        // update board to have correct pieces 
+        // update tiles to have correct tile contents
 
-            // -- Move Phase
-            // move the piece graphically
-            // update board with new positions
-            // once piece graphic reaches destination cast spell
+        // -- Upkeep Phase
+        // restore all elements to the field 
+        // calculate effects
+        // remove dead pieces from the board
+        // calculate exp gained by piece that just moved
 
-            // -- Cast Phase
-            // if spell parameter is not null
-            // calculate damage/deaths/effects caused by spell
-            // update effected piece stats
-            // play spell animation
-            // remove/play death animations of newly dead pieces
-            // update board to have correct pieces 
-            // update tiles to have correct tile contents
+        // -- Level Up Phase
+        // if a piece levels up
+        // calculate new stats
+        // play level up animation
+        // play stat increment animation or display new stats
 
-            // -- Upkeep Phase
-            // restore all elements to the field 
-            // remove dead pieces from the board
-            // calculate exp gained by piece that just moved
-
-            // -- Level Up Phase
-            // if a piece levels up
-            // calculate new stats
-            // play level up animation
-            // play stat increment animation or display new stats
-
-            // -- New Player Turn Phase
-            // increment turn counter
-            // switch current player token
-            // give control to the correct player
-            // wait for input
-        }
+        // -- New Player Turn Phase
+        // increment turn counter
+        // switch current player token
+        // give control to the correct player
+        // wait for input
 
 
         // Debug.Log(selectedSpell.name);
     }
 
-    private void MovePhase(Tile start, Tile end, Action nextPhase)
+    private void MovePhase(Tile start, Tile end, Action<Tile, Tile, Action> castPhase)
     {
-        // --- Data -- 
+        // --- Data ---
         Tile startTile = start.Clone();
         Tile endTile = end.Clone();
 
@@ -299,7 +288,40 @@ public class GameLogic : MonoBehaviour
         board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, endPos, TileContents.Piece, startTile.piece);
 
         // --- Graphics ---
-        graphics.MovePieceGraphic(startPos, endPos, nextPhase);
+        graphics.MovePieceGraphic(startPos, endPos, () => castPhase(startTile, endTile, () => Debug.Log("upkeep")));
+    }
+
+    private void CastPhase(Tile start, Tile end, Action upkeepPhase)
+    {
+        // --- Data --- 
+        Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(start, end, board.tiles));
+
+        // if spell parameter is not null
+        if (spell == null) return;
+
+        // calcularte damage and effects of spell
+        Piece caster = board.tiles[end.y][end.x].piece;
+        float damage = caster.attack * spell.damage;
+        string effect = spell.spellEffect;
+
+        // apply damage and effects to pieces in range
+        List<Tile> tilesWithPiecesInRange = BoardC.GetTilesWithPiecesInRange(board.tiles, BoardC.CalculateAOEPatterns(spell.pattern, end));
+        List<Tile> defeatedPieces = new List<Tile>();
+        List<Tile> piecesWithDamageAndEffects = tilesWithPiecesInRange.Select(tile =>
+        {
+            Tile tileCopy = tile.Clone();
+            tileCopy.piece.health -= damage;
+            tileCopy.piece.spellEffect = effect;
+            if (tileCopy.piece.health <= 0)
+                defeatedPieces.Add(tileCopy);
+
+            return tileCopy;
+        }).ToList();
+
+        // play spell animation
+        // remove/play death animations of newly dead pieces
+        // update board to have correct pieces 
+        // update tiles to have correct tile contents
     }
 }
 

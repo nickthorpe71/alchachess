@@ -177,5 +177,16 @@ namespace Calc
             tilesCopy[(int)position.y][(int)position.x].piece = newPieceData;
             return tilesCopy;
         }
+
+        public static List<Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range)
+        {
+            List<Tile> result = new List<Tile>();
+            LoopTiles(tiles, (tile) =>
+            {
+                if (range.Contains(new Vector2(tile.x, tile.y)) && tile.contents == TileContents.Piece)
+                    result.Add(tile);
+            });
+            return result;
+        }
     }
 }

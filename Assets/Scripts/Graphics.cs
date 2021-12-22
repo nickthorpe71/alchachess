@@ -2,6 +2,7 @@ using Calc;
 using Data;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Graphics : MonoBehaviour
@@ -150,5 +151,20 @@ public class Graphics : MonoBehaviour
         newPosition = new Vector3(end.x, 0, end.y);
         postMoveAction = postMove;
         pieceIsMoving = true;
+    }
+
+    public void PlaySpellAnim(Spell spell, Action postAnim)
+    {
+        string animPrefabPath = GraphicsC.GetSpellAnimPrefabPath(spell);
+    }
+
+    IEnumerator SpellAnimRoutine()
+    {
+        // play spell animation
+        yield return new WaitForSeconds(3);
+
+        // display health reduction and effect applicaiton to correct pieces
+        yield return new WaitForSeconds(3);
+
     }
 }

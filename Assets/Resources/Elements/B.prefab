@@ -19458,9 +19458,11 @@ GameObject:
   - component: {fileID: 4013750224901074}
   - component: {fileID: 198547047564982258}
   - component: {fileID: 199830478147735362}
+  - component: {fileID: 6199754998676224963}
+  - component: {fileID: 5765379562999587699}
   m_Layer: 0
   m_Name: B
-  m_TagString: Untagged
+  m_TagString: Element
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24344,6 +24346,32 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!135 &6199754998676224963
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587008591664600}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5765379562999587699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587008591664600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff92c8c44a333684b9b10860313b17ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyAnim: {fileID: 0}
 --- !u!1 &1987794914154144
 GameObject:
   m_ObjectHideFlags: 0

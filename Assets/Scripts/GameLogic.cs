@@ -9,7 +9,7 @@ using Data;
 public class GameLogic : MonoBehaviour
 {
     // Data
-    private PlayerToken humanPlayer = PlayerToken.P1;
+    [SerializeField] public PlayerToken humanPlayer = PlayerToken.P1;
     public TextAsset masterSpellList;
 
     // GameState
@@ -149,8 +149,7 @@ public class GameLogic : MonoBehaviour
 
     public void TileHover(GameObject hovered)
     {
-        if (hovered == null)
-            return;
+        if (hovered == null) return;
 
         Tile newHover = BoardC.GetTileDataByPos(hovered.transform.position, board);
 

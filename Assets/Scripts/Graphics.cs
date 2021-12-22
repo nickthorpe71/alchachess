@@ -19,6 +19,7 @@ public class Graphics : MonoBehaviour
         ['Y'] = "Elements/Yellow"
     };
     private List<GameObject> activePieces = new List<GameObject>();
+    private List<GameObject> activeElements = new List<GameObject>();
 
     // Piece Movement
     private bool pieceIsMoving = false;
@@ -85,8 +86,9 @@ public class Graphics : MonoBehaviour
     {
         string path = "Elements/" + element;
         Vector3 pos = new Vector3(x, 0.5f, y);
-        GameObject newPiece = Instantiate(Resources.Load(path) as GameObject);
-        newPiece.transform.position = pos;
+        GameObject newElement = Instantiate(Resources.Load(path) as GameObject);
+        newElement.transform.position = pos;
+        activeElements.Add(newElement);
     }
 
     // --- Update ---

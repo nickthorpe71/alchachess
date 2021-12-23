@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using Actions;
@@ -130,6 +129,8 @@ public class GameLogic : MonoBehaviour
         // if we clicked an element or empty tile which is highlighted
         else if (currentClicked != null && currentHover.isHighlighted)
         {
+            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
+
             // remove all state from all tiles
             board.tiles = BoardC.ChangeTilesState(
                 board.tiles,
@@ -137,10 +138,9 @@ public class GameLogic : MonoBehaviour
                 false
             );
 
-
             // take control away from player
 
-            ExecuteMove(currentClicked, currentHover);
+            ExecuteMove(currentClicked, currentHover, spell);
             currentClicked = null;
             currentHover = null;
         }
@@ -229,9 +229,9 @@ public class GameLogic : MonoBehaviour
         graphics.UpdateTileGraphics(board.tiles);
     }
 
-    public void ExecuteMove(Tile start, Tile end)
+    public void ExecuteMove(Tile start, Tile end, Spell spell)
     {
-        MovePhase(start, end, CastPhase);
+        MovePhase(start, end, spell);
 
         // !! each phase has a data section and an animation section
         // each phase should have an end event function that is called when its complete
@@ -273,7 +273,7 @@ public class GameLogic : MonoBehaviour
         // Debug.Log(selectedSpell.name);
     }
 
-    private void MovePhase(Tile start, Tile end, Action<Tile, Tile, Action> castPhase)
+    private void MovePhase(Tile start, Tile end, Spell spell)
     {
         // --- Data ---
         Tile startTile = start.Clone();
@@ -288,39 +288,50 @@ public class GameLogic : MonoBehaviour
         board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, endPos, TileContents.Piece, startTile.piece);
 
         // --- Graphics ---
-        graphics.MovePieceGraphic(startPos, endPos, () => castPhase(startTile, endTile, () => Debug.Log("upkeep")));
+        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(startTile, endTile, spell));
     }
 
-    private void CastPhase(Tile start, Tile end, Action upkeepPhase)
+    private void CastPhase(Tile start, Tile end, Spell spell)
     {
         // --- Data --- 
-        Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(start, end, board.tiles));
+        Debug.Log(spell);
 
         // if spell parameter is not null
         if (spell == null) return;
 
         // calcularte damage and effects of spell
-        Piece caster = board.tiles[end.y][end.x].piece;
-        float damage = caster.attack * spell.damage;
+        Tile caster = board.tiles[end.y][end.x];
+        float damage = caster.piece.attack * spell.damage;
         string effect = spell.spellEffect;
 
         // apply damage and effects to pieces in range
-        List<Tile> tilesWithPiecesInRange = BoardC.GetTilesWithPiecesInRange(board.tiles, BoardC.CalculateAOEPatterns(spell.pattern, end));
-        List<Tile> defeatedPieces = new List<Tile>();
-        List<Tile> piecesWithDamageAndEffects = tilesWithPiecesInRange.Select(tile =>
+        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, BoardC.CalculateAOEPatterns(spell.pattern, caster));
+        Dictionary<Vector2, Tile> defeatedPieces = new Dictionary<Vector2, Tile>();
+        Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
+
+        // TODO: targetsPreDmg not getting anything
+
+        foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
-            Tile tileCopy = tile.Clone();
+            Tile tileCopy = kvp.Value.Clone();
             tileCopy.piece.health -= damage;
             tileCopy.piece.spellEffect = effect;
             if (tileCopy.piece.health <= 0)
-                defeatedPieces.Add(tileCopy);
+            {
+                defeatedPieces[kvp.Key] = tileCopy;
+                tileCopy.contents = tileCopy.element != 'N' ? TileContents.Empty : TileContents.Element;
+            }
 
-            return tileCopy;
-        }).ToList();
+            board.tiles[tileCopy.y][tileCopy.x] = tileCopy;
+            targetsPostDmg[kvp.Key] = tileCopy;
+        };
 
+        // --- Graphics ---
         // play spell animation
+        graphics.PlaySpellAnim(spell, () => Debug.Log("UpkeepPhase"), caster, targetsPreDmg, targetsPostDmg, defeatedPieces);
+
         // remove/play death animations of newly dead pieces
-        // update board to have correct pieces 
+        // update board to have correct pieces
         // update tiles to have correct tile contents
     }
 }

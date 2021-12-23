@@ -153,34 +153,34 @@ public class Graphics : MonoBehaviour
         pieceIsMoving = true;
     }
 
-    public void PlaySpellAnim(Spell spell, Action postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets)
+    public void PlaySpellAnim(Spell spell, Action postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
     {
         string spellAnimPath = GraphicsC.GetSpellAnimPrefabPath(spell);
         string castAnimPath = GraphicsC.GetCastAnimPrefabPath(spell);
 
-        StartCoroutine(SpellAnimRoutine(castAnimPath, spellAnimPath, postAnim, caster, targetsPreDmg, targetsPostDmg, deadTargets));
+        StartCoroutine(SpellAnimRoutine(castAnimPath, spellAnimPath, postAnim, caster, targetsPreDmg, targetsPostDmg, deadTargets, aoeRange));
     }
 
-    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets)
+    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
     {
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
-        castAnim.transform.position = new Vector3(caster.x, 0, caster.y);
+        castAnim.transform.position = new Vector3(caster.x, 0.35f, caster.y);
+        Destroy(castAnim, 8);
         yield return new WaitForSeconds(1);
 
         // play spell animation on each target
-        foreach (Vector2 pos in targetsPreDmg.Keys)
+        foreach (Vector2 pos in aoeRange)
         {
-            Debug.Log(pos);
             GameObject spellAnim = Instantiate(Resources.Load(spellAnimPath) as GameObject);
-            castAnim.transform.position = new Vector3(pos.x, 0, pos.y);
+            spellAnim.transform.position = new Vector3(pos.x, 0.7f, pos.y);
+            Destroy(spellAnim, 8);
         }
         yield return new WaitForSeconds(3);
 
         // display health reduction and effect applicaiton to correct pieces
         yield return new WaitForSeconds(3);
         float deathAnimDelay = (deadTargets.Count > 0) ? 2f : 0;
-        // if nothing died
 
         // play deathanims
         yield return new WaitForSeconds(deathAnimDelay);

@@ -288,28 +288,30 @@ public class GameLogic : MonoBehaviour
         board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, endPos, TileContents.Piece, startTile.piece);
 
         // --- Graphics ---
-        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(startTile, endTile, spell));
+        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(endTile, spell));
     }
 
-    private void CastPhase(Tile start, Tile end, Spell spell)
+    private void CastPhase(Tile end, Spell spell)
     {
         // --- Data --- 
-        Debug.Log(spell);
+        Debug.Log(spell.name);
 
         // if spell parameter is not null
         if (spell == null) return;
 
         // calcularte damage and effects of spell
         Tile caster = board.tiles[end.y][end.x];
+        Debug.Log(caster.piece.label);
+        Debug.Log(caster.x);
+        Debug.Log(caster.y);
         float damage = caster.piece.attack * spell.damage;
         string effect = spell.spellEffect;
 
         // apply damage and effects to pieces in range
-        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, BoardC.CalculateAOEPatterns(spell.pattern, caster));
+        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster);
+        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange);
         Dictionary<Vector2, Tile> defeatedPieces = new Dictionary<Vector2, Tile>();
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
-
-        // TODO: targetsPreDmg not getting anything
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
@@ -328,7 +330,7 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         // play spell animation
-        graphics.PlaySpellAnim(spell, () => Debug.Log("UpkeepPhase"), caster, targetsPreDmg, targetsPostDmg, defeatedPieces);
+        graphics.PlaySpellAnim(spell, () => Debug.Log("UpkeepPhase"), caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
 
         // remove/play death animations of newly dead pieces
         // update board to have correct pieces

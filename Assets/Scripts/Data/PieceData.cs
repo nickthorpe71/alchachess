@@ -22,6 +22,7 @@ namespace Data
         public PieceColor color;
         public char element;
         public float health;
+        public float maxHealth;
         public int level;
         public float attack;
         public int moveDistance;
@@ -33,6 +34,7 @@ namespace Data
         {
             label = _label;
             color = _color;
+            maxHealth = _health;
             health = _health;
             level = _level;
             attack = _attack;
@@ -45,6 +47,7 @@ namespace Data
             label = _label;
             color = _color;
             health = PieceBaseStats.data[_label].health;
+            maxHealth = PieceBaseStats.data[_label].health;
             element = PieceBaseStats.data[_label].element;
             level = PieceBaseStats.data[_label].level;
             attack = PieceBaseStats.data[_label].attack;

@@ -178,13 +178,13 @@ namespace Calc
             return tilesCopy;
         }
 
-        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range)
+        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range, PlayerToken currentPlayer)
         {
             Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
             LoopTiles(tiles, (tile) =>
             {
                 Vector2 tilePosition = new Vector2(tile.x, tile.y);
-                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece)
+                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece && tile.piece.player != currentPlayer)
                     result[tilePosition] = tile;
             });
             return result;

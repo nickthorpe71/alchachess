@@ -55,11 +55,11 @@ namespace Data
             player = _player;
         }
 
-        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, int _level, float _attack, int _moveDistance, PlayerToken _player, string _currentSpellEffect)
+        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, float _maxHealth, int _level, float _attack, int _moveDistance, PlayerToken _player, string _currentSpellEffect)
         {
             label = _label;
             color = _color;
-            maxHealth = _health;
+            maxHealth = _maxHealth;
             health = _health;
             level = _level;
             attack = _attack;
@@ -70,7 +70,7 @@ namespace Data
 
         public Piece Clone()
         {
-            return new Piece(this.label, this.color, this.element, this.health, this.level, this.attack, this.moveDistance, this.player, this.currentSpellEffect);
+            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.attack, this.moveDistance, this.player, this.currentSpellEffect);
         }
     }
 

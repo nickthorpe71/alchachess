@@ -46,7 +46,7 @@ public class PieceStats : MonoBehaviour
 
         healthRed.fillAmount = postDamageHealthPercent;
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         statsCanvas.gameObject.SetActive(false);
     }

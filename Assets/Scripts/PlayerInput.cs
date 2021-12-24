@@ -6,7 +6,7 @@ namespace Actions
     {
         public static void HandleInput(GameLogic logic)
         {
-            if (logic.currentTurn == logic.humanPlayer)
+            if (logic.currentPlayer == logic.humanPlayer)
             {
                 HandleClick(logic);
                 HandleHover(logic);

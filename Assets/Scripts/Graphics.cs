@@ -1,6 +1,7 @@
 using Calc;
 using Data;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
@@ -186,11 +187,33 @@ public class Graphics : MonoBehaviour
             float previousHealth = targetsPreDmg[target.Key].piece.health;
             pieceGraphic.GetComponentInChildren<PieceStats>().UpdateStatsUI(target.Value.piece, previousHealth);
         }
-        yield return new WaitForSeconds(5);
-        float deathAnimDelay = (deadTargets.Count > 0) ? 2f : 0;
+        yield return new WaitForSeconds(4);
+        float deathAnimDelay = 0;
 
-        // play deathanims
-        // remove pieces from active pieces
+        if (deadTargets.Count > 0)
+        {
+            deathAnimDelay = 3f;
+            foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
+            {
+                // play deathanims
+                Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
+                GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
+                deathAnim.transform.position = positionIn3D;
+                Destroy(deathAnim, 5);
+
+                // remove pieces from active pieces
+                activePieces = activePieces.Where(piece =>
+                {
+                    if (piece.transform.position != positionIn3D)
+                    {
+                        return true;
+                    }
+                    // destroy piece
+                    Destroy(piece.gameObject);
+                    return false;
+                }).ToList();
+            }
+        }
 
         yield return new WaitForSeconds(deathAnimDelay);
         postAnim();

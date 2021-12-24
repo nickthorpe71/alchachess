@@ -15,7 +15,7 @@ public class GameLogic : MonoBehaviour
     // GameState
     [NonSerialized] public Board board;
     [NonSerialized] public int turnCount = 0;
-    [NonSerialized] public PlayerToken currentTurn = PlayerToken.P1;
+    [NonSerialized] public PlayerToken currentPlayer = PlayerToken.P1;
     [NonSerialized] public bool pieceClicked = false;
     private Tile currentHover = null;
     private Tile currentClicked = null;
@@ -291,8 +291,6 @@ public class GameLogic : MonoBehaviour
     private void CastPhase(Tile end, Spell spell)
     {
         // --- Data --- 
-        Debug.Log(spell.name);
-
         // if spell parameter is not null
         if (spell == null) return;
 
@@ -306,7 +304,7 @@ public class GameLogic : MonoBehaviour
 
         // apply damage and effects to pieces in range
         List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster);
-        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange);
+        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, currentPlayer);
         Dictionary<Vector2, Tile> defeatedPieces = new Dictionary<Vector2, Tile>();
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
 

@@ -280,12 +280,25 @@ public class GameLogic : MonoBehaviour
         Vector2 endPos = new Vector2(endTile.x, endTile.y);
 
         // update piece data and contents state of start and end tiles
-        TileContents newStartContents = (startTile.element != 'N') ? TileContents.Element : TileContents.Empty;
-        board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, startPos, newStartContents, null);
-        board.tiles = BoardC.UpdatePieceDataOnTile(board.tiles, endPos, TileContents.Piece, startTile.piece);
+        board.tiles = BoardC.MapTilesBetween(board.tiles, startPos, endPos, (tile, x, y) =>
+        {
+            Vector2 pos = new Vector2(x, y);
+            if (pos == endPos)
+            {   // set end tiel contents to piece and piece data to moved piece
+                tile.contents = TileContents.Piece;
+                tile.piece = startTile.piece;
+            }
+            else
+            {   // for all other tiles between set contents to empty and piece to null
+                tile.contents = TileContents.Empty;
+                tile.piece = null;
+            }
+
+            return tile;
+        });
 
         // --- Graphics ---
-        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(endTile, spell));
+        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(board.tiles[(int)endPos.y][(int)endPos.x], spell));
     }
 
     private void CastPhase(Tile end, Spell spell)
@@ -294,11 +307,11 @@ public class GameLogic : MonoBehaviour
         // if spell parameter is not null
         if (spell == null) return;
 
+        Debug.Log("end " + end.piece.label);
+        Debug.Log("spell " + spell.name);
+
         // calcularte damage and effects of spell
         Tile caster = board.tiles[end.y][end.x];
-        Debug.Log(caster.piece.label);
-        Debug.Log(caster.x);
-        Debug.Log(caster.y);
         float damage = caster.piece.attack * spell.damage;
         string effect = spell.spellEffect;
 
@@ -314,8 +327,6 @@ public class GameLogic : MonoBehaviour
 
             Tile tileCopy = kvp.Value.Clone();
             tileCopy.piece.health -= damage;
-            Debug.Log("post/pre " + targetsPreDmg[kvp.Key].piece.health);
-            Debug.Log("post " + tileCopy.piece.health);
             tileCopy.piece.currentSpellEffect = effect;
             if (tileCopy.piece.health <= 0)
             {

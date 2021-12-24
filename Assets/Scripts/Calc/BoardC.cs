@@ -75,8 +75,6 @@ namespace Calc
         {
             List<Vector2> result = new List<Vector2>();
 
-            // TODO: only add if in bounds
-
             for (int i = 0; i < pattern.Count; i++)
             {
                 Vector2 toAdd = new Vector2((float)(tile.x + pattern[i].x), (float)(tile.y + pattern[i].y));
@@ -144,39 +142,34 @@ namespace Calc
             if (!pathEnd.isHighlighted)
                 return "";
 
-            Vector2 path = new Vector2(pathEnd.x, pathEnd.y) - new Vector2(pathStart.x, pathStart.y);
-            int distance = Mathf.Max((int)path.x, (int)path.y);
-            Vector2 direction = path.normalized;
-            direction = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
-
             string result = "";
 
-            for (int step = 1; step <= distance; step++)
+            MapTilesBetween(tiles, new Vector2(pathStart.x, pathStart.y), new Vector2(pathEnd.x, pathEnd.y), (tile, x, y) =>
             {
-                int x = (int)pathStart.x + ((int)direction.x * step);
-                int y = (int)pathStart.y + ((int)direction.y * step);
-                Tile nextTile = tiles[y][x];
-
-                if (nextTile.element != 'N' && nextTile.isHighlighted && nextTile.contents == TileContents.Element)
-                    result += nextTile.element;
-            }
+                if (tile.element != 'N' && tile.isHighlighted && tile.contents == TileContents.Element)
+                    result += tile.element;
+                return tile;
+            });
 
             return result;
         }
 
-        public static Tile[][] ChangeTileContents(Tile[][] tiles, Vector2 position, TileContents newContents)
-        {
-            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
-            tilesCopy[(int)position.y][(int)position.x].contents = newContents;
-            return tilesCopy;
-        }
+        // public static Tile[][] ChangeTileContents(Tile[][] tiles, List<Vector2> positions, TileContents newContents)
+        // {
+        //     Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+        //     positions.ForEach(position =>
+        //     {
+        //         tilesCopy[(int)position.y][(int)position.x].contents = newContents;
+        //     });
+        //     return tilesCopy;
+        // }
 
-        public static Tile[][] UpdatePieceDataOnTile(Tile[][] tiles, Vector2 position, TileContents newContents, Piece newPieceData)
-        {
-            Tile[][] tilesCopy = ChangeTileContents(tiles, position, newContents);
-            tilesCopy[(int)position.y][(int)position.x].piece = newPieceData;
-            return tilesCopy;
-        }
+        // public static Tile[][] UpdatePieceDataOnTile(Tile[][] tiles, Vector2 position, TileContents newContents, Piece newPieceData)
+        // {
+        //     Tile[][] tilesCopy = ChangeTileContents(tiles, new List<Vector2> { position }, newContents);
+        //     tilesCopy[(int)position.y][(int)position.x].piece = newPieceData;
+        //     return tilesCopy;
+        // }
 
         public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range, PlayerToken currentPlayer)
         {
@@ -188,6 +181,27 @@ namespace Calc
                     result[tilePosition] = tile;
             });
             return result;
+        }
+
+        public static Tile[][] MapTilesBetween(Tile[][] tiles, Vector2 start, Vector2 end, Func<Tile, int, int, Tile> f)
+        {
+            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+
+            Vector2 path = new Vector2(end.x, end.y) - new Vector2(start.x, start.y);
+            int distance = Mathf.Max((int)path.x, (int)path.y);
+            Vector2 direction = path.normalized;
+            direction = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
+
+            for (int step = 1; step <= distance; step++)
+            {
+                int x = (int)start.x + ((int)direction.x * step);
+                int y = (int)start.y + ((int)direction.y * step);
+                Tile nextTile = tilesCopy[y][x];
+                tilesCopy[y][x] = f(nextTile, x, y);
+            }
+
+            return tilesCopy;
+
         }
     }
 }

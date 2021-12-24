@@ -167,7 +167,7 @@ namespace Data
             {
                 x = this.x,
                 y = this.y,
-                piece = this.piece,
+                piece = this.piece == null ? null : this.piece.Clone(),
                 element = this.element,
                 contents = this.contents,
                 isClicked = this.isClicked,

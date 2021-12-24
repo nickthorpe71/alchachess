@@ -174,15 +174,24 @@ public class Graphics : MonoBehaviour
         {
             GameObject spellAnim = Instantiate(Resources.Load(spellAnimPath) as GameObject);
             spellAnim.transform.position = new Vector3(pos.x, 0.7f, pos.y);
+            yield return new WaitForSeconds(0.5f);
             Destroy(spellAnim, 8);
         }
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2.5f);
 
         // display health reduction and effect applicaiton to correct pieces
-        yield return new WaitForSeconds(3);
+        foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
+        {
+            GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, target.Key);
+            float previousHealth = targetsPreDmg[target.Key].piece.health;
+            pieceGraphic.GetComponentInChildren<PieceStats>().UpdateStatsUI(target.Value.piece, previousHealth);
+        }
+        yield return new WaitForSeconds(5);
         float deathAnimDelay = (deadTargets.Count > 0) ? 2f : 0;
 
         // play deathanims
+        // remove pieces from active pieces
+
         yield return new WaitForSeconds(deathAnimDelay);
         postAnim();
     }

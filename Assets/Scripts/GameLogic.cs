@@ -268,9 +268,6 @@ public class GameLogic : MonoBehaviour
         // switch current player token
         // give control to the correct player
         // wait for input
-
-
-        // Debug.Log(selectedSpell.name);
     }
 
     private void MovePhase(Tile start, Tile end, Spell spell)
@@ -315,11 +312,16 @@ public class GameLogic : MonoBehaviour
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
+            Debug.Log("prev " + targetsPreDmg[kvp.Key].piece.health);
+
             Tile tileCopy = kvp.Value.Clone();
             tileCopy.piece.health -= damage;
-            tileCopy.piece.spellEffect = effect;
+            Debug.Log("post/pre " + targetsPreDmg[kvp.Key].piece.health);
+            Debug.Log("post " + tileCopy.piece.health);
+            tileCopy.piece.currentSpellEffect = effect;
             if (tileCopy.piece.health <= 0)
             {
+                // remove dead pieces
                 defeatedPieces[kvp.Key] = tileCopy;
                 tileCopy.contents = tileCopy.element != 'N' ? TileContents.Empty : TileContents.Element;
             }

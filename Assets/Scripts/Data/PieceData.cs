@@ -26,7 +26,7 @@ namespace Data
         public int level;
         public float attack;
         public int moveDistance;
-        public string spellEffect = "";
+        public string currentSpellEffect = "";
 
         public PlayerToken player;
 
@@ -53,6 +53,24 @@ namespace Data
             attack = PieceBaseStats.data[_label].attack;
             moveDistance = PieceBaseStats.data[_label].moveDistance;
             player = _player;
+        }
+
+        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, int _level, float _attack, int _moveDistance, PlayerToken _player, string _currentSpellEffect)
+        {
+            label = _label;
+            color = _color;
+            maxHealth = _health;
+            health = _health;
+            level = _level;
+            attack = _attack;
+            moveDistance = _moveDistance;
+            player = _player;
+            currentSpellEffect = _currentSpellEffect;
+        }
+
+        public Piece Clone()
+        {
+            return new Piece(this.label, this.color, this.element, this.health, this.level, this.attack, this.moveDistance, this.player, this.currentSpellEffect);
         }
     }
 

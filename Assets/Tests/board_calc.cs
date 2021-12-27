@@ -233,4 +233,96 @@ public class board_calc
         // make sure all states are checked
         Assert.AreEqual(numStatesChecked, allStates.Length);
     }
+
+    [Test]
+    public void MapTilesBetween_moves_a_piece_up()
+    {
+        // arrange
+        Board resultBoard = new Board();
+        Piece piece = resultBoard.tiles[0][4].piece;
+        Vector2 start = new Vector2(4, 0);
+        Vector2 end = new Vector2(4, 2);
+
+        // act
+        resultBoard.tiles = BoardC.MapTilesBetween(resultBoard.tiles, start, end, (tile, x, y) =>
+        {
+            Vector2 pos = new Vector2(x, y);
+            if (pos == end)
+            {   // set end tile contents to piece and piece data to moved piece
+                tile.contents = TileContents.Piece;
+                tile.piece = piece;
+            }
+            else
+            {   // for all other tiles set contents to empty and piece to null
+                tile.contents = TileContents.Empty;
+                tile.piece = null;
+            }
+
+            return tile;
+        });
+
+        // assert
+        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[0][4].contents);
+        Assert.AreEqual(null, resultBoard.tiles[0][4].piece);
+        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[1][4].contents);
+        Assert.AreEqual(null, resultBoard.tiles[1][4].piece);
+        Assert.AreEqual(TileContents.Piece, resultBoard.tiles[2][4].contents);
+        Assert.AreEqual(piece, resultBoard.tiles[2][4].piece);
+    }
+
+    [Test]
+    public void MapTilesBetween_moves_a_piece_up_and_back()
+    {
+        // arrange
+        Board resultBoard = new Board();
+        Piece piece = resultBoard.tiles[0][4].piece;
+        Vector2 start = new Vector2(4, 0);
+        Vector2 end = new Vector2(4, 2);
+
+        // act
+        resultBoard.tiles = BoardC.MapTilesBetween(resultBoard.tiles, start, end, (tile, x, y) =>
+        {
+            Vector2 pos = new Vector2(x, y);
+            if (pos == end)
+            {   // set end tile contents to piece and piece data to moved piece
+                tile.contents = TileContents.Piece;
+                tile.piece = piece;
+            }
+            else
+            {   // for all other tiles set contents to empty and piece to null
+                tile.contents = TileContents.Empty;
+                tile.piece = null;
+            }
+
+            return tile;
+        });
+
+        start = new Vector2(4, 2);
+        end = new Vector2(4, 0);
+
+        resultBoard.tiles = BoardC.MapTilesBetween(resultBoard.tiles, start, end, (tile, x, y) =>
+        {
+            Vector2 pos = new Vector2(x, y);
+            if (pos == end)
+            {   // set end tile contents to piece and piece data to moved piece
+                tile.contents = TileContents.Piece;
+                tile.piece = piece;
+            }
+            else
+            {   // for all other tiles set contents to empty and piece to null
+                tile.contents = TileContents.Empty;
+                tile.piece = null;
+            }
+
+            return tile;
+        });
+
+        // assert
+        Assert.AreEqual(TileContents.Piece, resultBoard.tiles[0][4].contents);
+        Assert.AreEqual(piece, resultBoard.tiles[0][4].piece);
+        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[1][4].contents);
+        Assert.AreEqual(null, resultBoard.tiles[1][4].piece);
+        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[2][4].contents);
+        Assert.AreEqual(null, resultBoard.tiles[2][4].piece);
+    }
 }

@@ -231,7 +231,6 @@ public class GameLogic : MonoBehaviour
 
     public void ExecuteMove(Tile start, Tile end, Spell spell)
     {
-        Debug.Log("pre move phase " + BoardC.GetBoardAsString(board));
         MovePhase(start, end, spell);
 
         // !! each phase has a data section and an animation section
@@ -285,12 +284,12 @@ public class GameLogic : MonoBehaviour
         {
             Vector2 pos = new Vector2(x, y);
             if (pos == endPos)
-            {   // set end tiel contents to piece and piece data to moved piece
+            {   // set end tile contents to piece and piece data to moved piece
                 tile.contents = TileContents.Piece;
                 tile.piece = startTile.piece;
             }
             else
-            {   // for all other tiles between set contents to empty and piece to null
+            {   // for all other tiles set contents to empty and piece to null
                 tile.contents = TileContents.Empty;
                 tile.piece = null;
             }
@@ -299,21 +298,20 @@ public class GameLogic : MonoBehaviour
         });
 
         // --- Graphics ---
-        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(board.tiles[(int)endPos.y][(int)endPos.x], spell));
+        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(endTile, spell));
     }
 
     private void CastPhase(Tile end, Spell spell)
     {
         // --- Data --- 
         // if spell parameter is not null
-        if (spell == null) return;
+        if (spell == null)
+        {
+            UpkeepPhase();
+            return;
+        }
 
-        Debug.Log("end " + end.piece.label);
-        Debug.Log("spell " + spell.name);
-        Debug.Log("pre cast phase " + BoardC.GetBoardAsString(board));
-
-
-        // calcularte damage and effects of spell
+        // calculate damage and effects of spell
         Tile caster = board.tiles[end.y][end.x];
         float damage = caster.piece.attack * spell.damage;
         string effect = spell.spellEffect;
@@ -326,8 +324,6 @@ public class GameLogic : MonoBehaviour
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
-            Debug.Log("prev " + targetsPreDmg[kvp.Key].piece.health);
-
             Tile tileCopy = kvp.Value.Clone();
             tileCopy.piece.health -= damage;
             tileCopy.piece.currentSpellEffect = effect;
@@ -345,10 +341,6 @@ public class GameLogic : MonoBehaviour
         // --- Graphics ---
         // play spell animation
         graphics.PlaySpellAnim(spell, UpkeepPhase, caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
-
-        // remove/play death animations of newly dead pieces
-        // update board to have correct pieces
-        // update tiles to have correct tile contents
     }
 
     public void UpkeepPhase()

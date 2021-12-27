@@ -171,7 +171,7 @@ namespace Calc
             Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
 
             Vector2 path = new Vector2(end.x, end.y) - new Vector2(start.x, start.y);
-            int distance = Mathf.Max((int)path.x, (int)path.y);
+            int distance = Mathf.Max(Mathf.Abs((int)path.x), Mathf.Abs((int)path.y));
             Vector2 direction = path.normalized;
             direction = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
 

@@ -154,23 +154,6 @@ namespace Calc
             return result;
         }
 
-        // public static Tile[][] ChangeTileContents(Tile[][] tiles, List<Vector2> positions, TileContents newContents)
-        // {
-        //     Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
-        //     positions.ForEach(position =>
-        //     {
-        //         tilesCopy[(int)position.y][(int)position.x].contents = newContents;
-        //     });
-        //     return tilesCopy;
-        // }
-
-        // public static Tile[][] UpdatePieceDataOnTile(Tile[][] tiles, Vector2 position, TileContents newContents, Piece newPieceData)
-        // {
-        //     Tile[][] tilesCopy = ChangeTileContents(tiles, new List<Vector2> { position }, newContents);
-        //     tilesCopy[(int)position.y][(int)position.x].piece = newPieceData;
-        //     return tilesCopy;
-        // }
-
         public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range, PlayerToken currentPlayer)
         {
             Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
@@ -192,7 +175,7 @@ namespace Calc
             Vector2 direction = path.normalized;
             direction = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
 
-            for (int step = 1; step <= distance; step++)
+            for (int step = 0; step <= distance; step++)
             {
                 int x = (int)start.x + ((int)direction.x * step);
                 int y = (int)start.y + ((int)direction.y * step);
@@ -201,7 +184,23 @@ namespace Calc
             }
 
             return tilesCopy;
+        }
 
+        public static string GetBoardAsString(Board board)
+        {
+            string result = "";
+            for (int y = 0; y < board.tiles.Length; y++)
+            {
+                result += "\n";
+                for (int x = 0; x < board.tiles[y].Length; x++)
+                {
+                    Tile tile = board.tiles[y][x];
+                    string piece = tile.piece != null ? tile.piece.label.ToString() : "no piece";
+                    result += "|" + tile.element + "," + tile.contents + "," + piece + "x:" + tile.x + "y:" + tile.y + "|";
+                }
+            }
+
+            return result;
         }
     }
 }

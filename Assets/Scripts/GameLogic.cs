@@ -231,6 +231,7 @@ public class GameLogic : MonoBehaviour
 
     public void ExecuteMove(Tile start, Tile end, Spell spell)
     {
+        Debug.Log("pre move phase " + BoardC.GetBoardAsString(board));
         MovePhase(start, end, spell);
 
         // !! each phase has a data section and an animation section
@@ -309,6 +310,8 @@ public class GameLogic : MonoBehaviour
 
         Debug.Log("end " + end.piece.label);
         Debug.Log("spell " + spell.name);
+        Debug.Log("pre cast phase " + BoardC.GetBoardAsString(board));
+
 
         // calcularte damage and effects of spell
         Tile caster = board.tiles[end.y][end.x];
@@ -341,11 +344,16 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         // play spell animation
-        graphics.PlaySpellAnim(spell, () => Debug.Log("UpkeepPhase"), caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
+        graphics.PlaySpellAnim(spell, UpkeepPhase, caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
 
         // remove/play death animations of newly dead pieces
         // update board to have correct pieces
         // update tiles to have correct tile contents
+    }
+
+    public void UpkeepPhase()
+    {
+        Debug.Log("post cast phase " + BoardC.GetBoardAsString(board));
     }
 }
 

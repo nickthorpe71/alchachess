@@ -175,10 +175,10 @@ public class Graphics : MonoBehaviour
         {
             GameObject spellAnim = Instantiate(Resources.Load(spellAnimPath) as GameObject);
             spellAnim.transform.position = new Vector3(pos.x, 0.7f, pos.y);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
             Destroy(spellAnim, 8);
         }
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(0.25f);
 
         // display health reduction and effect applicaiton to correct pieces
         foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)

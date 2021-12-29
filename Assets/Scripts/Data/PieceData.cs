@@ -6,13 +6,13 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> data = new Dictionary<PieceLabel, Piece>()
         {
-            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, 'G', 1124, 1, 1, 3),
-            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, 'R', 594, 1, 1.1f, 4),
-            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, 'D', 777, 1, 1.15f, 5),
-            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, 'N', 666, 1, 1.2f, 5),
-            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, 'W', 777, 1, 1.15f, 5),
-            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, 'B', 594, 1, 1.1f, 4),
-            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, 'Y', 1124, 1, 1, 3)
+            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, 'G', 1124, 1, 3),
+            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, 'R', 594, 1.1f, 4),
+            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, 'D', 777, 1.15f, 5),
+            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, 'N', 666, 1.2f, 5),
+            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, 'W', 777, 1.15f, 5),
+            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, 'B', 594, 1.1f, 4),
+            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, 'Y', 1124, 1, 3)
         };
     }
 
@@ -24,22 +24,27 @@ namespace Data
         public float health;
         public float maxHealth;
         public int level;
+        public int experience;
         public float attack;
         public int moveDistance;
+
         public string currentSpellEffect = "";
 
         public PlayerToken player;
 
-        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, int _level, float _attack, int _moveDistance)
+        // this is an un-owned piece
+        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, float _attack, int _moveDistance)
         {
             label = _label;
             color = _color;
             maxHealth = _health;
             health = _health;
-            level = _level;
+            level = 1;
+            experience = 0;
             attack = _attack;
             moveDistance = _moveDistance;
             player = PlayerToken.NA;
+
         }
 
         public Piece(PieceLabel _label, PieceColor _color, PlayerToken _player)

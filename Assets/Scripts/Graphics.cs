@@ -21,7 +21,6 @@ public class Graphics : MonoBehaviour
         ['Y'] = "Elements/Yellow"
     };
     private List<GameObject> activePieces = new List<GameObject>();
-    private List<GameObject> activeElements = new List<GameObject>();
 
     // Piece Movement
     private bool pieceIsMoving = false;
@@ -89,10 +88,17 @@ public class Graphics : MonoBehaviour
         string path = "Elements/" + element;
         Vector3 pos = new Vector3(x, 0.5f, y);
         GameObject newElement = Instantiate(Resources.Load(path) as GameObject);
-        GameObject elementDestroyAnim = Resources.Load("Elements/DestroyAnimations/" + element + "DestroyAnim") as GameObject;
         newElement.transform.position = pos;
-        newElement.GetComponent<ElementGraphic>().destroyAnimPrefab = elementDestroyAnim;
-        activeElements.Add(newElement);
+        GameObject elementDestroyAnim = Resources.Load("Elements/DestroyAnimations/" + element + "DestroyAnim") as GameObject;
+        ElementGraphic graphicComponent = newElement.GetComponent<ElementGraphic>();
+        graphicComponent.destroyAnimPrefab = elementDestroyAnim;
+        graphicComponent.graphics = this;
+    }
+
+    public void RepopulateElements(Dictionary<Vector2, char> toRepopulate)
+    {
+        foreach (KeyValuePair<Vector2, char> kvp in toRepopulate)
+            InstantiateElement(kvp.Value, (int)kvp.Key.x, (int)kvp.Key.y);
     }
 
     // --- Update ---

@@ -347,13 +347,28 @@ public class GameLogic : MonoBehaviour
 
     public void UpkeepPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
     {
-        if (deadTargets == null || deadTargets.Count <= 0)
-        {
-            LevelUpPhase(deadTargets, movedPiece);
-            return;
-        }
-
         // restore all elements to the field
+        Dictionary<Vector2, char> toRepopulate = new Dictionary<Vector2, char>();
+        board.tiles = BoardC.MapTiles(board.tiles, (tile) =>
+        {
+            if (tile.contents == TileContents.Empty && tile.element != 'N')
+            {
+                Tile tileCopy = tile.Clone();
+
+                // switch contents to hasElement
+                tileCopy.contents = TileContents.Element;
+
+                // add element and position to dict for graphics
+                toRepopulate[new Vector2(tileCopy.x, tileCopy.y)] = tile.element;
+
+                return tileCopy;
+            }
+            return tile;
+        });
+
+        // tell graphics to populate element graphics
+        graphics.RepopulateElements(toRepopulate);
+
         // calculate effects
         // show effect animations and remove health / increase decrease stats
         // if a piece dies from effects then add them to dead pieces list

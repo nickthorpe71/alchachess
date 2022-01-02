@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ElementGraphic : MonoBehaviour
 {
-    [SerializeField] public GameObject destroyAnimPrefab;
+    [HideInInspector] public GameObject destroyAnimPrefab;
+    [HideInInspector] public Graphics graphics;
 
     private void OnTriggerEnter(Collider other)
     {

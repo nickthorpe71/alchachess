@@ -154,7 +154,7 @@ public class Graphics : MonoBehaviour
         pieceIsMoving = true;
     }
 
-    public void PlaySpellAnim(Spell spell, Action postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
+    public void PlaySpellAnim(Spell spell, Action<Dictionary<Vector2, Tile>, Tile> postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
     {
         string spellAnimPath = GraphicsC.GetSpellAnimPrefabPath(spell);
         string castAnimPath = GraphicsC.GetCastAnimPrefabPath(spell);
@@ -162,7 +162,7 @@ public class Graphics : MonoBehaviour
         StartCoroutine(SpellAnimRoutine(castAnimPath, spellAnimPath, postAnim, caster, targetsPreDmg, targetsPostDmg, deadTargets, aoeRange));
     }
 
-    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
+    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action<Dictionary<Vector2, Tile>, Tile> postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
     {
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
@@ -180,7 +180,7 @@ public class Graphics : MonoBehaviour
         }
         yield return new WaitForSeconds(0.25f);
 
-        // display health reduction and effect applicaiton to correct pieces
+        // display health reduction and effect application to correct pieces
         foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
         {
             GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, target.Key);
@@ -195,7 +195,7 @@ public class Graphics : MonoBehaviour
             deathAnimDelay = 3f;
             foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
             {
-                // play deathanims
+                // play death animations
                 Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
                 GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
                 deathAnim.transform.position = positionIn3D;
@@ -216,6 +216,6 @@ public class Graphics : MonoBehaviour
         }
 
         yield return new WaitForSeconds(deathAnimDelay);
-        postAnim();
+        postAnim(deadTargets, caster);
     }
 }

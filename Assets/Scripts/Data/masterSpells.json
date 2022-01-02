@@ -2945,7 +2945,7 @@
                     "y": 3
                 }
             ],
-            "damage": 311,
+            "damage": 9999,
             "spellEffect": "increase attack"
         },
         {

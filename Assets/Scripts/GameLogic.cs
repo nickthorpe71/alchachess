@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Actions;
@@ -158,7 +159,7 @@ public class GameLogic : MonoBehaviour
         if (currentHover != null && new Vector3(newHover.x, 0, newHover.y) == new Vector3(currentHover.x, 0, currentHover.y))
             return;
 
-        // on new hover remove all AOE markeres
+        // on new hover remove all AOE markers
         board.tiles = BoardC.ChangeTilesState(
             board.tiles,
             new List<TileState> { TileState.isAOE },
@@ -235,7 +236,7 @@ public class GameLogic : MonoBehaviour
 
         // !! each phase has a data section and an animation section
         // each phase should have an end event function that is called when its complete
-        // if each phase is a function that thakes the next phase as a function then we can chain phases
+        // if each phase is a function that takes the next phase as a function then we can chain phases
 
         // -- Move Phase
         // move the piece graphically
@@ -254,16 +255,16 @@ public class GameLogic : MonoBehaviour
         // -- Upkeep Phase
         // restore all elements to the field 
         // calculate effects
-        // remove dead pieces from the board
-        // calculate exp gained by piece that just moved
+        // if a piece dies from effects then add them to dead pieces list
 
         // -- Level Up Phase
+        // calculate exp gained by piece that just moved
         // if a piece levels up
         // calculate new stats
         // play level up animation
         // play stat increment animation or display new stats
 
-        // -- New Player Turn Phase
+        // -- Next Turn Phase
         // increment turn counter
         // switch current player token
         // give control to the correct player
@@ -307,7 +308,7 @@ public class GameLogic : MonoBehaviour
         // if spell parameter is not null
         if (spell == null)
         {
-            UpkeepPhase();
+            UpkeepPhase(null, end);
             return;
         }
 
@@ -340,12 +341,75 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         // play spell animation
-        graphics.PlaySpellAnim(spell, UpkeepPhase, caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
+        graphics.PlaySpellAnim(spell, (defeatedPieces, caster) => UpkeepPhase(defeatedPieces, caster), caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
     }
 
-    public void UpkeepPhase()
+
+    public void UpkeepPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
     {
-        Debug.Log("post cast phase " + BoardC.GetBoardAsString(board));
+        if (deadTargets == null || deadTargets.Count <= 0)
+        {
+            LevelUpPhase(deadTargets, movedPiece);
+            return;
+        }
+
+        // restore all elements to the field
+        // calculate effects
+        // show effect animations and remove health / increase decrease stats
+        // if a piece dies from effects then add them to dead pieces list
+
+        Debug.Log("Upkeep");
+        LevelUpPhase(deadTargets, movedPiece);
+    }
+
+    public void LevelUpPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
+    {
+        // if dead targets is null then no spell was cast
+        // if dead targets length is 0 no exp is gained
+        if (deadTargets == null || deadTargets.Count <= 0)
+        {
+            // UpkeepPhase();
+            return;
+        }
+
+        Debug.Log("Pre: " + PieceC.PieceAsString(board.tiles[movedPiece.y][movedPiece.x].piece));
+
+        // --- Data ---
+        // calculate multiple target defeat bonus
+        int multiTargetBonus = deadTargets.Count;
+
+        // calculate exp gained by piece that just moved
+        int expGained = deadTargets.Values.Aggregate(0, (acc, tile) => acc + PieceC.CalcExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * multiTargetBonus;
+
+        // add exp to piece
+        Piece updatedExpPiece = movedPiece.piece.Clone();
+        updatedExpPiece.experience += expGained;
+        board.tiles = PieceC.UpdatePieceOnTile(board.tiles, new Vector2(movedPiece.x, movedPiece.y), updatedExpPiece);
+        // NOTE: going to need old exp and new exp for animation
+
+        // check if a piece levels up
+        int expToLevel = PieceC.CalcExpForNextLevel(movedPiece.piece.level);
+        bool pieceLeveled = (board.tiles[movedPiece.y][movedPiece.x].piece.experience >= expToLevel);
+
+        // calculate new stats and level
+        if (pieceLeveled)
+        {
+            Piece leveledPiece = updatedExpPiece.Clone();
+            leveledPiece.level += 1;
+            leveledPiece.attack += leveledPiece.attack / 5 * leveledPiece.level;
+            leveledPiece.maxHealth += leveledPiece.maxHealth / 5 * leveledPiece.level;
+            leveledPiece.health = leveledPiece.maxHealth;
+            leveledPiece.moveDistance = Math.Min(6, leveledPiece.level % 3 == 0 ? leveledPiece.moveDistance + 1 : leveledPiece.moveDistance);
+            board.tiles = PieceC.UpdatePieceOnTile(board.tiles, new Vector2(movedPiece.x, movedPiece.y), leveledPiece);
+        }
+
+        Debug.Log("Post: " + PieceC.PieceAsString(board.tiles[movedPiece.y][movedPiece.x].piece));
+
+        // --- Graphics ---
+        // play exp animation
+        // play level up animation
+        // play stat increment animation or display new stats
+
     }
 }
 
@@ -353,5 +417,5 @@ public class GameLogic : MonoBehaviour
 /*
 - spell UI fields bleed into each other
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
-    - caused by no checking douplicates in permutation function?
+    - caused by no checking duplicates in permutation function?
 */

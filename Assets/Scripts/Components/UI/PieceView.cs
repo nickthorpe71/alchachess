@@ -13,27 +13,29 @@ public class PieceView : MonoBehaviour, IToggle
     public TMP_Text health;
     public TMP_Text attack;
     public TMP_Text moveDistance;
+    public TMP_Text effect;
 
     public void Toggle(bool isDisplayed)
     {
         gameObject.SetActive(isDisplayed);
     }
 
-    public void UpdateView(Piece peice)
+    public void UpdateView(Piece piece)
     {
-        if (peice == null)
+        if (piece == null)
         {
             Toggle(false);
             return;
         }
 
         Toggle(true);
-        pieceName.text = Enum.GetName(typeof(PieceLabel), peice.label);
-        level.text = peice.level.ToString();
-        element.text = peice.element.ToString();
-        player.text = Enum.GetName(typeof(PlayerToken), peice.player);
-        health.text = peice.health.ToString();
-        attack.text = peice.attack.ToString();
-        moveDistance.text = peice.moveDistance.ToString();
+        pieceName.text = Enum.GetName(typeof(PieceLabel), piece.label);
+        level.text = piece.level.ToString();
+        element.text = piece.element.ToString();
+        player.text = Enum.GetName(typeof(PlayerToken), piece.player);
+        health.text = piece.health.ToString();
+        attack.text = piece.attack.ToString();
+        moveDistance.text = piece.moveDistance.ToString();
+        effect.text = piece.currentSpellEffect;
     }
 }

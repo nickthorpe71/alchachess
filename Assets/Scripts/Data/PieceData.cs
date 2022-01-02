@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace Data
@@ -20,11 +22,11 @@ namespace Data
     {
         public PieceLabel label;
         public PieceColor color;
-        public char element;
+        public Char element;
         public float health;
         public float maxHealth;
-        public int level;
-        public int experience;
+        public float level;
+        public float experience;
         public float attack;
         public int moveDistance;
 
@@ -55,27 +57,45 @@ namespace Data
             maxHealth = PieceBaseStats.data[_label].health;
             element = PieceBaseStats.data[_label].element;
             level = PieceBaseStats.data[_label].level;
+            experience = 0;
             attack = PieceBaseStats.data[_label].attack;
             moveDistance = PieceBaseStats.data[_label].moveDistance;
             player = _player;
         }
 
-        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, float _maxHealth, int _level, float _attack, int _moveDistance, PlayerToken _player, string _currentSpellEffect)
+        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, float _maxHealth, float _level, float _experience, float _attack, int _moveDistance, PlayerToken _player, string _currentSpellEffect)
         {
             label = _label;
             color = _color;
             maxHealth = _maxHealth;
             health = _health;
             level = _level;
+            experience = _experience;
             attack = _attack;
             moveDistance = _moveDistance;
             player = _player;
             currentSpellEffect = _currentSpellEffect;
         }
 
+        public object this[string propertyName]
+        {
+            get
+            {
+                Type myType = typeof(Piece);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                return myPropInfo.GetValue(this, null);
+            }
+            set
+            {
+                Type myType = typeof(Piece);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                myPropInfo.SetValue(this, value, null);
+            }
+        }
+
         public Piece Clone()
         {
-            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.attack, this.moveDistance, this.player, this.currentSpellEffect);
+            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.experience, this.attack, this.moveDistance, this.player, this.currentSpellEffect);
         }
     }
 

@@ -30,7 +30,7 @@ public class board_calc
     {
         // arrange
         Board board = new Board();
-        char expectedElement = 'R';
+        string expectedElement = "R";
 
         // act
         board.tiles = BoardC.MapTiles(board.tiles, tile =>

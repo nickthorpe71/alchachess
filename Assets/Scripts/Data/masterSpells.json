@@ -1,7 +1,6 @@
 {
     "allSpells": [
         {
-            "keep": true,
             "recipe": "D",
             "color": "D",
             "name": "Stab",
@@ -24,11 +23,10 @@
                     "y": 0
                 }
             ],
-            "damage": 66,
-            "spellEffect": "decrease defense"
+            "damage": 110,
+            "spellEffect": ""
         },
         {
-            "keep": true,
             "recipe": "B",
             "color": "B",
             "name": "Wave",
@@ -43,13 +41,12 @@
                     "y": 2
                 }
             ],
-            "damage": 81
+            "damage": 120
         },
         {
-            "keep": true,
             "recipe": "W",
             "color": "W",
-            "name": "Prayer",
+            "name": "Simple Prayer",
             "totalCost": 1,
             "pattern": [
                 {
@@ -61,19 +58,34 @@
                     "y": -1
                 },
                 {
-                    "x": 0,
-                    "y": 2
+                    "x": 1,
+                    "y": 1
                 },
                 {
-                    "x": 0,
-                    "y": -2
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 0
                 }
             ],
-            "damage": 69,
+            "damage": 120,
             "spellEffect": "heal"
         },
         {
-            "keep": true,
             "recipe": "R",
             "color": "R",
             "name": "Meteorite",
@@ -96,10 +108,10 @@
                     "y": -2
                 }
             ],
-            "damage": 109
+            "damage": 55,
+            "spellEffect": "burn"
         },
         {
-            "keep": true,
             "recipe": "G",
             "color": "G",
             "name": "Feather Nova",
@@ -138,11 +150,10 @@
                     "y": 0
                 }
             ],
-            "damage": 52,
+            "damage": 97,
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "Y",
             "color": "Y",
             "name": "Quake",
@@ -179,12 +190,27 @@
                 {
                     "x": -2,
                     "y": 0
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1
                 }
             ],
-            "damage": 78
+            "damage": 88
         },
         {
-            "keep": true,
             "recipe": "DG",
             "color": "G",
             "name": "Arrow Hex",
@@ -223,11 +249,10 @@
                     "y": 2
                 }
             ],
-            "damage": 165,
+            "damage": 117,
             "spellEffect": "poison"
         },
         {
-            "keep": true,
             "recipe": "BG",
             "color": "B",
             "name": "Aqua",
@@ -269,7 +294,6 @@
             "damage": 138
         },
         {
-            "keep": true,
             "recipe": "BW",
             "color": "W",
             "name": "Protecting Blue",
@@ -341,10 +365,9 @@
                 }
             ],
             "damage": 179,
-            "spellEffect": "increase defense"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "DR",
             "color": "D",
             "name": "Screaming Meteor",
@@ -367,46 +390,68 @@
                     "y": 0
                 }
             ],
-            "damage": 195,
-            "spellEffect": "decrease defense"
+            "damage": 135,
+            "spellEffect": "burn"
         },
         {
-            "keep": true,
             "recipe": "WY",
             "color": "W",
             "name": "Rock Spear",
             "totalCost": 2,
             "pattern": [
                 {
-                    "x": -1,
-                    "y": 0
+                    "x": 0,
+                    "y": 1
                 },
                 {
-                    "x": 1,
-                    "y": 0
+                    "x": 0,
+                    "y": 2
                 },
                 {
-                    "x": -2,
-                    "y": 0
+                    "x": 0,
+                    "y": 3
                 },
                 {
-                    "x": 2,
-                    "y": 0
+                    "x": 0,
+                    "y": 4
                 }
             ],
-            "damage": 121,
+            "damage": 181,
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "RY",
             "color": "Y",
-            "name": "Fiery Resist",
+            "name": "Fiery Heart",
             "totalCost": 2,
             "pattern": [
                 {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1
+                },
+                {
                     "x": -1,
                     "y": 0
+                },
+                {
+                    "x": -1,
+                    "y": 1
                 },
                 {
                     "x": 1,
@@ -421,14 +466,13 @@
                     "y": 0
                 }
             ],
-            "damage": 114,
-            "spellEffect": "increase defense"
+            "damage": 188,
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "BR",
             "color": "B",
-            "name": "Searing Pursute",
+            "name": "Searing Pursuit",
             "totalCost": 2,
             "pattern": [
                 {
@@ -464,14 +508,14 @@
                     "y": 0
                 }
             ],
-            "damage": 110,
+            "damage": 182,
             "spellEffect": "none"
         },
         {
             "keep": false,
             "recipe": "GY",
             "color": "Y",
-            "name": "Vines Fist",
+            "name": "Poison Vine Fist",
             "totalCost": 2,
             "pattern": [
                 {
@@ -483,8 +527,8 @@
                     "y": 2
                 }
             ],
-            "damage": 138,
-            "spellEffect": "increase defense"
+            "damage": 203,
+            "spellEffect": "poison"
         },
         {
             "keep": false,
@@ -580,7 +624,6 @@
             "damage": 145
         },
         {
-            "keep": true,
             "recipe": "RW",
             "color": "R",
             "name": "Sizzle",
@@ -674,7 +717,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "BY",
             "color": "Y",
             "name": "Mud Blizzard",
@@ -692,7 +734,6 @@
             "damage": 135
         },
         {
-            "keep": true,
             "recipe": "DY",
             "color": "D",
             "name": "Peel Flesh",
@@ -732,10 +773,9 @@
                 }
             ],
             "damage": 132,
-            "spellEffect": "decrease defense"
+            "spellEffect": "decrease power"
         },
         {
-            "keep": true,
             "recipe": "GW",
             "color": "G",
             "name": "Falcon's Agility",
@@ -762,7 +802,6 @@
             "spellEffect": "poison"
         },
         {
-            "keep": true,
             "recipe": "DDG",
             "color": "D",
             "name": "Gruesome Thoughts",
@@ -782,10 +821,9 @@
                 }
             ],
             "damage": 190,
-            "spellEffect": "decrease defense"
+            "spellEffect": "decrease power"
         },
         {
-            "keep": true,
             "recipe": "BDG",
             "color": "G",
             "name": "Ritual Ice Fauna",
@@ -819,7 +857,6 @@
             "damage": 146
         },
         {
-            "keep": true,
             "recipe": "BBW",
             "color": "B",
             "name": "Slate Knowledge",
@@ -846,7 +883,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "DRY",
             "color": "Y",
             "name": "Erupting Wraith Cascade",
@@ -888,7 +924,6 @@
             "damage": 224
         },
         {
-            "keep": true,
             "recipe": "RWY",
             "color": "R",
             "name": "Magma Punch",
@@ -923,7 +958,6 @@
             "spellEffect": "burn"
         },
         {
-            "keep": true,
             "recipe": "BGW",
             "color": "W",
             "name": "Snow Mother's Soul",
@@ -958,7 +992,6 @@
             "spellEffect": "heal"
         },
         {
-            "keep": true,
             "recipe": "DGR",
             "color": "R",
             "name": "Choke Bang",
@@ -990,10 +1023,9 @@
                 }
             ],
             "damage": 170,
-            "spellEffect": "increase attack"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "WWY",
             "color": "W",
             "name": "Judgement",
@@ -1020,7 +1052,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "BGR",
             "color": "R",
             "name": "Organic Flash",
@@ -1192,7 +1223,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "DRR",
             "color": "R",
             "name": "Of The Sun Dimension",
@@ -1262,7 +1292,6 @@
             "damage": 228
         },
         {
-            "keep": true,
             "recipe": "BRY",
             "color": "B",
             "name": "Barbaric Prism",
@@ -1281,7 +1310,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "GRY",
             "color": "G",
             "name": "Ranger",
@@ -1324,7 +1352,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "BDW",
             "color": "W",
             "name": "Glacial Hymn",
@@ -1351,7 +1378,6 @@
             "spellEffect": "heal"
         },
         {
-            "keep": true,
             "recipe": "DGW",
             "color": "G",
             "name": "Ancient Roots of Darkness",
@@ -1377,7 +1403,6 @@
             "damage": 207
         },
         {
-            "keep": true,
             "recipe": "DRW",
             "color": "D",
             "name": "Ritual",
@@ -1404,7 +1429,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "GRW",
             "color": "W",
             "name": "Heal Flame Of the Forest",
@@ -1431,7 +1455,6 @@
             "spellEffect": "heal"
         },
         {
-            "keep": true,
             "recipe": "BGY",
             "color": "B",
             "name": "Rain Fable",
@@ -1487,10 +1510,9 @@
                 }
             ],
             "damage": 226,
-            "spellEffect": "freeze"
+            "spellEffect": "frozen"
         },
         {
-            "keep": true,
             "recipe": "BDR",
             "color": "R",
             "name": "Smoke Choke",
@@ -1514,10 +1536,9 @@
                 }
             ],
             "damage": 261,
-            "spellEffect": "decrease defense"
+            "spellEffect": "decrease power"
         },
         {
-            "keep": true,
             "recipe": "GYY",
             "color": "Y",
             "name": "Potion Desert",
@@ -1573,10 +1594,9 @@
                 }
             ],
             "damage": 233,
-            "spellEffect": "increase defense"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "BDY",
             "color": "B",
             "name": "Fin",
@@ -1610,7 +1630,6 @@
             "damage": 225
         },
         {
-            "keep": true,
             "recipe": "BRW",
             "color": "R",
             "name": "Salamander",
@@ -1682,10 +1701,9 @@
                 }
             ],
             "damage": 199,
-            "spellEffect": "increase attack"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "DGY",
             "color": "G",
             "name": "Phase Claw",
@@ -1711,7 +1729,6 @@
             "damage": 222
         },
         {
-            "keep": true,
             "recipe": "GWY",
             "color": "G",
             "name": "Glaring Roots",
@@ -1745,7 +1762,6 @@
             "damage": 250
         },
         {
-            "keep": true,
             "recipe": "BWY",
             "color": "B",
             "name": "Faith Calculation",
@@ -1859,10 +1875,9 @@
                 }
             ],
             "damage": 256,
-            "spellEffect": "decrease defense"
+            "spellEffect": "decrease power"
         },
         {
-            "keep": true,
             "recipe": "BDGW",
             "color": "G",
             "name": "Blood Wager",
@@ -1889,7 +1904,6 @@
             "spellEffect": "poison"
         },
         {
-            "keep": true,
             "recipe": "DGRY",
             "color": "Y",
             "name": "Fortunate Earth Shadow",
@@ -1929,10 +1943,9 @@
                 }
             ],
             "damage": 305,
-            "spellEffect": "increase defense"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "BGWY",
             "color": "W",
             "name": "Beaming Tale",
@@ -1958,7 +1971,6 @@
             "damage": 303
         },
         {
-            "keep": true,
             "recipe": "DRWY",
             "color": "Y",
             "name": "Demi Yellow Flamestrike",
@@ -1984,7 +1996,6 @@
             "damage": 289
         },
         {
-            "keep": true,
             "recipe": "BDGR",
             "color": "B",
             "name": "Sinister Sight",
@@ -2040,10 +2051,9 @@
                 }
             ],
             "damage": 205,
-            "spellEffect": "freeze"
+            "spellEffect": "frozen"
         },
         {
-            "keep": true,
             "recipe": "BGRY",
             "color": "R",
             "name": "Transmutation",
@@ -2099,10 +2109,9 @@
                 }
             ],
             "damage": 236,
-            "spellEffect": "increase defense"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "BGGY",
             "color": "G",
             "name": "Plant Illusion",
@@ -2158,7 +2167,7 @@
                 }
             ],
             "damage": 307,
-            "spellEffect": "decrease attack"
+            "spellEffect": "decrease power"
         },
         {
             "keep": false,
@@ -2232,7 +2241,6 @@
             "spellEffect": "heal"
         },
         {
-            "keep": true,
             "recipe": "BDRW",
             "color": "R",
             "name": "Fire Gargoyle's Tradition",
@@ -2267,7 +2275,6 @@
             "spellEffect": "burn"
         },
         {
-            "keep": true,
             "recipe": "DGWY",
             "color": "Y",
             "name": "Earth Dragon's Green Demi",
@@ -2302,7 +2309,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "GRYY",
             "color": "Y",
             "name": "Empty Bones",
@@ -2438,10 +2444,9 @@
                 }
             ],
             "damage": 281,
-            "spellEffect": "decrease defense"
+            "spellEffect": "decrease power"
         },
         {
-            "keep": true,
             "recipe": "DGRW",
             "color": "G",
             "name": "Fauna Geist's Serenity",
@@ -2511,7 +2516,6 @@
             "damage": 197
         },
         {
-            "keep": true,
             "recipe": "BDRY",
             "color": "D",
             "name": "Of Ice Bones",
@@ -2551,10 +2555,9 @@
                 }
             ],
             "damage": 244,
-            "spellEffect": "decrease defense"
+            "spellEffect": "decrease power"
         },
         {
-            "keep": true,
             "recipe": "BRWY",
             "color": "R",
             "name": "Dip Smite Rock Inferno",
@@ -2573,7 +2576,6 @@
             "spellEffect": "burn"
         },
         {
-            "keep": true,
             "recipe": "GRWY",
             "color": "Y",
             "name": "Strategic Titan",
@@ -2674,7 +2676,6 @@
             "spellEffect": "poison"
         },
         {
-            "keep": true,
             "recipe": "BGRW",
             "color": "B",
             "name": "Sun River Blade",
@@ -2692,7 +2693,6 @@
             "damage": 293
         },
         {
-            "keep": true,
             "recipe": "BDWY",
             "color": "Y",
             "name": "Wine Fist Horn Later",
@@ -2735,7 +2735,6 @@
             "spellEffect": "none"
         },
         {
-            "keep": true,
             "recipe": "BDGWY",
             "color": "B",
             "name": "Hydro Necro",
@@ -2842,7 +2841,6 @@
             "spellEffect": "heal"
         },
         {
-            "keep": true,
             "recipe": "BDGRY",
             "color": "R",
             "name": "Roots Resist Pyroblast Bite Riddle",
@@ -2946,7 +2944,7 @@
                 }
             ],
             "damage": 9999,
-            "spellEffect": "increase attack"
+            "spellEffect": "increase power"
         },
         {
             "keep": false,
@@ -2971,7 +2969,6 @@
             "damage": 459
         },
         {
-            "keep": true,
             "recipe": "DGRWY",
             "color": "D",
             "name": "Gruesome Agility",
@@ -3107,10 +3104,9 @@
                 }
             ],
             "damage": 249,
-            "spellEffect": "increase attack"
+            "spellEffect": "increase power"
         },
         {
-            "keep": true,
             "recipe": "BDGRW",
             "color": "D",
             "name": "Haunting Mirror Shards",
@@ -3160,7 +3156,6 @@
             "damage": 443
         },
         {
-            "keep": true,
             "recipe": "BGGRY",
             "color": "G",
             "name": "Petrified Snake Spear",
@@ -3202,7 +3197,6 @@
             "damage": 362
         },
         {
-            "keep": true,
             "recipe": "BGRYY",
             "color": "Y",
             "name": "Earth Dragon's Herbal Calculation",
@@ -3292,7 +3286,6 @@
             "damage": 414
         },
         {
-            "keep": true,
             "recipe": "BDRWY",
             "color": "B",
             "name": "Gargoyle's List",
@@ -3316,10 +3309,9 @@
                 }
             ],
             "damage": 387,
-            "spellEffect": "freeze"
+            "spellEffect": "frozen"
         },
         {
-            "keep": true,
             "recipe": "BDGRWY",
             "color": "D",
             "name": "\"No One Said Anything About Warlocks!\"",

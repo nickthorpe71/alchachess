@@ -196,7 +196,7 @@ public class GameLogic : MonoBehaviour
         );
         currentHover = board.tiles[newHover.y][newHover.x];
 
-        // check if it's a piece or element
+        // check if it"s a piece or element
         if (currentHover.contents == TileContents.Piece)
         {
             ui.spellView.Toggle(false);
@@ -212,8 +212,9 @@ public class GameLogic : MonoBehaviour
             {
                 // TODO: display damage / effects that would be done if this piece would be selected
 
+                float colorMod = (currentClicked.piece.element == potentialSpell.color) ? 1.5f : 1;
                 // show stats of potential spell
-                ui.spellView.UpdateView(potentialSpell);
+                ui.spellView.UpdateView(potentialSpell, currentClicked.piece, colorMod);
 
                 // show potenetial spell AOE
                 board.tiles = BoardC.ChangeTilesState(
@@ -314,25 +315,29 @@ public class GameLogic : MonoBehaviour
 
         // calculate damage and effects of spell
         Tile caster = board.tiles[end.y][end.x];
-        float damage = caster.piece.attack * spell.damage;
+        float damage = caster.piece.power * spell.damage;
         string effect = spell.spellEffect;
 
         // apply damage and effects to pieces in range
         List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster);
-        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, currentPlayer);
+        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, BoardC.ChoosePlayerTargetForEffect(currentPlayer, effect));
         Dictionary<Vector2, Tile> defeatedPieces = new Dictionary<Vector2, Tile>();
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
             Tile tileCopy = kvp.Value.Clone();
-            tileCopy.piece.health -= damage;
-            tileCopy.piece.currentSpellEffect = effect;
+            float colorMod = (spell.color == caster.piece.element) ? 1.5f : 1;
+            tileCopy.piece.health += PieceC.HealthAdjust(damage, caster.piece.power, effect, colorMod);
+            tileCopy.piece.power += PieceC.PowerAdjust(damage, caster.piece.power, effect, colorMod);
+            tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
+            tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod);
+            tileCopy.piece.effectInflictor = caster.piece.label;
             if (tileCopy.piece.health <= 0)
             {
                 // remove dead pieces
                 defeatedPieces[kvp.Key] = tileCopy;
-                tileCopy.contents = tileCopy.element != 'N' ? TileContents.Empty : TileContents.Element;
+                tileCopy.contents = tileCopy.element != "N" ? TileContents.Empty : TileContents.Element;
             }
 
             board.tiles[tileCopy.y][tileCopy.x] = tileCopy;
@@ -347,11 +352,12 @@ public class GameLogic : MonoBehaviour
 
     public void UpkeepPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
     {
+        // --- Data ---
         // restore all elements to the field
-        Dictionary<Vector2, char> toRepopulate = new Dictionary<Vector2, char>();
+        Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
         board.tiles = BoardC.MapTiles(board.tiles, (tile) =>
         {
-            if (tile.contents == TileContents.Empty && tile.element != 'N')
+            if (tile.contents == TileContents.Empty && tile.element != "N")
             {
                 Tile tileCopy = tile.Clone();
 
@@ -366,15 +372,22 @@ public class GameLogic : MonoBehaviour
             return tile;
         });
 
-        // tell graphics to populate element graphics
-        graphics.RepopulateElements(toRepopulate);
-
         // calculate effects
+
+        // TODO: 
+        // - add effect turn left count to piece data
+        // - before moving check if piece is frozen (in TileClick)
+        // - be able to increment and decrement stats
+
+
+        // remove one from effectTurnCounter and potentially remove the effect if its the last turn
         // show effect animations and remove health / increase decrease stats
         // if a piece dies from effects then add them to dead pieces list
 
-        Debug.Log("Upkeep");
-        LevelUpPhase(deadTargets, movedPiece);
+        // --- Graphics ---
+        graphics.RepopulateElements(toRepopulate);
+
+        LevelUpPhase(deadTargets, movedPiece); // will likely be passed in to play after effect animations
     }
 
     public void LevelUpPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
@@ -411,7 +424,7 @@ public class GameLogic : MonoBehaviour
         {
             Piece leveledPiece = updatedExpPiece.Clone();
             leveledPiece.level += 1;
-            leveledPiece.attack += leveledPiece.attack / 5 * leveledPiece.level;
+            leveledPiece.power += leveledPiece.power / 5 * leveledPiece.level;
             leveledPiece.maxHealth += leveledPiece.maxHealth / 5 * leveledPiece.level;
             leveledPiece.health = leveledPiece.maxHealth;
             leveledPiece.moveDistance = Math.Min(6, leveledPiece.level % 3 == 0 ? leveledPiece.moveDistance + 1 : leveledPiece.moveDistance);

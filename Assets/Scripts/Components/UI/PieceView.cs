@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using Data;
+using Calc;
 
 public class PieceView : MonoBehaviour, IToggle
 {
@@ -11,7 +12,7 @@ public class PieceView : MonoBehaviour, IToggle
     public TMP_Text element;
     public TMP_Text player;
     public TMP_Text health;
-    public TMP_Text attack;
+    public TMP_Text power;
     public TMP_Text moveDistance;
     public TMP_Text effect;
 
@@ -28,13 +29,15 @@ public class PieceView : MonoBehaviour, IToggle
             return;
         }
 
+        Debug.Log(piece.element);
+
         Toggle(true);
         pieceName.text = Enum.GetName(typeof(PieceLabel), piece.label);
         level.text = piece.level.ToString();
-        element.text = piece.element.ToString();
+        element.text = SpellC.ColorToString(piece.element);
         player.text = Enum.GetName(typeof(PlayerToken), piece.player);
         health.text = piece.health.ToString();
-        attack.text = piece.attack.ToString();
+        power.text = piece.power.ToString();
         moveDistance.text = piece.moveDistance.ToString();
         effect.text = piece.currentSpellEffect;
     }

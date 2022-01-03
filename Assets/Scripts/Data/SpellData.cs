@@ -35,8 +35,6 @@ namespace Data
         public List<V2Import> pattern;
         public int damage;
         public string spellEffect;
-
-
     }
 
     [Serializable]

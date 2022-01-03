@@ -146,7 +146,7 @@ namespace Calc
 
             MapTilesBetween(tiles, new Vector2(pathStart.x, pathStart.y), new Vector2(pathEnd.x, pathEnd.y), (tile, x, y) =>
             {
-                if (tile.element != 'N' && tile.isHighlighted && tile.contents == TileContents.Element)
+                if (tile.element != "N" && tile.isHighlighted && tile.contents == TileContents.Element)
                     result += tile.element;
                 return tile;
             });
@@ -154,16 +154,26 @@ namespace Calc
             return result;
         }
 
-        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range, PlayerToken currentPlayer)
+        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range, PlayerToken targetSide)
         {
             Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
             LoopTiles(tiles, (tile) =>
             {
                 Vector2 tilePosition = new Vector2(tile.x, tile.y);
-                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece && tile.piece.player != currentPlayer)
+                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece && tile.piece.player == targetSide)
                     result[tilePosition] = tile;
             });
             return result;
+        }
+
+        public static PlayerToken ChoosePlayerTargetForEffect(PlayerToken currentPlayer, string effect)
+        {
+            // if effect is a buff return current player
+            if (effect == "increase power" || effect == "heal")
+                return currentPlayer;
+
+            // otherwise return the opponent
+            return (currentPlayer == PlayerToken.P1) ? PlayerToken.P2 : PlayerToken.P1;
         }
 
         public static Tile[][] MapTilesBetween(Tile[][] tiles, Vector2 start, Vector2 end, Func<Tile, int, int, Tile> f)

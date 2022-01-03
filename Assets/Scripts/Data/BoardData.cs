@@ -21,68 +21,68 @@ namespace Data
                 };
             tiles[1] = new Tile[] {
                 new Tile(0, 1 ),
-                new Tile(1, 1,'G'),
-                new Tile(2, 1,'R'),
-                new Tile(3, 1,'W'),
+                new Tile(1, 1,"G"),
+                new Tile(2, 1,"R"),
+                new Tile(3, 1,"W"),
                 new Tile(4, 1 ),
-                new Tile(5, 1,'D'),
-                new Tile(6, 1,'B'),
-                new Tile(7, 1,'Y'),
+                new Tile(5, 1,"D"),
+                new Tile(6, 1,"B"),
+                new Tile(7, 1,"Y"),
                 new Tile(8, 1 )
                 };
             tiles[2] = new Tile[] {
                 new Tile(0, 2 ),
-                new Tile(1, 2,'D'),
-                new Tile(2, 2,'Y'),
-                new Tile(3, 2,'B'),
+                new Tile(1, 2,"D"),
+                new Tile(2, 2,"Y"),
+                new Tile(3, 2,"B"),
                 new Tile(4, 2 ),
-                new Tile(5, 2,'R'),
-                new Tile(6, 2,'G'),
-                new Tile(7, 2,'W'),
+                new Tile(5, 2,"R"),
+                new Tile(6, 2,"G"),
+                new Tile(7, 2,"W"),
                 new Tile(8, 2 )
                 };
             tiles[3] = new Tile[] {
                 new Tile(0, 3 ),
-                new Tile(1, 3,'R'),
-                new Tile(2, 3,'W'),
-                new Tile(3, 3,'G'),
+                new Tile(1, 3,"R"),
+                new Tile(2, 3,"W"),
+                new Tile(3, 3,"G"),
                 new Tile(4, 3 ),
-                new Tile(5, 3,'Y'),
-                new Tile(6, 3,'D'),
-                new Tile(7, 3,'B'),
+                new Tile(5, 3,"Y"),
+                new Tile(6, 3,"D"),
+                new Tile(7, 3,"B"),
                 new Tile(8, 3 )
                 };
             tiles[4] = new Tile[] {
                 new Tile(0, 4 ),
-                new Tile(1, 4,'B'),
-                new Tile(2, 4,'D'),
-                new Tile(3, 4,'Y'),
+                new Tile(1, 4,"B"),
+                new Tile(2, 4,"D"),
+                new Tile(3, 4,"Y"),
                 new Tile(4, 4 ),
-                new Tile(5, 4,'G'),
-                new Tile(6, 4,'W'),
-                new Tile(7, 4,'R'),
+                new Tile(5, 4,"G"),
+                new Tile(6, 4,"W"),
+                new Tile(7, 4,"R"),
                 new Tile(8, 4 )
                 };
             tiles[5] = new Tile[] {
                 new Tile(0, 5 ),
-                new Tile(1, 5,'W'),
-                new Tile(2, 5,'G'),
-                new Tile(3, 5,'R'),
+                new Tile(1, 5,"W"),
+                new Tile(2, 5,"G"),
+                new Tile(3, 5,"R"),
                 new Tile(4, 5 ),
-                new Tile(5, 5,'B'),
-                new Tile(6, 5,'Y'),
-                new Tile(7, 5,'D'),
+                new Tile(5, 5,"B"),
+                new Tile(6, 5,"Y"),
+                new Tile(7, 5,"D"),
                 new Tile(8, 5 )
                 };
             tiles[6] = new Tile[] {
                 new Tile(0, 6 ),
-                new Tile(1, 6,'Y'),
-                new Tile(2, 6,'B'),
-                new Tile(3, 6,'D'),
+                new Tile(1, 6,"Y"),
+                new Tile(2, 6,"B"),
+                new Tile(3, 6,"D"),
                 new Tile(4, 6 ),
-                new Tile(5, 6,'W'),
-                new Tile(6, 6,'R'),
-                new Tile(7, 6,'G'),
+                new Tile(5, 6,"W"),
+                new Tile(6, 6,"R"),
+                new Tile(7, 6,"G"),
                 new Tile(8, 6 )
                 };
             tiles[7] = new Tile[] {
@@ -103,7 +103,7 @@ namespace Data
     {
         public TileContents contents;
         public Piece piece;
-        public char element;
+        public string element;
         public int x;
         public int y;
 
@@ -117,7 +117,7 @@ namespace Data
         {
             contents = TileContents.Empty;
             piece = null;
-            element = 'N';
+            element = "N";
             x = _x;
             y = _y;
         }
@@ -126,12 +126,12 @@ namespace Data
         {
             contents = TileContents.Piece;
             piece = new Piece(peiceLabel, pieceColor, player);
-            element = 'N';
+            element = "N";
             x = _x;
             y = _y;
         }
 
-        public Tile(int _x, int _y, char _element)
+        public Tile(int _x, int _y, string _element)
         {
             contents = TileContents.Element;
             piece = null;
@@ -142,7 +142,7 @@ namespace Data
 
         public Tile(int _x, int _y,
             Piece _piece,
-            char _element,
+            string _element,
             TileContents _contents,
             bool _isClicked,
             bool _isHovered,

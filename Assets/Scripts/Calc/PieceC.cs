@@ -24,7 +24,26 @@ namespace Calc
 
         public static string PieceAsString(Piece piece)
         {
-            return $"|Label: {piece.label} |Color: {piece.color} |Health: {piece.health} |MaxHealth: {piece.maxHealth} |Level: {piece.level} |Exp: {piece.experience} |Attack: {piece.attack} |Move: {piece.moveDistance} |Effect: " + piece.currentSpellEffect + $"|Player: {piece.player}| Element: " + piece.element.ToString();
+            return $"|Label: {piece.label} |Color: {piece.color} |Health: {piece.health} |MaxHealth: {piece.maxHealth} |Level: {piece.level} |Exp: {piece.experience} |Power: {piece.power} |Move: {piece.moveDistance} |Effect: " + piece.currentSpellEffect + $"|Player: {piece.player}| Element: " + piece.element.ToString();
+        }
+
+        public static float HealthAdjust(float damage, float power, string effect, float colorMod)
+        {
+            if (effect == "increase power" || effect == "decrease power")
+                return 0;
+
+            return (effect == "heal") ? SpellC.CalcHeal(damage, power, colorMod) : SpellC.CalcDamage(damage, power, colorMod) * -1;
+        }
+
+        public static float PowerAdjust(float damage, float power, string effect, float colorMod)
+        {
+            if (effect == "increase power")
+                return SpellC.CalcIncreasePower(damage, power, colorMod);
+
+            if (effect == "increase power")
+                return SpellC.CalcDecreasePower(damage, power, colorMod) * -1;
+
+            return 0;
         }
     }
 }

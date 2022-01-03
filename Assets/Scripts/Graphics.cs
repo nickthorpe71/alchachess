@@ -11,14 +11,14 @@ public class Graphics : MonoBehaviour
     public Material blackMat;
     public Material whiteMat;
     public TileGraphic[][] tileGraphics;
-    private Dictionary<char, string> elementResourceMap = new Dictionary<char, string>()
+    private Dictionary<string, string> elementResourceMap = new Dictionary<string, string>()
     {
-        ['G'] = "Elements/Green",
-        ['R'] = "Elements/Red",
-        ['D'] = "Elements/Dark",
-        ['W'] = "Elements/White",
-        ['B'] = "Elements/Blue",
-        ['Y'] = "Elements/Yellow"
+        ["G"] = "Elements/Green",
+        ["R"] = "Elements/Red",
+        ["D"] = "Elements/Dark",
+        ["W"] = "Elements/White",
+        ["B"] = "Elements/Blue",
+        ["Y"] = "Elements/Yellow"
     };
     private List<GameObject> activePieces = new List<GameObject>();
 
@@ -83,7 +83,7 @@ public class Graphics : MonoBehaviour
         activePieces.Add(newPiece);
     }
 
-    private void InstantiateElement(char element, int x, int y)
+    private void InstantiateElement(string element, int x, int y)
     {
         string path = "Elements/" + element;
         Vector3 pos = new Vector3(x, 0.5f, y);
@@ -95,9 +95,9 @@ public class Graphics : MonoBehaviour
         graphicComponent.graphics = this;
     }
 
-    public void RepopulateElements(Dictionary<Vector2, char> toRepopulate)
+    public void RepopulateElements(Dictionary<Vector2, string> toRepopulate)
     {
-        foreach (KeyValuePair<Vector2, char> kvp in toRepopulate)
+        foreach (KeyValuePair<Vector2, string> kvp in toRepopulate)
             InstantiateElement(kvp.Value, (int)kvp.Key.x, (int)kvp.Key.y);
     }
 

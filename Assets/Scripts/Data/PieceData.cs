@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace Data
@@ -8,13 +6,13 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> data = new Dictionary<PieceLabel, Piece>()
         {
-            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, 'G', 1124, 1, 3),
-            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, 'R', 594, 1.1f, 4),
-            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, 'D', 777, 1.15f, 5),
-            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, 'N', 666, 1.2f, 5),
-            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, 'W', 777, 1.15f, 5),
-            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, 'B', 594, 1.1f, 4),
-            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, 'Y', 1124, 1, 3)
+            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, "G", 1124, 1, 3),
+            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, "R", 594, 1.1f, 4),
+            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, "D", 777, 1.15f, 5),
+            [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, "N", 666, 1.2f, 5),
+            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, "W", 777, 1.15f, 5),
+            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, "B", 594, 1.1f, 4),
+            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, "Y", 1124, 1, 3)
         };
     }
 
@@ -22,31 +20,33 @@ namespace Data
     {
         public PieceLabel label;
         public PieceColor color;
-        public Char element;
+        public string element;
         public float health;
         public float maxHealth;
         public float level;
         public float experience;
-        public float attack;
+        public float power;
         public int moveDistance;
+        public int effectTurnsLeft = 0;
+        public PieceLabel effectInflictor = PieceLabel.None;
 
         public string currentSpellEffect = "";
 
         public PlayerToken player;
 
         // this is an un-owned piece
-        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, float _attack, int _moveDistance)
+        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _power, int _moveDistance)
         {
             label = _label;
             color = _color;
+            element = _element;
             maxHealth = _health;
             health = _health;
             level = 1;
             experience = 0;
-            attack = _attack;
+            power = _power;
             moveDistance = _moveDistance;
             player = PlayerToken.NA;
-
         }
 
         public Piece(PieceLabel _label, PieceColor _color, PlayerToken _player)
@@ -58,44 +58,31 @@ namespace Data
             element = PieceBaseStats.data[_label].element;
             level = PieceBaseStats.data[_label].level;
             experience = 0;
-            attack = PieceBaseStats.data[_label].attack;
+            power = PieceBaseStats.data[_label].power;
             moveDistance = PieceBaseStats.data[_label].moveDistance;
             player = _player;
         }
 
-        public Piece(PieceLabel _label, PieceColor _color, char _element, float _health, float _maxHealth, float _level, float _experience, float _attack, int _moveDistance, PlayerToken _player, string _currentSpellEffect)
+        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _level, float _experience, float _power, int _moveDistance, PlayerToken _player, string _currentSpellEffect, int _effectTurnsLeft, PieceLabel _effectInflictor)
         {
             label = _label;
             color = _color;
+            element = _element;
             maxHealth = _maxHealth;
             health = _health;
             level = _level;
             experience = _experience;
-            attack = _attack;
+            power = _power;
             moveDistance = _moveDistance;
             player = _player;
             currentSpellEffect = _currentSpellEffect;
-        }
-
-        public object this[string propertyName]
-        {
-            get
-            {
-                Type myType = typeof(Piece);
-                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
-                return myPropInfo.GetValue(this, null);
-            }
-            set
-            {
-                Type myType = typeof(Piece);
-                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
-                myPropInfo.SetValue(this, value, null);
-            }
+            effectTurnsLeft = _effectTurnsLeft;
+            effectInflictor = _effectInflictor;
         }
 
         public Piece Clone()
         {
-            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.experience, this.attack, this.moveDistance, this.player, this.currentSpellEffect);
+            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.experience, this.power, this.moveDistance, this.player, this.currentSpellEffect, this.effectTurnsLeft, this.effectInflictor);
         }
     }
 

@@ -52,7 +52,7 @@ namespace Calc
         public static float CalcDecreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
         public static float CalcDamage(float baseDmg, float power, float colorMod) => baseDmg * power * colorMod;
 
-        public static int DetermineEffectTurns(string effect, float colorMod) => (effect == "burn" || effect == "poison" || effect == "frozen") ? 3 + (int)Mathf.Floor(colorMod) : 0;
+        public static int DetermineEffectTurns(string effect, float colorMod, int currentTurns) => (effect == "burn" || effect == "poison" || effect == "frozen") ? 3 + (int)Mathf.Floor(colorMod) : currentTurns;
         public static string DetermineLastingEffect(string effect) => (effect == "burn" || effect == "poison" || effect == "frozen") ? effect : "";
 
         public static string ColorToString(string color)

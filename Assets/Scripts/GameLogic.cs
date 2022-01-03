@@ -130,6 +130,13 @@ public class GameLogic : MonoBehaviour
         // if we clicked an element or empty tile which is highlighted
         else if (currentClicked != null && currentHover.isHighlighted)
         {
+            if (currentClicked.piece.currentSpellEffect == "frozen")
+            {
+                // TODO: need to display this message in UI
+                Debug.Log("cannot move a frozen piece");
+                return;
+            }
+
             Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
 
             // remove all state from all tiles
@@ -331,7 +338,10 @@ public class GameLogic : MonoBehaviour
             tileCopy.piece.health += PieceC.HealthAdjust(damage, caster.piece.power, effect, colorMod);
             tileCopy.piece.power += PieceC.PowerAdjust(damage, caster.piece.power, effect, colorMod);
             tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
-            tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod);
+            tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod, tileCopy.piece.effectTurnsLeft);
+            tileCopy.piece.effectDamage = effect == "burn"
+                ? SpellC.CalcBurn(SpellC.CalcDamage(damage, caster.piece.power, colorMod))
+                : SpellC.CalcPoison(SpellC.CalcDamage(damage, caster.piece.power, colorMod));
             tileCopy.piece.effectInflictor = caster.piece.label;
             if (tileCopy.piece.health <= 0)
             {
@@ -373,11 +383,12 @@ public class GameLogic : MonoBehaviour
         });
 
         // calculate effects
+        board.tiles = BoardC.MapTiles(board.tiles, tile => PieceC.ApplyStatusEffects(tile));
+        // will need a map of effected pieces and the damage/effect being done to them so graphics can display
 
         // TODO: 
-        // - add effect turn left count to piece data
-        // - before moving check if piece is frozen (in TileClick)
         // - be able to increment and decrement stats
+        // - need to make color mod account for opposites as well
 
 
         // remove one from effectTurnCounter and potentially remove the effect if its the last turn

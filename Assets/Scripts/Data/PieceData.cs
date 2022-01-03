@@ -28,6 +28,7 @@ namespace Data
         public float power;
         public int moveDistance;
         public int effectTurnsLeft = 0;
+        public float effectDamage = 0;
         public PieceLabel effectInflictor = PieceLabel.None;
 
         public string currentSpellEffect = "";
@@ -63,7 +64,7 @@ namespace Data
             player = _player;
         }
 
-        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _level, float _experience, float _power, int _moveDistance, PlayerToken _player, string _currentSpellEffect, int _effectTurnsLeft, PieceLabel _effectInflictor)
+        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _level, float _experience, float _power, int _moveDistance, PlayerToken _player, string _currentSpellEffect, int _effectTurnsLeft, float _effectDamage, PieceLabel _effectInflictor)
         {
             label = _label;
             color = _color;
@@ -77,12 +78,13 @@ namespace Data
             player = _player;
             currentSpellEffect = _currentSpellEffect;
             effectTurnsLeft = _effectTurnsLeft;
+            effectDamage = _effectDamage;
             effectInflictor = _effectInflictor;
         }
 
         public Piece Clone()
         {
-            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.experience, this.power, this.moveDistance, this.player, this.currentSpellEffect, this.effectTurnsLeft, this.effectInflictor);
+            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.level, this.experience, this.power, this.moveDistance, this.player, this.currentSpellEffect, this.effectTurnsLeft, this.effectDamage, this.effectInflictor);
         }
     }
 

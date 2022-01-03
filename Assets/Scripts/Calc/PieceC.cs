@@ -45,5 +45,15 @@ namespace Calc
 
             return 0;
         }
+
+        public static Tile ApplyStatusEffects(Tile tile)
+        {
+            // check if there is a status effect on tile
+
+            // decrement turns left
+
+            //
+            return tile;
+        }
     }
 }

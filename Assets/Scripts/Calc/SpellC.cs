@@ -57,7 +57,6 @@ namespace Calc
 
         public static string ColorToString(string color)
         {
-            Debug.Log("color: " + color);
             switch (color)
             {
                 case "D":
@@ -76,6 +75,9 @@ namespace Calc
                     return "";
             }
         }
+
+        public static float ColorMod(string attackerColor, string defenderColor, string spellColor)
+            => (spellColor == attackerColor) ? 1.5f : (spellColor == ElementOpposites.list[defenderColor] || defenderColor == "N") ? 0.5f : 1;
     }
 }
 

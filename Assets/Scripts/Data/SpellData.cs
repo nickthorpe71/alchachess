@@ -19,6 +19,19 @@ namespace Data
         }
     }
 
+    public static class ElementOpposites
+    {
+        public static Dictionary<string, string> list = new Dictionary<string, string>{
+            {"D", "W"},
+            {"W", "D"},
+            {"R", "B"},
+            {"B", "R"},
+            {"Y", "G"},
+            {"G", "Y"},
+            {"N", "N"}
+        };
+    }
+
     [Serializable]
     public class SpellImport
     {

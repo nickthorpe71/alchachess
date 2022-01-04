@@ -106,4 +106,18 @@ namespace Data
         White,
         None
     }
+
+    public class StatusChange
+    {
+        public float damage;
+        public string effect;
+        public PieceLabel inflictor;
+
+        public StatusChange(float _damage, string _effect, PieceLabel _inflictor)
+        {
+            damage = _damage;
+            effect = _effect;
+            inflictor = _inflictor;
+        }
+    }
 }

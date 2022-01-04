@@ -203,7 +203,7 @@ public class GameLogic : MonoBehaviour
         );
         currentHover = board.tiles[newHover.y][newHover.x];
 
-        // check if it"s a piece or element
+        // check if it's a piece or element
         if (currentHover.contents == TileContents.Piece)
         {
             ui.spellView.Toggle(false);
@@ -219,11 +219,11 @@ public class GameLogic : MonoBehaviour
             {
                 // TODO: display damage / effects that would be done if this piece would be selected
 
-                float colorMod = (currentClicked.piece.element == potentialSpell.color) ? 1.5f : 1;
                 // show stats of potential spell
+                float colorMod = SpellC.ColorMod(currentClicked.piece.element, "N", potentialSpell.color);
                 ui.spellView.UpdateView(potentialSpell, currentClicked.piece, colorMod);
 
-                // show potenetial spell AOE
+                // show potential spell AOE
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isAOE },
@@ -334,14 +334,15 @@ public class GameLogic : MonoBehaviour
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
             Tile tileCopy = kvp.Value.Clone();
-            float colorMod = (spell.color == caster.piece.element) ? 1.5f : 1;
+            float colorMod = SpellC.ColorMod(caster.piece.element, tileCopy.piece.element, spell.color);
             tileCopy.piece.health += PieceC.HealthAdjust(damage, caster.piece.power, effect, colorMod);
             tileCopy.piece.power += PieceC.PowerAdjust(damage, caster.piece.power, effect, colorMod);
             tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
             tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod, tileCopy.piece.effectTurnsLeft);
-            tileCopy.piece.effectDamage = effect == "burn"
-                ? SpellC.CalcBurn(SpellC.CalcDamage(damage, caster.piece.power, colorMod))
-                : SpellC.CalcPoison(SpellC.CalcDamage(damage, caster.piece.power, colorMod));
+            tileCopy.piece.effectDamage
+                = effect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(damage, caster.piece.power, colorMod))
+                : effect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(damage, caster.piece.power, colorMod))
+                : 0;
             tileCopy.piece.effectInflictor = caster.piece.label;
             if (tileCopy.piece.health <= 0)
             {
@@ -365,38 +366,22 @@ public class GameLogic : MonoBehaviour
         // --- Data ---
         // restore all elements to the field
         Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
-        board.tiles = BoardC.MapTiles(board.tiles, (tile) =>
-        {
-            if (tile.contents == TileContents.Empty && tile.element != "N")
-            {
-                Tile tileCopy = tile.Clone();
+        board.tiles = BoardC.RepopulateElements(board.tiles, toRepopulate);
 
-                // switch contents to hasElement
-                tileCopy.contents = TileContents.Element;
-
-                // add element and position to dict for graphics
-                toRepopulate[new Vector2(tileCopy.x, tileCopy.y)] = tile.element;
-
-                return tileCopy;
-            }
-            return tile;
-        });
-
-        // calculate effects
-        board.tiles = BoardC.MapTiles(board.tiles, tile => PieceC.ApplyStatusEffects(tile));
-        // will need a map of effected pieces and the damage/effect being done to them so graphics can display
+        // calculate effects and save a copy of effected pieces and 
+        // the damage/effect being done to them so graphics can display
+        Dictionary<Vector2, StatusChange> tilesWithEffectsAdded = PieceC.GetCurrentStatusEffects(board.tiles);
+        board.tiles = BoardC.ApplyStatusEffects(board.tiles, tilesWithEffectsAdded);
 
         // TODO: 
-        // - be able to increment and decrement stats
-        // - need to make color mod account for opposites as well
-
-
-        // remove one from effectTurnCounter and potentially remove the effect if its the last turn
-        // show effect animations and remove health / increase decrease stats
-        // if a piece dies from effects then add them to dead pieces list
+        // - scan board for dead pieces
+        // - if found remove from board data and send list to graphics to be removed as well
 
         // --- Graphics ---
         graphics.RepopulateElements(toRepopulate);
+
+        // show effect animations and remove health / increase decrease stats
+        // pass this function the tilesWithEffectsAdded list
 
         LevelUpPhase(deadTargets, movedPiece); // will likely be passed in to play after effect animations
     }
@@ -454,7 +439,7 @@ public class GameLogic : MonoBehaviour
 
 // BUGS:
 /*
-- spell UI fields bleed into each other
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
     - caused by no checking duplicates in permutation function?
+- poison (and probably burn) is being calculated twice
 */

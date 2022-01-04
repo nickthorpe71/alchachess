@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Data;
 
 namespace Calc
@@ -40,20 +41,29 @@ namespace Calc
             if (effect == "increase power")
                 return SpellC.CalcIncreasePower(damage, power, colorMod);
 
-            if (effect == "increase power")
+            if (effect == "decrease power")
                 return SpellC.CalcDecreasePower(damage, power, colorMod) * -1;
 
             return 0;
         }
 
-        public static Tile ApplyStatusEffects(Tile tile)
+        public static Dictionary<Vector2, StatusChange> GetCurrentStatusEffects(Tile[][] tiles)
         {
-            // check if there is a status effect on tile
+            Dictionary<Vector2, StatusChange> result = new Dictionary<Vector2, StatusChange>();
 
-            // decrement turns left
+            BoardC.LoopTiles(tiles, tile =>
+            {
+                if (tile.contents != TileContents.Piece) return;
 
-            //
-            return tile;
+                if (tile.piece.currentSpellEffect == "" || tile.piece.currentSpellEffect == null || tile.piece.currentSpellEffect == "none")
+                    return;
+
+                result[new Vector2(tile.x, tile.y)] = new StatusChange(
+                    tile.piece.effectDamage,
+                    tile.piece.currentSpellEffect,
+                    tile.piece.effectInflictor);
+            });
+            return result;
         }
     }
 }

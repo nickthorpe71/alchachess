@@ -29,8 +29,6 @@ public class PieceView : MonoBehaviour, IToggle
             return;
         }
 
-        Debug.Log(piece.element);
-
         Toggle(true);
         pieceName.text = Enum.GetName(typeof(PieceLabel), piece.label);
         level.text = piece.level.ToString();

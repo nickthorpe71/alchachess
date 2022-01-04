@@ -212,5 +212,39 @@ namespace Calc
 
             return result;
         }
+
+        public static Tile[][] RepopulateElements(Tile[][] tiles, Dictionary<Vector2, string> toRepopulate)
+            => BoardC.MapTiles(tiles, (tile) =>
+            {
+                if (tile.contents == TileContents.Empty && tile.element != "N")
+                {
+                    Tile tileCopy = tile.Clone();
+
+                    // switch contents to hasElement
+                    tileCopy.contents = TileContents.Element;
+
+                    // add element and position to dict for graphics
+                    toRepopulate[new Vector2(tileCopy.x, tileCopy.y)] = tile.element;
+
+                    return tileCopy;
+                }
+                return tile;
+            });
+
+        public static Tile[][] ApplyStatusEffects(Tile[][] tiles, Dictionary<Vector2, StatusChange> statusChanges)
+        {
+            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+
+            foreach (KeyValuePair<Vector2, StatusChange> changeWithPos in statusChanges)
+            {
+                Piece piece = tilesCopy[(int)changeWithPos.Key.y][(int)changeWithPos.Key.x].piece;
+                piece.effectTurnsLeft = piece.effectTurnsLeft > 1 ? piece.effectTurnsLeft - 1 : 0;
+                piece.health -= changeWithPos.Value.damage;
+                if (piece.effectTurnsLeft <= 0)
+                    piece.currentSpellEffect = "";
+            }
+
+            return tilesCopy;
+        }
     }
 }

@@ -160,15 +160,15 @@ public class Graphics : MonoBehaviour
         pieceIsMoving = true;
     }
 
-    public void PlaySpellAnim(Spell spell, Action<Dictionary<Vector2, Tile>, Tile> postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
+    public void PlaySpellAnim(Spell spell, Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
     {
         string spellAnimPath = GraphicsC.GetSpellAnimPrefabPath(spell);
         string castAnimPath = GraphicsC.GetCastAnimPrefabPath(spell);
 
-        StartCoroutine(SpellAnimRoutine(castAnimPath, spellAnimPath, postAnim, caster, targetsPreDmg, targetsPostDmg, deadTargets, aoeRange));
+        StartCoroutine(SpellAnimRoutine(castAnimPath, spellAnimPath, nextAction, caster, targetsPreDmg, targetsPostDmg, deadTargets, aoeRange));
     }
 
-    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action<Dictionary<Vector2, Tile>, Tile> postAnim, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
+    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
     {
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
@@ -185,7 +185,12 @@ public class Graphics : MonoBehaviour
             Destroy(spellAnim, 8);
         }
         yield return new WaitForSeconds(0.25f);
+        yield return ReduceHealthRoutine(nextAction, caster, targetsPreDmg, targetsPostDmg, deadTargets);
+    }
 
+    IEnumerator ReduceHealthRoutine(Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets)
+    {
+        Debug.Log("made it");
         // display health reduction and effect application to correct pieces
         foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
         {
@@ -194,34 +199,35 @@ public class Graphics : MonoBehaviour
             pieceGraphic.GetComponentInChildren<PieceStats>().UpdateStatsUI(target.Value.piece, previousHealth);
         }
         yield return new WaitForSeconds(4);
-        float deathAnimDelay = 0;
+        yield return DeathRoutine(nextAction, caster, targetsPreDmg, targetsPostDmg, deadTargets);
+    }
 
-        if (deadTargets.Count > 0)
+    IEnumerator DeathRoutine(Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets)
+    {
+        if (deadTargets.Count == 0) yield return null;
+
+        foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
         {
-            deathAnimDelay = 3f;
-            foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
-            {
-                // play death animations
-                Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
-                GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
-                deathAnim.transform.position = positionIn3D;
-                Destroy(deathAnim, 5);
+            // play death animations
+            Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
+            GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
+            deathAnim.transform.position = positionIn3D;
+            Destroy(deathAnim, 5);
 
-                // remove pieces from active pieces
-                activePieces = activePieces.Where(piece =>
+            // remove pieces from active pieces
+            activePieces = activePieces.Where(piece =>
+            {
+                if (piece.transform.position != positionIn3D)
                 {
-                    if (piece.transform.position != positionIn3D)
-                    {
-                        return true;
-                    }
-                    // destroy piece
-                    Destroy(piece.gameObject);
-                    return false;
-                }).ToList();
-            }
+                    return true;
+                }
+                // destroy piece
+                Destroy(piece.gameObject);
+                return false;
+            }).ToList();
         }
 
-        yield return new WaitForSeconds(deathAnimDelay);
-        postAnim(deadTargets, caster);
+        yield return new WaitForSeconds(3);
+        nextAction(deadTargets, caster);
     }
 }

@@ -442,5 +442,4 @@ public class GameLogic : MonoBehaviour
 /*
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
     - caused by no checking duplicates in permutation function?
-- poison (and probably burn) is being calculated twice
 */

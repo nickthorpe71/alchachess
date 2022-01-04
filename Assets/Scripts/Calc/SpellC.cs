@@ -46,8 +46,8 @@ namespace Calc
 
         // Status effect calculations
         public static float CalcHeal(float baseDmg, float power, float colorMod) => baseDmg * power * colorMod;
-        public static float CalcBurn(float damage) => damage / 10 * 2;
-        public static float CalcPoison(float damage) => damage / 10 * 2;
+        public static float CalcBurn(float damage) => (damage / 10) * 2;
+        public static float CalcPoison(float damage) => (damage / 10) * 2;
         public static float CalcIncreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
         public static float CalcDecreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
         public static float CalcDamage(float baseDmg, float power, float colorMod) => baseDmg * power * colorMod;
@@ -77,7 +77,7 @@ namespace Calc
         }
 
         public static float ColorMod(string attackerColor, string defenderColor, string spellColor)
-            => (spellColor == attackerColor) ? 1.5f : (spellColor == ElementOpposites.list[defenderColor] || defenderColor == "N") ? 0.5f : 1;
+            => (spellColor == attackerColor) ? 1.5f : (spellColor == ElementOpposites.list[defenderColor]) ? 0.5f : 1;
     }
 }
 

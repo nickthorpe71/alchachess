@@ -322,7 +322,6 @@ public class GameLogic : MonoBehaviour
 
         // calculate damage and effects of spell
         Tile caster = board.tiles[end.y][end.x];
-        float damage = caster.piece.power * spell.damage;
         string effect = spell.spellEffect;
 
         // apply damage and effects to pieces in range
@@ -335,15 +334,16 @@ public class GameLogic : MonoBehaviour
         {
             Tile tileCopy = kvp.Value.Clone();
             float colorMod = SpellC.ColorMod(caster.piece.element, tileCopy.piece.element, spell.color);
-            tileCopy.piece.health += PieceC.HealthAdjust(damage, caster.piece.power, effect, colorMod);
-            tileCopy.piece.power += PieceC.PowerAdjust(damage, caster.piece.power, effect, colorMod);
+            tileCopy.piece.health += PieceC.HealthAdjust(spell.damage, caster.piece.power, effect, colorMod);
+            tileCopy.piece.power += PieceC.PowerAdjust(spell.damage, caster.piece.power, effect, colorMod);
             tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
             tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod, tileCopy.piece.effectTurnsLeft);
             tileCopy.piece.effectDamage
-                = effect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(damage, caster.piece.power, colorMod))
-                : effect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(damage, caster.piece.power, colorMod))
+                = effect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
+                : effect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
                 : 0;
             tileCopy.piece.effectInflictor = caster.piece.label;
+
             if (tileCopy.piece.health <= 0)
             {
                 // remove dead pieces
@@ -352,6 +352,7 @@ public class GameLogic : MonoBehaviour
             }
 
             board.tiles[tileCopy.y][tileCopy.x] = tileCopy;
+            Debug.Log("after apply: " + board.tiles[tileCopy.y][tileCopy.x].piece.effectDamage);
             targetsPostDmg[kvp.Key] = tileCopy;
         };
 

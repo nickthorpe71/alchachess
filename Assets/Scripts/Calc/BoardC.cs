@@ -13,7 +13,7 @@ namespace Calc
         {
             for (int y = 0; y < tiles.Length; y++)
                 for (int x = 0; x < tiles[y].Length; x++)
-                    f(tiles[y][x]);
+                    f(tiles[y][x].Clone());
         }
 
         public static Tile[][] MapTiles(Tile[][] tiles, Func<Tile, Tile> f)
@@ -24,7 +24,7 @@ namespace Calc
             {
                 tilesCopy[y] = new Tile[tiles[y].Length];
                 for (int x = 0; x < tiles[y].Length; x++)
-                    tilesCopy[y][x] = f(tiles[y][x]);
+                    tilesCopy[y][x] = f(tiles[y][x].Clone());
             }
 
             return tilesCopy;
@@ -213,6 +213,14 @@ namespace Calc
             return result;
         }
 
+        public static Tile RemovePiece(Tile tile)
+        {
+            Tile tileWithPieceRemoved = tile.Clone();
+            tileWithPieceRemoved.contents = tileWithPieceRemoved.element != "N" ? TileContents.Empty : TileContents.Element;
+            tileWithPieceRemoved.piece = null;
+            return tileWithPieceRemoved;
+        }
+
         public static Tile[][] RepopulateElements(Tile[][] tiles, Dictionary<Vector2, string> toRepopulate)
             => BoardC.MapTiles(tiles, (tile) =>
             {
@@ -230,21 +238,5 @@ namespace Calc
                 }
                 return tile;
             });
-
-        public static Tile[][] ApplyStatusEffects(Tile[][] tiles, Dictionary<Vector2, StatusChange> statusChanges)
-        {
-            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
-
-            foreach (KeyValuePair<Vector2, StatusChange> changeWithPos in statusChanges)
-            {
-                Piece piece = tilesCopy[(int)changeWithPos.Key.y][(int)changeWithPos.Key.x].piece;
-                piece.effectTurnsLeft = piece.effectTurnsLeft > 1 ? piece.effectTurnsLeft - 1 : 0;
-                piece.health -= changeWithPos.Value.damage;
-                if (piece.effectTurnsLeft <= 0)
-                    piece.currentSpellEffect = "";
-            }
-
-            return tilesCopy;
-        }
     }
 }

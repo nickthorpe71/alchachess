@@ -160,15 +160,28 @@ public class Graphics : MonoBehaviour
         pieceIsMoving = true;
     }
 
-    public void PlaySpellAnim(Spell spell, Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
+    public void PlayCastAnims(
+        Spell spell,
+        Action<Tile> upkeepPhase,
+        Tile caster,
+        Dictionary<Vector2, Tile> targetsPreDmg,
+        Dictionary<Vector2, Tile> targetsPostDmg,
+        List<Vector2> aoeRange)
     {
         string spellAnimPath = GraphicsC.GetSpellAnimPrefabPath(spell);
         string castAnimPath = GraphicsC.GetCastAnimPrefabPath(spell);
 
-        StartCoroutine(SpellAnimRoutine(castAnimPath, spellAnimPath, nextAction, caster, targetsPreDmg, targetsPostDmg, deadTargets, aoeRange));
+        StartCoroutine(CastAnims(castAnimPath, spellAnimPath, upkeepPhase, caster, targetsPreDmg, targetsPostDmg, aoeRange));
     }
 
-    IEnumerator SpellAnimRoutine(string castAnimPath, string spellAnimPath, Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets, List<Vector2> aoeRange)
+    IEnumerator CastAnims(
+        string castAnimPath,
+        string spellAnimPath,
+        Action<Tile> upkeepPhase,
+        Tile caster,
+        Dictionary<Vector2, Tile> targetsPreDmg,
+        Dictionary<Vector2, Tile> targetsPostDmg,
+        List<Vector2> aoeRange)
     {
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
@@ -185,49 +198,72 @@ public class Graphics : MonoBehaviour
             Destroy(spellAnim, 8);
         }
         yield return new WaitForSeconds(0.25f);
-        yield return ReduceHealthRoutine(nextAction, caster, targetsPreDmg, targetsPostDmg, deadTargets);
+
+        // display health reduction and effect application to correct pieces
+        ReduceHealth(targetsPreDmg, targetsPostDmg);
+        yield return new WaitForSeconds(2);
+
+        upkeepPhase(caster);
     }
 
-    IEnumerator ReduceHealthRoutine(Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets)
+    public void ReduceHealth(Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg)
     {
-        Debug.Log("made it");
-        // display health reduction and effect application to correct pieces
         foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
         {
             GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, target.Key);
             float previousHealth = targetsPreDmg[target.Key].piece.health;
             pieceGraphic.GetComponentInChildren<PieceStats>().UpdateStatsUI(target.Value.piece, previousHealth);
         }
-        yield return new WaitForSeconds(4);
-        yield return DeathRoutine(nextAction, caster, targetsPreDmg, targetsPostDmg, deadTargets);
     }
 
-    IEnumerator DeathRoutine(Action<Dictionary<Vector2, Tile>, Tile> nextAction, Tile caster, Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg, Dictionary<Vector2, Tile> deadTargets)
+    public void PlayUpkeepAnims(
+        Action<Dictionary<Vector2, Tile>, Tile> levelPhase,
+        Tile caster,
+        Dictionary<Vector2, Tile> targetsPreDmg,
+        Dictionary<Vector2, Tile> targetsPostDmg,
+        Dictionary<Vector2, Tile> deadTargets)
     {
-        if (deadTargets.Count == 0) yield return null;
+        StartCoroutine(UpkeepAnims(levelPhase, caster, targetsPreDmg, targetsPostDmg, deadTargets));
+    }
 
-        foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
+    IEnumerator UpkeepAnims(
+        Action<Dictionary<Vector2, Tile>, Tile>
+        levelPhase,
+        Tile caster,
+        Dictionary<Vector2, Tile> targetsPreDmg,
+        Dictionary<Vector2, Tile> targetsPostDmg,
+        Dictionary<Vector2, Tile> deadTargets)
+    {
+        ReduceHealth(targetsPreDmg, targetsPostDmg);
+        yield return new WaitForSeconds(2);
+
+        // TODO: show anim to add status effects and pass this function the currentEffects dict
+
+        if (deadTargets.Count > 0)
         {
-            // play death animations
-            Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
-            GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
-            deathAnim.transform.position = positionIn3D;
-            Destroy(deathAnim, 5);
-
-            // remove pieces from active pieces
-            activePieces = activePieces.Where(piece =>
+            foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
             {
-                if (piece.transform.position != positionIn3D)
+                // play death animations
+                Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
+                GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
+                deathAnim.transform.position = positionIn3D;
+                Destroy(deathAnim, 5);
+
+                // remove pieces from active pieces
+                activePieces = activePieces.Where(piece =>
                 {
-                    return true;
-                }
-                // destroy piece
-                Destroy(piece.gameObject);
-                return false;
-            }).ToList();
+                    if (piece.transform.position != positionIn3D)
+                    {
+                        return true;
+                    }
+                    // destroy piece
+                    Destroy(piece.gameObject);
+                    return false;
+                }).ToList();
+            }
         }
 
         yield return new WaitForSeconds(3);
-        nextAction(deadTargets, caster);
+        levelPhase(deadTargets, caster);
     }
 }

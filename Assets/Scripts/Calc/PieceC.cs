@@ -65,5 +65,14 @@ namespace Calc
             });
             return result;
         }
+
+        public static Tile ApplyStatusEffects(Tile tileCopy, StatusChange statusChange)
+        {
+            tileCopy.piece.effectTurnsLeft = tileCopy.piece.effectTurnsLeft > 1 ? tileCopy.piece.effectTurnsLeft - 1 : 0;
+            tileCopy.piece.health -= statusChange.damage;
+            if (tileCopy.piece.effectTurnsLeft <= 0)
+                tileCopy.piece.currentSpellEffect = "";
+            return tileCopy;
+        }
     }
 }

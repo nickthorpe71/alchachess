@@ -316,7 +316,7 @@ public class GameLogic : MonoBehaviour
         // if spell parameter is not null
         if (spell == null)
         {
-            UpkeepPhase(null, end);
+            UpkeepPhase(end);
             return;
         }
 
@@ -327,7 +327,6 @@ public class GameLogic : MonoBehaviour
         // apply damage and effects to pieces in range
         List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster);
         Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, BoardC.ChoosePlayerTargetForEffect(currentPlayer, effect));
-        Dictionary<Vector2, Tile> defeatedPieces = new Dictionary<Vector2, Tile>();
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
@@ -344,47 +343,65 @@ public class GameLogic : MonoBehaviour
                 : 0;
             tileCopy.piece.effectInflictor = caster.piece.label;
 
-            if (tileCopy.piece.health <= 0)
-            {
-                // remove dead pieces
-                defeatedPieces[kvp.Key] = tileCopy;
-                tileCopy.contents = tileCopy.element != "N" ? TileContents.Empty : TileContents.Element;
-            }
-
             board.tiles[tileCopy.y][tileCopy.x] = tileCopy;
-            Debug.Log("after apply: " + board.tiles[tileCopy.y][tileCopy.x].piece.effectDamage);
             targetsPostDmg[kvp.Key] = tileCopy;
         };
 
         // --- Graphics ---
         // play spell animation
-        graphics.PlaySpellAnim(spell, (defeatedPieces, caster) => UpkeepPhase(defeatedPieces, caster), caster, targetsPreDmg, targetsPostDmg, defeatedPieces, aoeRange);
+        graphics.PlayCastAnims(spell, (caster) => UpkeepPhase(caster), caster, targetsPreDmg, targetsPostDmg, aoeRange);
     }
 
 
-    public void UpkeepPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
+    public void UpkeepPhase(Tile movedPiece)
     {
         // --- Data ---
         // restore all elements to the field
         Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
         board.tiles = BoardC.RepopulateElements(board.tiles, toRepopulate);
 
-        // calculate effects and save a copy of effected pieces and 
-        // the damage/effect being done to them so graphics can display
-        Dictionary<Vector2, StatusChange> tilesWithEffectsAdded = PieceC.GetCurrentStatusEffects(board.tiles);
-        board.tiles = BoardC.ApplyStatusEffects(board.tiles, tilesWithEffectsAdded);
+        // calculate effects and save a copy of effected pieces
+        Dictionary<Vector2, StatusChange> currentEffects = PieceC.GetCurrentStatusEffects(board.tiles);
 
-        // TODO: 
-        // - scan board for dead pieces
-        // - if found remove from board data and send list to graphics to be removed as well
+        // apply effects and record health pre and post effect
+        Dictionary<Vector2, Tile> targetsPreDamage = new Dictionary<Vector2, Tile>();
+        Dictionary<Vector2, Tile> targetsPostDamage = new Dictionary<Vector2, Tile>();
+        board.tiles = BoardC.MapTiles(board.tiles, tileCopy =>
+        {
+            Vector2 pos = new Vector2(tileCopy.x, tileCopy.y);
+            if (!currentEffects.ContainsKey(pos)) return tileCopy;
+
+            // store pre damage targets
+            targetsPreDamage[pos] = tileCopy;
+
+            // apply status effect/damage
+            tileCopy = PieceC.ApplyStatusEffects(tileCopy, currentEffects[pos]);
+
+            // store post damage targets
+            targetsPostDamage[pos] = tileCopy;
+            return tileCopy;
+        });
+
+        // scan board for dead pieces
+        Dictionary<Vector2, Tile> deadTargets = new Dictionary<Vector2, Tile>();
+        board.tiles = BoardC.MapTiles(board.tiles, tile =>
+        {
+            if (tile.contents != TileContents.Piece || tile.piece.health > 0) return tile;
+            else
+            {
+                // if found remove from board data and create list to 
+                //send to graphics to be removed as well
+                deadTargets[new Vector2(tile.x, tile.y)] = tile;
+                return BoardC.RemovePiece(tile);
+            }
+        });
 
         // --- Graphics ---
         graphics.RepopulateElements(toRepopulate);
 
-        // show effect animations and remove health / increase decrease stats
-        // pass this function the tilesWithEffectsAdded list
-
-        LevelUpPhase(deadTargets, movedPiece); // will likely be passed in to play after effect animations
+        // show effect animations and remove health and destroy newly dead targets
+        // TODO: find out why status effect health reduction doesn't show red
+        graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets);
     }
 
     public void LevelUpPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)

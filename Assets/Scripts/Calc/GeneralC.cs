@@ -30,5 +30,11 @@ namespace Calc
             return GetPermutations(list, length - 1)
                 .SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
         }
+
+        public static void Append<K, V>(this Dictionary<K, V> first, Dictionary<K, V> second)
+        {
+            List<KeyValuePair<K, V>> pairs = second.ToList();
+            pairs.ForEach(pair => first.Add(pair.Key, pair.Value));
+        }
     }
 }

@@ -400,7 +400,6 @@ public class GameLogic : MonoBehaviour
         graphics.RepopulateElements(toRepopulate);
 
         // show effect animations and remove health and destroy newly dead targets
-        // TODO: find out why status effect health reduction doesn't show red
         graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets);
     }
 
@@ -410,11 +409,9 @@ public class GameLogic : MonoBehaviour
         // if dead targets length is 0 no exp is gained
         if (deadTargets == null || deadTargets.Count <= 0)
         {
-            // UpkeepPhase();
+            NextTurnPhase();
             return;
         }
-
-        Debug.Log("Pre: " + PieceC.PieceAsString(board.tiles[movedPiece.y][movedPiece.x].piece));
 
         // --- Data ---
         // calculate multiple target defeat bonus
@@ -445,13 +442,16 @@ public class GameLogic : MonoBehaviour
             board.tiles = PieceC.UpdatePieceOnTile(board.tiles, new Vector2(movedPiece.x, movedPiece.y), leveledPiece);
         }
 
-        Debug.Log("Post: " + PieceC.PieceAsString(board.tiles[movedPiece.y][movedPiece.x].piece));
-
         // --- Graphics ---
         // play exp animation
         // play level up animation
         // play stat increment animation or display new stats
 
+    }
+
+    public void NextTurnPhase()
+    {
+        Debug.Log("NextTurn");
     }
 }
 

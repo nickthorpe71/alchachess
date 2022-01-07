@@ -7,12 +7,17 @@ using Data;
 public class PieceStats : MonoBehaviour
 {
     public GameObject statsCanvas;
+
     public Image healthGreen;
     public Image healthRed;
     public TextMeshProUGUI effectText;
+
+    public Image expBar;
+    public TextMeshProUGUI level;
+
     private float updateSpeed = 0.25f;
 
-    public void UpdateStatsUI(Piece piece, float previousHealth)
+    public void UpdateHealthUI(Piece piece, float previousHealth)
     {
         statsCanvas.gameObject.SetActive(true);
         float preDamageHealthPercent = previousHealth / piece.maxHealth;
@@ -21,7 +26,7 @@ public class PieceStats : MonoBehaviour
         healthGreen.fillAmount = postDamageHealthPercent;
         healthRed.fillAmount = preDamageHealthPercent;
 
-        StartCoroutine(UpdateHealth(piece, preDamageHealthPercent, postDamageHealthPercent));
+        StartCoroutine(UpdateBar(healthRed, preDamageHealthPercent, postDamageHealthPercent));
         UpdateEffect(piece.currentSpellEffect);
     }
 
@@ -30,7 +35,32 @@ public class PieceStats : MonoBehaviour
         effectText.text = effect;
     }
 
-    IEnumerator UpdateHealth(Piece piece, float preDamageHealthPercent, float postDamageHealthPercent)
+    public void UpdateExpUI(Piece piece, float previousExp, bool didGainLevel)
+    {
+        statsCanvas.gameObject.SetActive(true);
+        // TODO:
+        // float startLevel;
+        // float endLevel;
+        // 
+
+        // current exp - previous level required exp / next level required exp - previous level required exp
+
+        // if didGainLevel
+        // startLevel = piece.level - 1
+
+        // --- start exp ---
+        // = previousExp - current level required exp
+
+        float startExpPercent = previousExp / piece.maxHealth;
+        float endExpPercent = piece.health / piece.maxHealth;
+
+        level.text = piece.level.ToString();
+        expBar.fillAmount = startExpPercent;
+
+        StartCoroutine(UpdateBar(expBar, startExpPercent, endExpPercent));
+    }
+
+    IEnumerator UpdateBar(Image targetBar, float preDamageHealthPercent, float postDamageHealthPercent)
     {
         float preChangePercent = preDamageHealthPercent;
         float elapsed = 0f;
@@ -40,11 +70,11 @@ public class PieceStats : MonoBehaviour
         while (elapsed < updateSpeed)
         {
             elapsed += Time.deltaTime;
-            healthRed.fillAmount = Mathf.Lerp(preChangePercent, postDamageHealthPercent, elapsed / updateSpeed);
+            targetBar.fillAmount = Mathf.Lerp(preChangePercent, postDamageHealthPercent, elapsed / updateSpeed);
             yield return null;
         }
 
-        healthRed.fillAmount = postDamageHealthPercent;
+        targetBar.fillAmount = postDamageHealthPercent;
 
         yield return new WaitForSeconds(2);
 

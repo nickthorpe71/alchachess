@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
+
 namespace Calc
 {
     public static class GeneralC

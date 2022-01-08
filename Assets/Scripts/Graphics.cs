@@ -212,7 +212,7 @@ public class Graphics : MonoBehaviour
         {
             GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, target.Key);
             float previousHealth = targetsPreDmg[target.Key].piece.health;
-            pieceGraphic.GetComponentInChildren<PieceStats>().UpdateStatsUI(target.Value.piece, previousHealth);
+            pieceGraphic.GetComponentInChildren<PieceStats>().UpdateHealthUI(target.Value.piece, previousHealth);
         }
     }
 
@@ -235,7 +235,7 @@ public class Graphics : MonoBehaviour
         Dictionary<Vector2, Tile> deadTargets)
     {
         ReduceHealth(targetsPreDmg, targetsPostDmg);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         // TODO: show anim to add status effects and pass this function the currentEffects dict
 
@@ -263,7 +263,27 @@ public class Graphics : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         levelPhase(deadTargets, caster);
+    }
+
+    public void PlayLevelPhaseAnims(Action nextTurnPhase, Tile pieceTile, float startExp, float startLevel)
+    {
+        StartCoroutine(LevelPhaseAnims(nextTurnPhase, pieceTile, startExp, startLevel));
+    }
+
+    IEnumerator LevelPhaseAnims(Action nextTurnPhase, Tile pieceTile, float startExp, float startLevel)
+    {
+        GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, new Vector3(pieceTile.x, pieceTile.y));
+        pieceGraphic.GetComponentInChildren<PieceStats>().UpdateExpUI(pieceTile, startExp, startLevel, PlayLevelUpAnim);
+        yield return new WaitForSeconds(2f * (pieceTile.piece.level + 3));
+        nextTurnPhase();
+    }
+
+    public void PlayLevelUpAnim(Vector3 pos)
+    {
+        GameObject levelUpAnim = Instantiate(Resources.Load("SpellAnims/LevelUpAnim") as GameObject);
+        levelUpAnim.transform.position = pos;
+        Destroy(levelUpAnim, 5);
     }
 }

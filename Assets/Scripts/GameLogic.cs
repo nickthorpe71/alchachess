@@ -20,6 +20,7 @@ public class GameLogic : MonoBehaviour
     [NonSerialized] public bool pieceClicked = false;
     private Tile currentHover = null;
     private Tile currentClicked = null;
+    private bool humanCanInput;
 
     // References
     private Graphics graphics;
@@ -37,7 +38,10 @@ public class GameLogic : MonoBehaviour
 
         ui = GetComponent<GameUI>();
 
-        // currentTurn = RandomizeFirstTurn();
+        board.tiles[7][3].piece.level = 4; // temp to test leveling up
+
+        // currentPlayer = PlayerC.RandomizeFirstTurn();
+        humanCanInput = PlayerC.CanHumanInput(currentPlayer);
     }
 
     private void Start()
@@ -52,12 +56,6 @@ public class GameLogic : MonoBehaviour
     }
 
     // --- Logic ---
-    private PlayerToken RandomizeFirstTurn()
-    {
-        int roll = UnityEngine.Random.Range(0, 100);
-        return (roll < 50) ? PlayerToken.P1 : PlayerToken.P2;
-    }
-
     public void TileClick(GameObject clicked)
     {
         // Get tile data for clicked tile
@@ -130,6 +128,9 @@ public class GameLogic : MonoBehaviour
         // if we clicked an element or empty tile which is highlighted
         else if (currentClicked != null && currentHover.isHighlighted)
         {
+            if (!humanCanInput)
+                return;
+
             if (currentClicked.piece.currentSpellEffect == "frozen")
             {
                 // TODO: need to display this message in UI
@@ -414,27 +415,30 @@ public class GameLogic : MonoBehaviour
         }
 
         // --- Data ---
+        // store start level and exp for graphics
+        float startLevel = movedPiece.piece.level;
+        float startExp = movedPiece.piece.experience;
+
         // calculate multiple target defeat bonus
         int multiTargetBonus = deadTargets.Count;
 
         // calculate exp gained by piece that just moved
-        int expGained = deadTargets.Values.Aggregate(0, (acc, tile) => acc + PieceC.CalcExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * multiTargetBonus;
+        int expGained = deadTargets.Values.Aggregate(0, (acc, tile) => acc + PieceC.ExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * multiTargetBonus;
 
         // add exp to piece
         Piece updatedExpPiece = movedPiece.piece.Clone();
         updatedExpPiece.experience += expGained;
         board.tiles = PieceC.UpdatePieceOnTile(board.tiles, new Vector2(movedPiece.x, movedPiece.y), updatedExpPiece);
-        // NOTE: going to need old exp and new exp for animation
 
         // check if a piece levels up
-        int expToLevel = PieceC.CalcExpForNextLevel(movedPiece.piece.level);
+        int expToLevel = PieceC.ExpForNextLevel(movedPiece.piece.level);
         bool pieceLeveled = (board.tiles[movedPiece.y][movedPiece.x].piece.experience >= expToLevel);
 
         // calculate new stats and level
         if (pieceLeveled)
         {
             Piece leveledPiece = updatedExpPiece.Clone();
-            leveledPiece.level += 1;
+            leveledPiece.level += PieceC.CalcLevelFromExp(leveledPiece.experience);
             leveledPiece.power += leveledPiece.power / 5 * leveledPiece.level;
             leveledPiece.maxHealth += leveledPiece.maxHealth / 5 * leveledPiece.level;
             leveledPiece.health = leveledPiece.maxHealth;
@@ -443,15 +447,23 @@ public class GameLogic : MonoBehaviour
         }
 
         // --- Graphics ---
-        // play exp animation
-        // play level up animation
-        // play stat increment animation or display new stats
-
+        graphics.PlayLevelPhaseAnims(() => NextTurnPhase(), board.tiles[movedPiece.y][movedPiece.x], startExp, startLevel);
     }
 
     public void NextTurnPhase()
     {
-        Debug.Log("NextTurn");
+        // increment turn counter
+        turnCount++;
+
+        // switch current player token
+        currentPlayer = PlayerC.SwitchPlayers(currentPlayer);
+
+        // give control to the correct player
+        humanCanInput = PlayerC.CanHumanInput(currentPlayer);
+
+        // wait for input
+        if (currentPlayer != humanPlayer)
+            AIC.TakeTurn();
     }
 }
 

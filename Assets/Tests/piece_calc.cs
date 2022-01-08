@@ -29,7 +29,7 @@ public class piece_calc
 
         // act
         Dictionary<int, int> levelToExpMapRequired = new Dictionary<int, int>{
-            {1,PieceC.CalcExpForNextLevel(1)}, {2,PieceC.CalcExpForNextLevel(2)}, {3,PieceC.CalcExpForNextLevel(3)}, {4,PieceC.CalcExpForNextLevel(4)}, {5,PieceC.CalcExpForNextLevel(5)}, {6,PieceC.CalcExpForNextLevel(6)}, {7,PieceC.CalcExpForNextLevel(7)}, {8,PieceC.CalcExpForNextLevel(8)}, {9,PieceC.CalcExpForNextLevel(9)}, {10, PieceC.CalcExpForNextLevel(10)}
+            {1,PieceC.ExpForNextLevel(1)}, {2,PieceC.ExpForNextLevel(2)}, {3,PieceC.ExpForNextLevel(3)}, {4,PieceC.ExpForNextLevel(4)}, {5,PieceC.ExpForNextLevel(5)}, {6,PieceC.ExpForNextLevel(6)}, {7,PieceC.ExpForNextLevel(7)}, {8,PieceC.ExpForNextLevel(8)}, {9,PieceC.ExpForNextLevel(9)}, {10, PieceC.ExpForNextLevel(10)}
         };
 
         // assert
@@ -40,13 +40,13 @@ public class piece_calc
     }
 
     [Test]
-    public void CalcExpFromDefeatingOther_gets_correct_exp_lvls_1_to_2()
+    public void ExpFromDefeatingOther_gets_correct_exp_lvls_1_to_2()
     {
         // act
-        int result11 = PieceC.CalcExpFromDefeatingOther(1, 1); // lvl 1 defeating lvl 1
-        int result21 = PieceC.CalcExpFromDefeatingOther(2, 1); // lvl 2 defeating lvl 1
-        int result12 = PieceC.CalcExpFromDefeatingOther(1, 2); // lvl 1 defeating lvl 2
-        int result22 = PieceC.CalcExpFromDefeatingOther(2, 2); // lvl 2 defeating lvl 2
+        int result11 = PieceC.ExpFromDefeatingOther(1, 1); // lvl 1 defeating lvl 1
+        int result21 = PieceC.ExpFromDefeatingOther(2, 1); // lvl 2 defeating lvl 1
+        int result12 = PieceC.ExpFromDefeatingOther(1, 2); // lvl 1 defeating lvl 2
+        int result22 = PieceC.ExpFromDefeatingOther(2, 2); // lvl 2 defeating lvl 2
 
         // assert
         Assert.AreEqual(45, result11);

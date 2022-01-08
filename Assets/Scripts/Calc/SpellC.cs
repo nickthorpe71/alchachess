@@ -30,11 +30,11 @@ namespace Calc
                 case "heal":
                     return $"Heal your pieces in range for {CalcHeal(damage, power, colorMod)} HP.";
                 case "burn":
-                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and an additional {CalcBurn(CalcDamage(damage, power, colorMod))} damage for 3 turns.";
+                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and an additional {CalcBurn(CalcDamage(damage, power, colorMod))} damage each upkeep for 3 turns.";
                 case "poison":
-                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and an additional {CalcPoison(CalcDamage(damage, power, colorMod))} damage for 3 turns.";
+                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and an additional {CalcPoison(CalcDamage(damage, power, colorMod))} damage each upkeep for 3 turns.";
                 case "frozen":
-                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and can't move for 3 turns.";
+                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and can't move for 2 turns.";
                 case "increase power":
                     return $"Your pieces in range have their power permanently increased by {CalcIncreasePower(damage, power, colorMod)}.";
                 case "decrease power":

@@ -10,11 +10,35 @@ namespace Calc
         public static string GetPathByLabel(PieceLabel label)
             => String.Format("Pieces/{0}", Enum.GetName(typeof(PieceLabel), label));
 
-        public static int CalcExpForNextLevel(float currentLevel)
+        public static int ExpForNextLevel(float currentLevel)
             => (int)Math.Floor(((Math.Pow(currentLevel, 4) + 10 * Math.Pow(currentLevel, 3) + 37 * Math.Pow(currentLevel, 2) + 57 * currentLevel - 96) / 16) * 100);
 
-        public static int CalcExpFromDefeatingOther(float myLevel, float opponentLevel)
+        public static int ExpFromDefeatingOther(float myLevel, float opponentLevel)
             => (int)Math.Floor(((Math.Pow(opponentLevel, 4) + 10 * Math.Pow(opponentLevel, 3) + 37 * Math.Pow(opponentLevel, 2) + 57 * opponentLevel - 96) / myLevel) * 5);
+
+        public static float ExpAsPercent(float exp, float level)
+        {
+            float prevExpCap = level == 1 ? 0 : ExpForNextLevel(level - 1);
+            float currentExpCap = ExpForNextLevel(level);
+            return (prevExpCap - exp) / (currentExpCap - prevExpCap);
+        }
+
+        public static float CalcLevelFromExp(float exp)
+        {
+            if (exp < ExpForNextLevel(1))
+                return 1;
+
+            float currentExp = exp;
+            float resultingLevel = 1;
+
+            while (currentExp > 0)
+            {
+                currentExp -= ExpForNextLevel(resultingLevel);
+                resultingLevel++;
+            }
+
+            return resultingLevel;
+        }
 
         public static Tile[][] UpdatePieceOnTile(Tile[][] tiles, Vector2 position, Piece piece)
         {

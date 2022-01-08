@@ -15,9 +15,8 @@ public class GameLogic : MonoBehaviour
 
     // GameState
     [NonSerialized] public Board board;
-    [NonSerialized] public int turnCount = 0;
+    [NonSerialized] public int turnCount = 1;
     [NonSerialized] public PlayerToken currentPlayer = PlayerToken.P1;
-    [NonSerialized] public bool pieceClicked = false;
     private Tile currentHover = null;
     private Tile currentClicked = null;
     private bool humanCanInput;
@@ -147,11 +146,7 @@ public class GameLogic : MonoBehaviour
                 false
             );
 
-            // take control away from player
-
             ExecuteMove(currentClicked, currentHover, spell);
-            currentClicked = null;
-            currentHover = null;
         }
 
         graphics.UpdateTileGraphics(board.tiles);
@@ -241,6 +236,9 @@ public class GameLogic : MonoBehaviour
 
     public void ExecuteMove(Tile start, Tile end, Spell spell)
     {
+        humanCanInput = false;
+        currentClicked = null;
+        currentHover = null;
         MovePhase(start, end, spell);
 
         // !! each phase has a data section and an animation section
@@ -463,7 +461,7 @@ public class GameLogic : MonoBehaviour
 
         // wait for input
         if (currentPlayer != humanPlayer)
-            AIC.TakeTurn();
+            AIC.TakeTurn(board, this);
     }
 }
 

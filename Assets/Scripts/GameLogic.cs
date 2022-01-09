@@ -11,6 +11,7 @@ public class GameLogic : MonoBehaviour
 {
     // Data
     [SerializeField] public PlayerToken humanPlayer = PlayerToken.P1;
+    [SerializeField] public PlayerToken aiPlayer = PlayerToken.P2;
     public TextAsset masterSpellList;
 
     // GameState
@@ -36,8 +37,6 @@ public class GameLogic : MonoBehaviour
         graphics.InstantiateInitialBoard(board);
 
         ui = GetComponent<GameUI>();
-
-        board.tiles[7][3].piece.level = 4; // temp to test leveling up
 
         // currentPlayer = PlayerC.RandomizeFirstTurn();
         humanCanInput = PlayerC.CanHumanInput(currentPlayer);
@@ -137,7 +136,7 @@ public class GameLogic : MonoBehaviour
                 return;
             }
 
-            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
+            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
 
             // remove all state from all tiles
             board.tiles = BoardC.ChangeTilesState(
@@ -207,7 +206,9 @@ public class GameLogic : MonoBehaviour
         }
         else
         {
-            Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles));
+            if (currentClicked == null) return;
+
+            Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
             ui.pieceView.Toggle(false);
 
             // if piece is clicked and there are elements in our path
@@ -240,42 +241,6 @@ public class GameLogic : MonoBehaviour
         currentClicked = null;
         currentHover = null;
         MovePhase(start, end, spell);
-
-        // !! each phase has a data section and an animation section
-        // each phase should have an end event function that is called when its complete
-        // if each phase is a function that takes the next phase as a function then we can chain phases
-
-        // -- Move Phase
-        // move the piece graphically
-        // update board with new positions
-        // once piece graphic reaches destination cast spell
-
-        // -- Cast Phase
-        // if spell parameter is not null
-        // calculate damage/deaths/effects caused by spell
-        // update effected piece stats
-        // play spell animation
-        // remove/play death animations of newly dead pieces
-        // update board to have correct pieces 
-        // update tiles to have correct tile contents
-
-        // -- Upkeep Phase
-        // restore all elements to the field 
-        // calculate effects
-        // if a piece dies from effects then add them to dead pieces list
-
-        // -- Level Up Phase
-        // calculate exp gained by piece that just moved
-        // if a piece levels up
-        // calculate new stats
-        // play level up animation
-        // play stat increment animation or display new stats
-
-        // -- Next Turn Phase
-        // increment turn counter
-        // switch current player token
-        // give control to the correct player
-        // wait for input
     }
 
     private void MovePhase(Tile start, Tile end, Spell spell)
@@ -469,4 +434,9 @@ public class GameLogic : MonoBehaviour
 /*
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
     - caused by no checking duplicates in permutation function?
+    - potentially just generate spells by ingredients picked up?
+- looks like killing a piece is not giving exp sometimes but giving too much exp others
+- looks like movement isn't increasing with level
+- if a piece dies from poison or burn an error is thrown
+- ai can move frozen pieces
 */

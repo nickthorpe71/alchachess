@@ -196,7 +196,7 @@ public class board_calc
         Tile pathEnd = board.tiles[3][1];
 
         // act
-        string result = BoardC.GetRecipeByPath(pathStart, pathEnd, board.tiles);
+        string result = BoardC.GetRecipeByPath(pathStart, pathEnd, board.tiles, PlayerToken.P1, PlayerToken.P1);
 
         // assert
         Assert.AreEqual("GDR", result);

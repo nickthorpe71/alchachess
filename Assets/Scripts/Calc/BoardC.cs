@@ -30,10 +30,41 @@ namespace Calc
             return tilesCopy;
         }
 
+        public static Tile[][] MapTilesBetween(Tile[][] tiles, Vector2 start, Vector2 end, Func<Tile, int, int, Tile> f)
+        {
+            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+
+            Vector2 path = new Vector2(end.x, end.y) - new Vector2(start.x, start.y);
+            int distance = Mathf.Max(Mathf.Abs((int)path.x), Mathf.Abs((int)path.y));
+            Vector2 direction = path.normalized;
+            direction = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
+
+            for (int step = 0; step <= distance; step++)
+            {
+                int x = (int)start.x + ((int)direction.x * step);
+                int y = (int)start.y + ((int)direction.y * step);
+                Tile nextTile = tilesCopy[y][x];
+                tilesCopy[y][x] = f(nextTile, x, y);
+            }
+
+            return tilesCopy;
+        }
+
         public static Tile GetTileDataByPos(Vector3 tilePos, Board board)
         => BoardC.GetTile(board.tiles, (int)tilePos.x, (int)tilePos.z);
 
         public static Tile GetTile(Tile[][] tiles, int x, int y) => tiles[y][x];
+
+        public static List<Tile> GetTilesWithPieceForPlayer(Tile[][] tiles, PlayerToken player)
+        {
+            List<Tile> result = new List<Tile>();
+            LoopTiles(tiles, tile =>
+            {
+                if (tile.contents == TileContents.Piece && tile.piece.player == player)
+                    result.Add(tile);
+            });
+            return result;
+        }
 
         public static Tile[][] ChangeTilesState(Tile[][] tiles, List<TileState> states, bool newState, List<Vector2> toChange)
         {
@@ -131,22 +162,24 @@ namespace Calc
             return true;
         }
 
-        public static bool InBounds(Vector2 locaiton)
-            => (locaiton.x < Const.BOARD_WIDTH) && (locaiton.x >= 0) && (locaiton.y < Const.BOARD_HEIGHT) && (locaiton.y >= 0);
+        public static bool InBounds(Vector2 location)
+            => (location.x < Const.BOARD_WIDTH) && (location.x >= 0) && (location.y < Const.BOARD_HEIGHT) && (location.y >= 0);
 
         public static bool TileHasPiece(Tile[][] tiles, Vector2 location)
             => tiles[(int)location.y][(int)location.x].contents == TileContents.Piece;
 
-        public static string GetRecipeByPath(Tile pathStart, Tile pathEnd, Tile[][] tiles)
+        public static string GetRecipeByPath(Tile pathStart, Tile pathEnd, Tile[][] tiles, PlayerToken humanPlayer, PlayerToken currentPlayer)
         {
-            if (!pathEnd.isHighlighted)
+            if (currentPlayer == humanPlayer && !pathEnd.isHighlighted)
                 return "";
 
             string result = "";
 
             MapTilesBetween(tiles, new Vector2(pathStart.x, pathStart.y), new Vector2(pathEnd.x, pathEnd.y), (tile, x, y) =>
             {
-                if (tile.element != "N" && tile.isHighlighted && tile.contents == TileContents.Element)
+                if (currentPlayer == humanPlayer && !tile.isHighlighted) return tile;
+
+                if (tile.element != "N" && tile.contents == TileContents.Element)
                     result += tile.element;
                 return tile;
             });
@@ -174,26 +207,6 @@ namespace Calc
 
             // otherwise return the opponent
             return (currentPlayer == PlayerToken.P1) ? PlayerToken.P2 : PlayerToken.P1;
-        }
-
-        public static Tile[][] MapTilesBetween(Tile[][] tiles, Vector2 start, Vector2 end, Func<Tile, int, int, Tile> f)
-        {
-            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
-
-            Vector2 path = new Vector2(end.x, end.y) - new Vector2(start.x, start.y);
-            int distance = Mathf.Max(Mathf.Abs((int)path.x), Mathf.Abs((int)path.y));
-            Vector2 direction = path.normalized;
-            direction = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
-
-            for (int step = 0; step <= distance; step++)
-            {
-                int x = (int)start.x + ((int)direction.x * step);
-                int y = (int)start.y + ((int)direction.y * step);
-                Tile nextTile = tilesCopy[y][x];
-                tilesCopy[y][x] = f(nextTile, x, y);
-            }
-
-            return tilesCopy;
         }
 
         public static string GetBoardAsString(Board board)

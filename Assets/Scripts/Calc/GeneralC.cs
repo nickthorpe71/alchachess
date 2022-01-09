@@ -37,5 +37,9 @@ namespace Calc
             List<KeyValuePair<K, V>> pairs = second.ToList();
             pairs.ForEach(pair => first.Add(pair.Key, pair.Value));
         }
+
+        public static T RandomFromList<T>(List<T> list) => list[UnityEngine.Random.Range(0, list.Count - 1)];
+
+        public static string CapitalizeFirstLetter(string s) => char.ToUpper(s[0]) + s.Substring(1);
     }
 }

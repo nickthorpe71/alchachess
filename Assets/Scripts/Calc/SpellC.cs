@@ -1,5 +1,6 @@
-using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 using Data;
 
 namespace Calc
@@ -11,16 +12,104 @@ namespace Calc
             if (recipe == "")
                 return null;
 
-            var allPerms = GeneralC.GetPermutations(recipe, recipe.Length).ToList();
+            // color of the spell is == to the last element 
+            string color = recipe[recipe.Length - 1].ToString();
 
-            for (int i = 0; i < allPerms.Count; i++)
+            Spell newSpell = new Spell(recipe, color, SpellNameFromRecipe(recipe, color), recipe.Length, new List<V2Import>(), 0, "");
+
+            for (int i = 0; i < recipe.Length; i++)
             {
-                string perm = new string(allPerms[i].ToArray());
-                if (AllSpells.data.ContainsKey(perm))
-                    return AllSpells.data[perm];
+                // convert char to string
+                string element = "" + recipe[i];
+                // get component by recipe element
+                ElementalComponent component = ElementalComponents.list[element];
+
+                // stack pattern on existing pattern
+                List<V2Import> amplifiedPattern = component.Pattern.Select(v2Import =>
+                {
+                    V2Import v2 = new V2Import(v2Import.x, v2Import.y);
+                    while (IsInPattern(newSpell.pattern, v2))
+                    {
+                        v2.x += (v2.x < 0) ? -1 : (v2.x > 0) ? 1 : 0;
+                        v2.y += (v2.y < 0) ? -1 : (v2.y > 0) ? 1 : 0;
+                    }
+                    return v2;
+                }).ToList();
+
+                // add pattern and damage of component to spell
+                newSpell.pattern.AddRange(amplifiedPattern);
+                newSpell.damage += component.Damage;
             }
 
-            return null;
+            // add effect for spell color
+            newSpell.spellEffect = ElementalComponents.list[color].Effect;
+            return newSpell;
+
+            // var allPerms = GeneralC.GetPermutations(recipe, recipe.Length).ToList();
+
+            // for (int i = 0; i < allPerms.Count; i++)
+            // {
+            //     string perm = new string(allPerms[i].ToArray());
+            //     if (AllSpells.data.ContainsKey(perm))
+            //         return AllSpells.data[perm];
+            // }
+
+            // return null;
+        }
+
+        private static bool IsInPattern(List<V2Import> pattern, V2Import v2)
+        {
+            bool inPattern = false;
+            for (int i = 0; i < pattern.Count; i++)
+                if (pattern[i].x == v2.x && pattern[i].y == v2.y)
+                    inPattern = true;
+            return inPattern;
+        }
+
+        private static string SpellNameFromRecipe(string recipe, string spellColor)
+        {
+            string name = "";
+            string inUseRecipe = recipe;
+            int nameLength = Random.Range(2, Mathf.Min(recipe.Length + 1, 4));
+            int charsLeft = nameLength;
+
+            // make sure there are enough elements to map to words
+            while (inUseRecipe.Length < nameLength)
+                inUseRecipe += spellColor;
+
+            string toAdd = "";
+            // parts of words that should not be used as first word
+            List<string> cantBeFirstWord = new List<string> { "of" };
+            if (nameLength == 1) cantBeFirstWord.Add("'s");
+
+            // add first word to match spell color
+            do
+            {
+                toAdd = GeneralC.CapitalizeFirstLetter(GeneralC.RandomFromList(ElementWords.list[spellColor]));
+            } while (cantBeFirstWord.Any(s => toAdd.Contains(s)));
+
+            name += toAdd;
+            // remove last char of inUseRecipe since it has been used
+            charsLeft--;
+            inUseRecipe = inUseRecipe.Substring(0, inUseRecipe.Length - 1);
+
+            // add random words to name based on remaining recipe
+            while (charsLeft > 0)
+            {
+                // select random element from recipe
+                List<string> recipeAsList = inUseRecipe.ToCharArray().Select(c => "" + c).ToList();
+                string nextElement = GeneralC.RandomFromList(recipeAsList);
+
+                // get random word using nextElement
+                toAdd = " " + GeneralC.CapitalizeFirstLetter(GeneralC.RandomFromList(ElementWords.list[nextElement]));
+
+                // add to name and remove used element
+                name += toAdd;
+                charsLeft--;
+                inUseRecipe.Remove(inUseRecipe.IndexOf(nextElement));
+            }
+
+            return name;
         }
 
         public static string SpellEffectString(string effect, float damage, float power, float colorMod)
@@ -43,6 +132,7 @@ namespace Calc
                     return $"Deal {CalcDamage(damage, power, colorMod)} to opponent's pieces in range.";
             }
         }
+
 
         // Status effect calculations
         public static float CalcHeal(float baseDmg, float power, float colorMod) => baseDmg * power * colorMod;

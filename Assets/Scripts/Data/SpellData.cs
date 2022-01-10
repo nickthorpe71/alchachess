@@ -80,93 +80,133 @@ namespace Data
         }
     }
 
+    // what is needed are lists of adjectives, verbs, beings, and ofs
+    // then patterns that make sense for each
+    // ex:
+    // - adjective + being 
+    // - adjective + being + of
+    // - adjective + thing 
+    // - adjective + thing + of
+    // - adjective + being's + thing
+    // - adjective + adjective + being
+    // - adjective + adjective + being + of
+    // - adjective + verb + being
+    // - adjective + verb + being + of
+    // - verb + being
+    // - verb + thing
+    // - verb + being + thing
+    // - verb + being + of
+    // - verb + adjective + being
+    // - verb + adjective + being + of
+    // - being's + thing
+    // - being's + adjective + thing
+    // - being's + adjective + thing + of
+    // - being's + adjective + being
+    // - being's + adjective + adjective + being
+    // - being's + adjective + being + of
+    // - thing + being
+    // - thing + being's + thing 
+    // - thing + being's + thing + of
+    // - thing + being's + adjective + thing
+    // - thing + being's + adjective + thing + of
+
     public class ElementWords
     {
         public static Dictionary<string, List<string>> list = new Dictionary<string, List<string>>{
-            {"D", new List<string>{
-                "darkness", "hex", "curse", "shadow", "shade",
-                "black", "thief", "traitor", "bone", "touch",
-                "dimension", "gravity", "demi", "phase", "drain",
-                "gloom", "fear", "flesh", "wraith", "blood",
-                "phantom", "ghost", "haunting", "necro", "gruesome",
-                "torture", "sinister", "stab", "choke", "bleeding",
-                "gouge", "scream", "spectre", "ritual", "voodoo",
-                "phase", "disguise", "demon", "gargoyle", "contract",
-                "deal", "bite", "horror", "witch", "warlocks",
-                "exorcist", "geist", "demonic", "moonlight", "moon",
-                "hangman's", "banshee's", "abyss", "of the Pit", "grime",
-                "putrid", "skull", "ghoul's"
-                }
-            },
-            {"W", new List<string>{
-                "light", "heal", "cure", "holy", "divine",
-                "eden", "prayer", "serenity", "flash", "renew",
-                "hymn", "sing", "spirit", "soul", "hope",
-                "fade", "faith", "pure", "smite", "redemption",
-                "inner", "psalm", "knowledge", "lore", "enigma", "white",
-                "wings", "paradise", "beam", "plasma", "tradition",
-                "photon", "blinding", "glaring", "beaming", "consuming",
-                "pius", "angelic", "sailing", "soaring", "flying",
-                "gliding", "breeze", "choice", "judgement", "protecting",
-                "flash", "ray", "conviction", "game", "horn", "prison",
-                "of Eden", "eden's", "of Light"
-                }
-            },
-            {"R", new List<string>{
-                "scorcher", "burning", "hell", "flame", "fireball",
-                "fire", "combust", "lava", "fiery", "blast",
-                "breath", "sun", "prism", "inferno", "hellish",
-                "pyroblast", "flamestrike", "hellfire", "searing", "magma",
-                "phoenix", "sizzle", "dragon", "burn", "immolate", "red",
-                "flash", "bang", "boom", "magus", "wall",
-                "link", "chasm", "choke", "scald", "fuel",
-                "blazing", "detonate", "raging", "bull", "tiger",
-                "lizard", "salamander", "cascade", "consuming", "burning",
-                "spear", "attack", "roar", "chant", "meteor", "berserk",
-                "red Dragon's", "of Flame", "of the Sun"
-                }
-            },
-            {"B", new List<string>{
-                "water", "ice", "glacial", "surf", "wave",
-                "illusion", "mist", "rain", "aqua", "charm",
-                "bubble", "snow", "hail", "wine", "river",
-                "shapeless", "glass", "sight", "hydro", "blizzard",
-                "dive", "swim", "trick", "dance", "mind", "blue",
-                "slate", "ice", "glacial", "surf", "wave",
-                "mystic", "transmutation", "calculation", "counter", "song",
-                "tale", "fable", "lagoon", "tail", "fin",
-                "storm", "icicle", "pursuit", "climate", "dip",
-                "elegant", "frost", "riddle", "rhyme", "jewel", "lavishing",
-                "siren's", "of Ice", "of Frost"
-                }
-            },
-            {"Y", new List<string>{
-                "earth", "gold", "yellow", "rock", "stone",
-                "upheaval", "quake", "tremor", "fissure", "iron",
-                "sand", "mud", "punch", "crush", "desert",
-                "tomb", "skin", "body", "statue", "pound",
-                "defense", "fist", "block", "shield", "stomp",
-                "ground", "mineral", "shard", "hammer", "axe",
-                "giant's", "ancient", "binding", "mold", "grasp",
-                "wall", "gate", "erupting", "shape", "bones",
-                "resist", "implosion", "strength", "barbaric", "boulder",
-                "protection", "guard", "clay", "planet", "smash", "titan",
-                "colossal", "earth Dragon's"
-                }
-            },
-            {"G", new List<string>{
-                "plant", "green", "wood", "roots", "rot",
-                "poison", "growth", "wind", "leaf", "blade",
-                "slice", "garden", "flower", "seed", "vines",
-                "nature", "spring", "organic", "rejuvenate", "flora",
-                "fauna", "mother's", "druid's", "ranger", "ages",
-                "feather", "quick", "aero", "terrain", "fortune",
-                "wager", "strike", "arrow", "trunk", "swarm",
-                "snakes", "unguent", "potion", "attempt", "dodge",
-                "agility", "branch", "plan", "strategy", "sprint",
-                "rapid", "energy", "singing", "fang", "claw", "green Dragon's",
-                "of the Forest", "herbal", "acid"}
-            }
+            {"D-adjective", new List<string>{
+                "cursed", "shadowy", "shady", "black", "bony", "bone", "gloomy", "fleshy", "bloody", "ghostly", "haunted", "necro", "gruesome", "sinister", "voodoo", "putrid", "dark", "demi", "dimensional", "fearful", "horrible", "demonic", "wrathful", "scornful", "deceitful"
+            }},
+            {"D-verb", new List<string>{
+                "phasing", "screaming", "choking", "staring", "puking", "shuddering", "gouging", "biting", "sneaking", "draining", "haunting", "bleeding", "horrifying"
+            }},
+            {"D-thing", new List<string>{
+                "touch", "phase", "stab", "curse", "stare", "puke", "gouge", "bite", "promise", "scream", "hex", "dimension", "gloom", "fear", "flesh", "blood", "gravity", "torture", "ritual", "disguise", "demon", "contract", "deal", "horror", "exorcism", "moonlight", "moon", "abyss", "pit", "grime", "stench", "skull",
+            }},
+            {"D-being", new List<string>{
+                "shade", "thief", "traitor", "wraith", "phantom", "ghost", "spectre", "demon", "gargoyle", "witch", "warlock", "exorcist", "geist", "hangman", "banshee", "ghoul"
+            }},
+            {"D-of", new List<string>{
+                "of Darkness", "of the Shade", "of Blood", "of the Moon", "of the Pit", "of the Witch", "of Horror"
+            }},
+            {"W-adjective", new List<string>{
+                "light", "holy", "divine", "hopeful", "faithful", "pure", "white", "pius", "angelic", "radiant"
+            }},
+            {"W-verb", new List<string>{
+                "healing", "praying", "singing", "fading", "blinding", "glaring", "beaming", "consuming", "protecting", "sailing", "soaring", "flying",
+                "gliding",
+            }},
+            {"W-thing", new List<string>{
+                "light", "heal", "cure", "prayer", "serenity", "flash", "hymn", "song", "spirit", "soul", "hope", "faith", "smite", "redemption",
+                "psalm", "knowledge", "lore", "enigma", "wings", "paradise", "beam", "plasma", "tradition", "photon", "breeze", "choice", "judgement",  "ray", "conviction", "game", "horn", "prison", "birth"
+            }},
+            {"W-being", new List<string>{
+                "eden", "angel", "saint", "priest", "nun", "humanity", "spirit", "father", "mother"
+            }},
+            {"W-of", new List<string>{
+                "of Eden", "of Light", "of Healing", "of Legend", "of Paradise", "of the Clouds", "of the Wind"
+            }},
+            {"R-adjective", new List<string>{
+                "scorched", "burnt", "hellish", "fiery", "seared", "red", "enraged"
+            }},
+            {"R-verb", new List<string>{
+                "burning", "flaming", "blazing", "blasting","searing", "sizzling", "immolating", "booming", "scalding", "raging", "cascading", "consuming",
+            }},
+            {"R-thing", new List<string>{
+                "scorcher", "hell", "flame", "fireball", "fire", "combust", "lava", "blast", "breath", "sun", "prism", "inferno", "pyroblast", "flamestrike", "strike", "hellfire", "magma", "phoenix", "sizzle", "dragon", "flash", "bang", "boom", "magus", "wall", "link", "chasm", "fuel", "bull", "tiger", "cascade", "spear", "attack", "roar", "chant", "meteor", "berserk"
+            }},
+            {"R-being", new List<string>{
+                "dragon", "hell", "phoenix", "tiger", "mage", "bull", "lizard", "salamander", "berserker", "red Dragon"
+            }},
+            {"R-of", new List<string>{
+                "of Flame", "of the Sun", "of Hellfire", "of the Tiger", "of the Lizard", "of the Berserker", "of the Dragon", "of the Salamander", "of the Bull"
+            }},
+            {"B-adjective", new List<string>{
+                "glacial", "aqua", "charming", "wet", "cold", "frozen", "shapeless", "glass", "blue", "mystical", "legendary", "forgotten", "invisible", "elegant", "lavishing", "romantic", "drunken", "poetic"
+            }},
+            {"B-verb", new List<string>{
+                "surfing", "raining", "swimming", "diving", "dancing", "drowning", "bubbling", "crashing", "chilling", "glimmering"
+            }},
+            {"B-thing", new List<string>{
+                "water", "ice", "wave", "illusion", "mist", "rain", "charm", "bubble", "snow", "hail", "wine", "river", "sight", "blizzard", "trick", "dance", "mind", "ice", "transmutation", "calculation", "counter", "tale", "fable", "lagoon", "tail", "fin", "storm", "icicle", "pursuit", "climate",  "frost", "riddle", "rhyme", "jewel", "potion", "ward", "poem"
+            }},
+            {"B-being", new List<string>{
+                "leviathan", "illusionist", "sorcerer", "mushishi", "mystic", "siren", "traveler", "bard", "serpent", "frog", "shark"
+            }},
+            {"B-of", new List<string>{
+                "of Ice", "of Frost", "of the Deep", "Riddle", "Illusion", "of the Mind"
+            }},
+            {"Y-adjective", new List<string>{
+                "golden", "yellow", "barbaric", "stoic", "clay", "stone", "iron", "steel", "slate", "sandy",
+            }},
+            {"Y-verb", new List<string>{
+                "pounding", "blocking", "stampeding", "ancient", "binding", "erupting", "imploding", "smashing"
+            }},
+            {"Y-thing", new List<string>{
+                "earth", "rock", "stone", "steel", "upheaval", "quake", "tremor", "fissure", "iron", "sand", "mud", "punch", "crush", "desert", "tomb", "skin", "body", "statue", "defense", "fist", "shield", "mineral", "shard", "hammer", "axe", "grasp", "gate", "resist", "strength", "boulder", "protection", "guard", "clay", "planet", "colossal", "earth Dragon's", "slate"
+            }},
+            {"Y-being", new List<string>{
+                "giant", "ancient", "titan", "golem", "earth Dragon", "gambler",
+            }},
+            {"Y-of", new List<string>{
+                "of the Sand", "of the Land", "of the Earth", "of Iron", "of Power", "of Strength", "of Fortune"
+            }},
+            {"G-adjective", new List<string>{
+                "green", "wooden", "leafy", "lush", "organic", "feathery", "quick", "gnarled", "acidic", "herbal", "potent"
+            }},
+            {"G-verb", new List<string>{
+                "rotting", "windey", "rejuvenating", "swarming", "striking", "wilting", "energizing"
+            }},
+            {"G-thing", new List<string>{
+                "plant",  "wood", "roots", "rot", "poison", "growth", "wind", "leaf", "blade", "garden", "flower", "seed", "vine", "spring", "rejuvenate", "flora", "fauna", "feather", "terrain", "fortune", "wager", "strike", "arrow", "trunk", "swarm", "unguent", "potion", "attempt", "dodge",
+                "agility", "branch", "plan", "strategy", "sprint", "energy", "fang", "claw", "acid", "herb"
+            }},
+            {"G-being", new List<string>{
+                "nature", "druid", "ranger", "green Dragon"
+            }},
+            {"G-of", new List<string>{
+                "of the Ages", "of the Forest", "of the Woods", "the Blade"
+            }},
+
         };
     }
 

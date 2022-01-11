@@ -80,37 +80,66 @@ namespace Data
         }
     }
 
-    // what is needed are lists of adjectives, verbs, beings, and ofs
-    // then patterns that make sense for each
-    // ex:
-    // - adjective + being 
-    // - adjective + being + of
-    // - adjective + thing 
-    // - adjective + thing + of
-    // - adjective + being's + thing
-    // - adjective + adjective + being
-    // - adjective + adjective + being + of
-    // - adjective + verb + being
-    // - adjective + verb + being + of
-    // - verb + being
-    // - verb + thing
-    // - verb + being + thing
-    // - verb + being + of
-    // - verb + adjective + being
-    // - verb + adjective + being + of
-    // - being's + thing
-    // - being's + adjective + thing
-    // - being's + adjective + thing + of
-    // - being's + adjective + being
-    // - being's + adjective + adjective + being
-    // - being's + adjective + being + of
-    // - thing + being
-    // - thing + being's + thing 
-    // - thing + being's + thing + of
-    // - thing + being's + adjective + thing
-    // - thing + being's + adjective + thing + of
+    public static class NamePatterns
+    {
+        public static Dictionary<int, List<List<string>>> list = new Dictionary<int, List<List<string>>>
+        {
+            {2, new List<List<string>>{
+                new List<string>{"adjective", "being"},
+                new List<string>{"adjective", "thing"},
+                new List<string>{"verb", "being"},
+                new List<string>{"verb", "thing"},
+                new List<string>{"adjective", "being"},
+                new List<string>{"adjective", "being"},
+                new List<string>{"being's", "thing"},
+                new List<string>{"thing", "being"}
+            }},
+            {3, new List<List<string>>{
+                new List<string>{"adjective", "being", "of"},
+                new List<string>{"adjective", "thing", "of"},
+                new List<string>{"adjective", "adjective", "being"},
+                new List<string>{"adjective", "verb", "being"},
+                new List<string>{"verb", "being", "thing"},
+                new List<string>{"verb", "being", "of"},
+                new List<string>{"verb", "adjective", "being"},
+                new List<string>{"being's", "adjective", "thing"},
+                new List<string>{"being's", "thing", "of"},
+                new List<string>{"being's", "adjective", "being"},
+                new List<string>{"thing", "being's", "thing"}
+            }},
+            {4, new List<List<string>>{
+                new List<string>{"adjective", "adjective", "being", "of"},
+                new List<string>{"adjective", "being's", "verb", "being"},
+                new List<string>{"adjective", "being's", "verb", "thing"},
+                new List<string>{"adjective", "verb", "being's", "thing"},
+                new List<string>{"adjective", "verb", "being", "of"},
+                new List<string>{"verb", "being", "thing", "of"},
+                new List<string>{"verb", "being's", "thing", "of"},
+                new List<string>{"verb", "adjective", "being", "thing"},
+                new List<string>{"verb", "adjective", "being", "of"},
+                new List<string>{"being's", "adjective", "thing", "of"},
+                new List<string>{"being's", "adjective", "adjective", "being"},
+                new List<string>{"being's", "adjective", "adjective", "thing"},
+                new List<string>{"being's", "adjective", "being", "of"},
+                new List<string>{"thing", "being's", "thing", "of"},
+                new List<string>{"thing", "being's", "adjective", "thing"}
+            }},
+            {5, new List<List<string>>{
+                new List<string>{"adjective", "being's", "verb", "adjective", "being"},
+                new List<string>{"adjective", "being's", "verb", "being", "of"},
+                new List<string>{"adjective", "being's", "verb", "thing", "of"},
+                new List<string>{"adjective", "verb", "being's", "thing", "of"},
+                new List<string>{"verb", "adjective", "adjective", "being", "thing"},
+                new List<string>{"verb", "adjective", "being", "thing", "of"},
+                new List<string>{"being's", "adjective", "adjective", "being", "of"},
+                new List<string>{"being's", "adjective", "adjective", "thing", "of"},
+                new List<string>{"being's", "adjective", "adjective", "verb", "thing"},
+                new List<string>{"thing", "being's", "adjective", "thing", "of"},
+            }}
+        };
+    }
 
-    public class ElementWords
+    public static class ElementWords
     {
         public static Dictionary<string, List<string>> list = new Dictionary<string, List<string>>{
             {"D-adjective", new List<string>{
@@ -158,13 +187,13 @@ namespace Data
                 "dragon", "hell", "phoenix", "tiger", "mage", "bull", "lizard", "salamander", "berserker", "red Dragon"
             }},
             {"R-of", new List<string>{
-                "of Flame", "of the Sun", "of Hellfire", "of the Tiger", "of the Lizard", "of the Berserker", "of the Dragon", "of the Salamander", "of the Bull"
+                "of Flame", "of the Sun", "of Hellfire", "of the Tiger", "of the Lizard", "of the Berserker", "of the Dragon", "of the Salamander", "of the Bull", "of Lightning"
             }},
             {"B-adjective", new List<string>{
                 "glacial", "aqua", "charming", "wet", "cold", "frozen", "shapeless", "glass", "blue", "mystical", "legendary", "forgotten", "invisible", "elegant", "lavishing", "romantic", "drunken", "poetic"
             }},
             {"B-verb", new List<string>{
-                "surfing", "raining", "swimming", "diving", "dancing", "drowning", "bubbling", "crashing", "chilling", "glimmering"
+                "surfing", "swimming", "diving", "dancing", "drowning", "bubbling", "crashing", "chilling", "glimmering"
             }},
             {"B-thing", new List<string>{
                 "water", "ice", "wave", "illusion", "mist", "rain", "charm", "bubble", "snow", "hail", "wine", "river", "sight", "blizzard", "trick", "dance", "mind", "ice", "transmutation", "calculation", "counter", "tale", "fable", "lagoon", "tail", "fin", "storm", "icicle", "pursuit", "climate",  "frost", "riddle", "rhyme", "jewel", "potion", "ward", "poem"

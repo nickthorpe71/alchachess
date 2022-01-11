@@ -70,46 +70,28 @@ namespace Calc
         {
             string name = "";
             string inUseRecipe = recipe;
-            int nameLength = Random.Range(2, Mathf.Min(recipe.Length + 1, 4));
-            int charsLeft = nameLength;
+            int nameLength = Random.Range(2, Mathf.Min(recipe.Length + 1, 5));
 
             // make sure there are enough elements to map to words
             while (inUseRecipe.Length < nameLength)
                 inUseRecipe += spellColor;
 
-            string toAdd = "";
-            // parts of words that should not be used as first word
-            List<string> cantBeFirstWord = new List<string> { "of" };
-            if (nameLength == 1) cantBeFirstWord.Add("'s");
+            // select name pattern
+            List<string> namePattern = GeneralC.RandomFromList(NamePatterns.list[nameLength]);
 
-            // add first word to match spell color
-            do
+            for (int i = 0; i < nameLength; i++)
             {
-                toAdd = GeneralC.CapitalizeFirstLetter(GeneralC.RandomFromList(ElementWords.list[spellColor]));
-            } while (cantBeFirstWord.Any(s => toAdd.Contains(s)));
+                string nextWord = "";
+                if (namePattern[i] == "being's")
+                    nextWord = GeneralC.RandomFromList(ElementWords.list[inUseRecipe[i] + "-" + "being"]) + "'s";
+                else
+                    nextWord = GeneralC.RandomFromList(ElementWords.list[inUseRecipe[i] + "-" + namePattern[i]]);
 
-            name += toAdd;
-            // remove last char of inUseRecipe since it has been used
-            charsLeft--;
-            inUseRecipe = inUseRecipe.Substring(0, inUseRecipe.Length - 1);
-
-            // add random words to name based on remaining recipe
-            while (charsLeft > 0)
-            {
-                // select random element from recipe
-                List<string> recipeAsList = inUseRecipe.ToCharArray().Select(c => "" + c).ToList();
-                string nextElement = GeneralC.RandomFromList(recipeAsList);
-
-                // get random word using nextElement
-                toAdd = " " + GeneralC.CapitalizeFirstLetter(GeneralC.RandomFromList(ElementWords.list[nextElement]));
-
-                // add to name and remove used element
-                name += toAdd;
-                charsLeft--;
-                inUseRecipe.Remove(inUseRecipe.IndexOf(nextElement));
+                // add random word to name using next element in recipe and next type in pattern
+                name += " " + GeneralC.CapitalizeFirstLetter(nextWord);
             }
 
-            return name;
+            return name.Trim();
         }
 
         public static string SpellEffectString(string effect, float damage, float power, float colorMod)

@@ -38,6 +38,25 @@ namespace Calc
 
             logic.ExecuteMove(selectedPiece, endTile, spell);
         }
+
+        private static void DamagingTurn(Board board, GameLogic logic)
+        {
+            // get pieces owned by ai player
+
+            // for each piece determine which moves will result in damage or healing
+            // for each piece
+            //      check where they can move, once moved what spell will be cast, 
+            //      if that spell will do damage or heal their own piece
+            //      give a score to this move based on what it will achieve
+
+            // scoring
+            // damage or heal adds to the score directly
+            // killing a piece = score * 1.25
+
+            // save these moves: Tile with piece(start), end location, spell, score
+
+            logic.ExecuteMove(selectedPiece, endTile, spell);
+        }
     }
 }
 

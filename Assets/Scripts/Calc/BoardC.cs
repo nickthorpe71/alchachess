@@ -102,13 +102,14 @@ namespace Calc
                     return tileCopy;
                 });
 
-        public static List<Vector2> CalculateAOEPatterns(List<V2Import> pattern, Tile tile)
+        public static List<Vector2> CalculateAOEPatterns(List<V2Import> pattern, Tile tile, PlayerToken player)
         {
             List<Vector2> result = new List<Vector2>();
+            float playerMod = (player == PlayerToken.P1) ? 1 : -1;
 
             for (int i = 0; i < pattern.Count; i++)
             {
-                Vector2 toAdd = new Vector2((float)(tile.x + pattern[i].x), (float)(tile.y + pattern[i].y));
+                Vector2 toAdd = new Vector2((float)(tile.x + pattern[i].x * playerMod), (float)(tile.y + pattern[i].y * playerMod));
                 if (InBounds(toAdd))
                     result.Add(toAdd);
             }

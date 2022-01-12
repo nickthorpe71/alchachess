@@ -98,5 +98,22 @@ namespace Calc
                 tileCopy.piece.currentSpellEffect = "";
             return tileCopy;
         }
+
+        public static Piece ApplySpellToPiece(Piece attacker, Piece defender, Spell spell)
+        {
+            Piece tileCopy = defender.Clone();
+            float colorMod = SpellC.ColorMod(attacker.element, tileCopy.element, spell.color);
+            tileCopy.health += HealthAdjust(spell.damage, attacker.power, spell.spellEffect, colorMod);
+            tileCopy.power += PowerAdjust(spell.damage, attacker.power, spell.spellEffect, colorMod);
+            tileCopy.currentSpellEffect = SpellC.DetermineLastingEffect(spell.spellEffect);
+            tileCopy.effectTurnsLeft = SpellC.DetermineEffectTurns(spell.spellEffect, colorMod, tileCopy.effectTurnsLeft);
+            tileCopy.effectDamage
+                = spell.spellEffect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(spell.damage, attacker.power, colorMod))
+                : spell.spellEffect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(spell.damage, attacker.power, colorMod))
+                : 0;
+            tileCopy.effectInflictor = attacker.label;
+
+            return tileCopy;
+        }
     }
 }

@@ -225,7 +225,7 @@ public class GameLogic : MonoBehaviour
                     board.tiles,
                     new List<TileState> { TileState.isAOE },
                     true,
-                    BoardC.CalculateAOEPatterns(potentialSpell.pattern, currentHover)
+                    BoardC.CalculateAOEPatterns(potentialSpell.pattern, currentHover, currentClicked.piece.player)
                 );
             }
             else
@@ -289,26 +289,29 @@ public class GameLogic : MonoBehaviour
         string effect = spell.spellEffect;
 
         // apply damage and effects to pieces in range
-        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster);
+        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.piece.player);
         Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, BoardC.ChoosePlayerTargetForEffect(currentPlayer, effect));
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
-            Tile tileCopy = kvp.Value.Clone();
-            float colorMod = SpellC.ColorMod(caster.piece.element, tileCopy.piece.element, spell.color);
-            tileCopy.piece.health += PieceC.HealthAdjust(spell.damage, caster.piece.power, effect, colorMod);
-            tileCopy.piece.power += PieceC.PowerAdjust(spell.damage, caster.piece.power, effect, colorMod);
-            tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
-            tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod, tileCopy.piece.effectTurnsLeft);
-            tileCopy.piece.effectDamage
-                = effect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
-                : effect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
-                : 0;
-            tileCopy.piece.effectInflictor = caster.piece.label;
+            // Tile tileCopy = kvp.Value.Clone();
+            // float colorMod = SpellC.ColorMod(caster.piece.element, tileCopy.piece.element, spell.color);
+            // tileCopy.piece.health += PieceC.HealthAdjust(spell.damage, caster.piece.power, effect, colorMod);
+            // tileCopy.piece.power += PieceC.PowerAdjust(spell.damage, caster.piece.power, effect, colorMod);
+            // tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
+            // tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod, tileCopy.piece.effectTurnsLeft);
+            // tileCopy.piece.effectDamage
+            //     = effect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
+            //     : effect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
+            //     : 0;
+            // tileCopy.piece.effectInflictor = caster.piece.label;
 
-            board.tiles[tileCopy.y][tileCopy.x] = tileCopy;
-            targetsPostDmg[kvp.Key] = tileCopy;
+            Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.piece, kvp.Value.piece, spell);
+            Tile tileWithNewPiece = board.tiles[(int)kvp.Key.y][(int)kvp.Key.x].Clone();
+            tileWithNewPiece.piece = piecePostSpell;
+            board.tiles[(int)kvp.Key.y][(int)kvp.Key.x] = tileWithNewPiece;
+            targetsPostDmg[kvp.Key] = tileWithNewPiece;
         };
 
         // --- Graphics ---
@@ -426,7 +429,7 @@ public class GameLogic : MonoBehaviour
 
         // wait for input
         if (currentPlayer != humanPlayer)
-            AIC.TakeTurn(board, this);
+            AIC.TakeTurn(board, this, 5); // difficulty is 1-5
     }
 }
 
@@ -435,8 +438,21 @@ public class GameLogic : MonoBehaviour
 - player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
     - caused by no checking duplicates in permutation function?
     - potentially just generate spells by ingredients picked up?
-- looks like killing a piece is not giving exp sometimes but giving too much exp others
+- killing a piece only gives exp if you kill multiple
 - looks like movement isn't increasing with level
 - if a piece dies from poison or burn an error is thrown
 - ai can move frozen pieces
+- putting cursor off board with piece selected throws error
+- healing heals past max health
+- elements are not respawning where a piece dies
+- health bar doesn't update when gaining levels
+- when health is 0.1321415 the piece doesn't die
+- after level 6 gaining a level makes exp go down
+*/
+
+// Balance
+/*
+- eden to far red element first turn is OP
+- heal needs to be buffed
+- 
 */

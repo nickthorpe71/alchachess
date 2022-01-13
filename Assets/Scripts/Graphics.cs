@@ -262,20 +262,19 @@ public class Graphics : MonoBehaviour
                 }).ToList();
             }
         }
-
         yield return new WaitForSeconds(1);
         levelPhase(deadTargets, caster);
     }
 
-    public void PlayLevelPhaseAnims(Action nextTurnPhase, Tile pieceTile, float startExp, float startLevel)
+    public void PlayLevelPhaseAnims(Action nextTurnPhase, Tile pieceTile, float startExp, float startLevel, float previousHealth)
     {
-        StartCoroutine(LevelPhaseAnims(nextTurnPhase, pieceTile, startExp, startLevel));
+        StartCoroutine(LevelPhaseAnims(nextTurnPhase, pieceTile, startExp, startLevel, previousHealth));
     }
 
-    IEnumerator LevelPhaseAnims(Action nextTurnPhase, Tile pieceTile, float startExp, float startLevel)
+    IEnumerator LevelPhaseAnims(Action nextTurnPhase, Tile pieceTile, float startExp, float startLevel, float previousHealth)
     {
         GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, new Vector3(pieceTile.x, pieceTile.y));
-        pieceGraphic.GetComponentInChildren<PieceStats>().UpdateExpUI(pieceTile, startExp, startLevel, PlayLevelUpAnim);
+        pieceGraphic.GetComponentInChildren<PieceStats>().UpdateExpUI(pieceTile, startExp, startLevel, PlayLevelUpAnim, previousHealth);
         yield return new WaitForSeconds(2f * (pieceTile.piece.level + 3));
         nextTurnPhase();
     }

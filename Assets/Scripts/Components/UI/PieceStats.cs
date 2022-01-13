@@ -47,7 +47,7 @@ public class PieceStats : MonoBehaviour
         effectText.text = effect;
     }
 
-    public void UpdateExpUI(Tile pieceTile, float startExp, float startLevel, Action<Vector3> playLevelUpAnim)
+    public void UpdateExpUI(Tile pieceTile, float startExp, float startLevel, Action<Vector3> playLevelUpAnim, float previousHealth)
     {
         statsCanvas.gameObject.SetActive(true);
         Piece piece = pieceTile.piece;
@@ -65,7 +65,11 @@ public class PieceStats : MonoBehaviour
         if (levelsToGain == 0)
             StartCoroutine(UpdateBar(expBar, startExpPercent, endExpPercent, true));
         else
+        {
             StartCoroutine(LevelUpRoutine(startLevel, piece.level, startExpPercent, endExpPercent, new Vector3(pieceTile.x, 0, pieceTile.y), playLevelUpAnim));
+            UpdateHealthUI(piece, previousHealth);
+        }
+
     }
 
     IEnumerator UpdateBar(Image targetBar, float startPercent, float endPercent, bool deactivateCanvasPost)

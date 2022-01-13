@@ -295,18 +295,6 @@ public class GameLogic : MonoBehaviour
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
-            // Tile tileCopy = kvp.Value.Clone();
-            // float colorMod = SpellC.ColorMod(caster.piece.element, tileCopy.piece.element, spell.color);
-            // tileCopy.piece.health += PieceC.HealthAdjust(spell.damage, caster.piece.power, effect, colorMod);
-            // tileCopy.piece.power += PieceC.PowerAdjust(spell.damage, caster.piece.power, effect, colorMod);
-            // tileCopy.piece.currentSpellEffect = SpellC.DetermineLastingEffect(effect);
-            // tileCopy.piece.effectTurnsLeft = SpellC.DetermineEffectTurns(effect, colorMod, tileCopy.piece.effectTurnsLeft);
-            // tileCopy.piece.effectDamage
-            //     = effect == "burn" ? SpellC.CalcBurn(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
-            //     : effect == "poison" ? SpellC.CalcPoison(SpellC.CalcDamage(spell.damage, caster.piece.power, colorMod))
-            //     : 0;
-            // tileCopy.piece.effectInflictor = caster.piece.label;
-
             Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.piece, kvp.Value.piece, spell);
             Tile tileWithNewPiece = board.tiles[(int)kvp.Key.y][(int)kvp.Key.x].Clone();
             tileWithNewPiece.piece = piecePostSpell;
@@ -384,6 +372,7 @@ public class GameLogic : MonoBehaviour
         // store start level and exp for graphics
         float startLevel = movedPiece.piece.level;
         float startExp = movedPiece.piece.experience;
+        float startHealth = movedPiece.piece.health;
 
         // calculate multiple target defeat bonus
         int multiTargetBonus = deadTargets.Count;
@@ -403,6 +392,7 @@ public class GameLogic : MonoBehaviour
         // calculate new stats and level
         if (pieceLeveled)
         {
+            Debug.Log("made it");
             Piece leveledPiece = updatedExpPiece.Clone();
             leveledPiece.level += PieceC.CalcLevelFromExp(leveledPiece.experience);
             leveledPiece.power += leveledPiece.power / 5 * leveledPiece.level;
@@ -413,7 +403,7 @@ public class GameLogic : MonoBehaviour
         }
 
         // --- Graphics ---
-        graphics.PlayLevelPhaseAnims(() => NextTurnPhase(), board.tiles[movedPiece.y][movedPiece.x], startExp, startLevel);
+        graphics.PlayLevelPhaseAnims(() => NextTurnPhase(), board.tiles[movedPiece.y][movedPiece.x], startExp, startLevel, startHealth);
     }
 
     public void NextTurnPhase()
@@ -435,9 +425,6 @@ public class GameLogic : MonoBehaviour
 
 // BUGS:
 /*
-- player first turn move with iron piece moving forward 3 (recipe: YWB) displays that it will cast judgement which should actually cost (WWY)
-    - caused by no checking duplicates in permutation function?
-    - potentially just generate spells by ingredients picked up?
 - killing a piece only gives exp if you kill multiple
 - looks like movement isn't increasing with level
 - if a piece dies from poison or burn an error is thrown

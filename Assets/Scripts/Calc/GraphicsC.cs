@@ -28,5 +28,11 @@ namespace Calc
         }
 
         public static string GetCastAnimPrefabPath(Spell spell) => "SpellAnims/CastAnims/" + spell.color + "CastAnim";
+
+        public static PieceStats GetPieceStatsUI(Vector2 piecePos, List<GameObject> activePieces)
+        {
+            GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, piecePos);
+            return pieceGraphic.GetComponentInChildren<PieceStats>();
+        }
     }
 }

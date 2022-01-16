@@ -20,7 +20,7 @@ public class GameLogic : MonoBehaviour
     [NonSerialized] public PlayerToken currentPlayer = PlayerToken.P1;
     private Tile currentHover = null;
     private Tile currentClicked = null;
-    private bool humanCanInput;
+    [HideInInspector] public bool humanCanInput;
 
     // References
     private Graphics graphics;
@@ -189,7 +189,9 @@ public class GameLogic : MonoBehaviour
             new List<Vector2> { new Vector2(currentHover.x, currentHover.y) }
         );
 
-        // Set new Hovered to hovered
+        graphics.ToggleAllPieceStatsUI(false);
+
+        // Set new Hovered to hovered TileState
         board.tiles = BoardC.ChangeTilesState(
             board.tiles,
             new List<TileState> { TileState.isHovered },
@@ -202,20 +204,18 @@ public class GameLogic : MonoBehaviour
         if (currentHover.contents == TileContents.Piece)
         {
             ui.spellView.Toggle(false);
-            ui.pieceView.UpdateView(currentHover.piece);
+            graphics.ShowPieceStats(new Vector2(currentHover.x, currentHover.y), currentHover.piece);
         }
         else
         {
             if (currentClicked == null) return;
 
             Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
-            ui.pieceView.Toggle(false);
+            graphics.TogglePieceStatsUI(new Vector2(currentClicked.x, currentClicked.y), false);
 
             // if piece is clicked and there are elements in our path
             if (currentClicked != null && potentialSpell != null)
             {
-                // TODO: display damage / effects that would be done if this piece would be selected
-
                 // show stats of potential spell
                 float colorMod = SpellC.ColorMod(currentClicked.piece.element, "N", potentialSpell.color);
                 ui.spellView.UpdateView(potentialSpell, currentClicked.piece, colorMod);
@@ -229,7 +229,10 @@ public class GameLogic : MonoBehaviour
                 );
             }
             else
+            {
                 ui.ToggleAllUI(false);
+                graphics.ToggleAllPieceStatsUI(false);
+            }
         }
 
         graphics.UpdateTileGraphics(board.tiles);

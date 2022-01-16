@@ -4199,6 +4199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackMat: {fileID: 2100000, guid: 2e2372ca4d0887740b817349d27e23ef, type: 2}
   whiteMat: {fileID: 2100000, guid: 025d6208002b0994c9ba9b52a5589170, type: 2}
+  activePieces: []
 --- !u!114 &1195970375
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,14 +10,37 @@ public class PieceStats : MonoBehaviour
 {
     public GameObject statsCanvas;
 
+    public TextMeshProUGUI characterName;
+
     public Image healthGreen;
     public Image healthRed;
+    public TextMeshProUGUI healthTxt;
+
     public TextMeshProUGUI effectText;
 
     public Image expBar;
     public TextMeshProUGUI level;
 
     private float updateSpeed = 0.25f;
+
+    public void Toggle(bool isActive)
+    {
+        statsCanvas.SetActive(isActive);
+    }
+
+    public void UpdateUI(Piece piece)
+    {
+        healthGreen.fillAmount = piece.health / piece.maxHealth;
+        healthRed.fillAmount = piece.health / piece.maxHealth;
+        healthTxt.text = $"{piece.health} / {piece.maxHealth}";
+        characterName.text = piece.label.ToString();
+        level.text = piece.level.ToString();
+        expBar.fillAmount = PieceC.ExpAsPercent(piece.experience, piece.level);
+        UpdateEffect(piece.currentSpellEffect);
+        // TODO:
+        // update power
+        // update movement
+    }
 
     public void UpdateHealthUI(Piece piece, float previousHealth)
     {
@@ -26,7 +49,7 @@ public class PieceStats : MonoBehaviour
         float postDamageHealthPercent = piece.health / piece.maxHealth;
 
         // update level as it hasn't been initialized
-        level.text = "Lvl. " + piece.level.ToString();
+        level.text = piece.level.ToString();
 
         healthGreen.fillAmount = postDamageHealthPercent;
         healthRed.fillAmount = preDamageHealthPercent;
@@ -53,13 +76,12 @@ public class PieceStats : MonoBehaviour
         Piece piece = pieceTile.piece;
 
         // set ui to show start exp and start level
-        level.text = "Lvl. " + startLevel.ToString();
+        level.text = startLevel.ToString();
 
         float startExpPercent = PieceC.ExpAsPercent(startExp, startLevel);
         expBar.fillAmount = startExpPercent;
 
         float endExpPercent = PieceC.ExpAsPercent(piece.experience, piece.level);
-
         float levelsToGain = piece.level - startLevel;
 
         if (levelsToGain == 0)
@@ -100,7 +122,7 @@ public class PieceStats : MonoBehaviour
         // bring bar up to 100%
         yield return StartCoroutine(UpdateBar(expBar, startExpPercent, 1, false));
         currentLevel++;
-        level.text = "Lvl. " + currentLevel.ToString();
+        level.text = currentLevel.ToString();
         playLevelUpAnim(piecePos);
         yield return new WaitForSeconds(1f);
 
@@ -109,7 +131,7 @@ public class PieceStats : MonoBehaviour
         {
             yield return StartCoroutine(UpdateBar(expBar, 0, 1, false));
             currentLevel++;
-            level.text = "Lvl. " + currentLevel.ToString();
+            level.text = currentLevel.ToString();
             playLevelUpAnim(piecePos);
             yield return new WaitForSeconds(1f);
         }

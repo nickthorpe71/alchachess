@@ -20,7 +20,7 @@ public class Graphics : MonoBehaviour
         ["B"] = "Elements/Blue",
         ["Y"] = "Elements/Yellow"
     };
-    private List<GameObject> activePieces = new List<GameObject>();
+    public List<GameObject> activePieces = new List<GameObject>();
 
     // Piece Movement
     private bool pieceIsMoving = false;
@@ -160,6 +160,29 @@ public class Graphics : MonoBehaviour
         pieceIsMoving = true;
     }
 
+    public void TogglePieceStatsUI(Vector2 piecePos, bool isActive)
+    {
+        PieceStats statsUI = GraphicsC.GetPieceStatsUI(piecePos, activePieces);
+        statsUI.Toggle(isActive);
+    }
+
+    public void ToggleAllPieceStatsUI(bool isActive)
+    {
+        foreach (GameObject obj in activePieces)
+        {
+            PieceStats statsUI = GraphicsC.GetPieceStatsUI(new Vector2(obj.transform.position.x, obj.transform.position.z), activePieces);
+            statsUI.Toggle(isActive);
+        }
+
+    }
+
+    public void ShowPieceStats(Vector2 piecePos, Piece piece)
+    {
+        PieceStats statsUI = GraphicsC.GetPieceStatsUI(piecePos, activePieces);
+        statsUI.UpdateUI(piece);
+        statsUI.Toggle(true);
+    }
+
     public void PlayCastAnims(
         Spell spell,
         Action<Tile> upkeepPhase,
@@ -210,9 +233,9 @@ public class Graphics : MonoBehaviour
     {
         foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
         {
-            GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, target.Key);
+            PieceStats pieceStatsUI = GraphicsC.GetPieceStatsUI(target.Key, activePieces);
             float previousHealth = targetsPreDmg[target.Key].piece.health;
-            pieceGraphic.GetComponentInChildren<PieceStats>().UpdateHealthUI(target.Value.piece, previousHealth);
+            pieceStatsUI.UpdateHealthUI(target.Value.piece, previousHealth);
         }
     }
 

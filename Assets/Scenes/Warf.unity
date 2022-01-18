@@ -491,7 +491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &126196550
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4215,6 +4215,7 @@ MonoBehaviour:
   humanPlayer: 0
   aiPlayer: 1
   masterSpellList: {fileID: 4900000, guid: 0c0a1c0330baf4c4e80e44f50d46a5cc, type: 3}
+  humanCanInput: 0
 --- !u!4 &1195970376
 Transform:
   m_ObjectHideFlags: 0

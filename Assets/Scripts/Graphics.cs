@@ -23,7 +23,7 @@ public class Graphics : MonoBehaviour
     public List<GameObject> activePieces = new List<GameObject>();
 
     // Piece Movement
-    private bool pieceIsMoving = false;
+    [HideInInspector] public bool pieceIsMoving = false;
     private GameObject targetPiece;
     private Vector3 newPosition;
     private float moveSpeed = 2;

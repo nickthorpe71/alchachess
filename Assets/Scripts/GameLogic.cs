@@ -200,13 +200,14 @@ public class GameLogic : MonoBehaviour
         );
         currentHover = board.tiles[newHover.y][newHover.x];
 
-        // check if it's a piece or element
+        // if hovering a piece
         if (currentHover.contents == TileContents.Piece)
         {
             ui.spellView.Toggle(false);
-            graphics.ShowPieceStats(new Vector2(currentHover.x, currentHover.y), currentHover.piece);
+            if (!graphics.pieceIsMoving)
+                graphics.ShowPieceStats(new Vector2(currentHover.x, currentHover.y), currentHover.piece);
         }
-        else
+        else // if hoverint an element
         {
             if (currentClicked == null) return;
 
@@ -381,7 +382,8 @@ public class GameLogic : MonoBehaviour
         int multiTargetBonus = deadTargets.Count;
 
         // calculate exp gained by piece that just moved
-        int expGained = deadTargets.Values.Aggregate(0, (acc, tile) => acc + PieceC.ExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * multiTargetBonus;
+        int expGained = deadTargets.Values.ToList().Aggregate(0, (acc, tile) => acc + PieceC.ExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * Mathf.Max((multiTargetBonus / 2), 1);
+        Debug.Log(expGained);
 
         // add exp to piece
         Piece updatedExpPiece = movedPiece.piece.Clone();

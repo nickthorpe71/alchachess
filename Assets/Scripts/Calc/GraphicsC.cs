@@ -16,7 +16,10 @@ namespace Calc
         }
 
         public static GameObject GetPieceByPosition(List<GameObject> pieces, Vector2 position)
-            => pieces.Where(piece => new Vector2(piece.transform.position.x, piece.transform.position.z) == position).ToList<GameObject>()[0];
+        {
+            List<GameObject> result = pieces.Where(piece => new Vector2(piece.transform.position.x, piece.transform.position.z) == position).ToList<GameObject>();
+            return (result.Count > 0) ? result[0] : null;
+        }
 
         public static string GetSpellAnimPrefabPath(Spell spell)
         {

@@ -89,7 +89,9 @@ public class board_calc
             new Vector2(1,2),
             new Vector2(3,2),
             new Vector2(1,3),
-            new Vector2(4,3)
+            new Vector2(4,3),
+            new Vector2(1,4),
+            new Vector2(5,4)
         };
 
         // act

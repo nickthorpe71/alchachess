@@ -49,9 +49,9 @@ public class piece_calc
         int result22 = PieceC.ExpFromDefeatingOther(2, 2); // lvl 2 defeating lvl 2
 
         // assert
-        Assert.AreEqual(45, result11);
-        Assert.AreEqual(22, result21);
-        Assert.AreEqual(1310, result12);
-        Assert.AreEqual(655, result22);
+        Assert.AreEqual(90, result11);
+        Assert.AreEqual(45, result21);
+        Assert.AreEqual(2620, result12);
+        Assert.AreEqual(1310, result22);
     }
 }

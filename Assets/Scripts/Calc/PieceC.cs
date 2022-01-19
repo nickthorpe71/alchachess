@@ -104,6 +104,7 @@ namespace Calc
             Piece tileCopy = defender.Clone();
             float colorMod = SpellC.ColorMod(attacker.element, tileCopy.element, spell.color);
             tileCopy.health += HealthAdjust(spell.damage, attacker.power, spell.spellEffect, colorMod);
+            if (tileCopy.health > tileCopy.maxHealth) tileCopy.health = tileCopy.maxHealth;
             tileCopy.power += PowerAdjust(spell.damage, attacker.power, spell.spellEffect, colorMod);
             tileCopy.currentSpellEffect = SpellC.DetermineLastingEffect(spell.spellEffect);
             tileCopy.effectTurnsLeft = SpellC.DetermineEffectTurns(spell.spellEffect, colorMod, tileCopy.effectTurnsLeft);

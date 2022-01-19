@@ -311,7 +311,6 @@ public class GameLogic : MonoBehaviour
         graphics.PlayCastAnims(spell, (caster) => UpkeepPhase(caster), caster, targetsPreDmg, targetsPostDmg, aoeRange);
     }
 
-
     public void UpkeepPhase(Tile movedPiece)
     {
         // --- Data ---
@@ -430,16 +429,13 @@ public class GameLogic : MonoBehaviour
 
 // BUGS:
 /*
-- killing a piece only gives exp if you kill multiple
-- looks like movement isn't increasing with level
-- if a piece dies from poison or burn an error is thrown
-- ai can move frozen pieces
-- putting cursor off board with piece selected throws error
-- healing heals past max health
 - elements are not respawning where a piece dies
 - health bar doesn't update when gaining levels
 - when health is 0.1321415 the piece doesn't die
 - after level 6 gaining a level makes exp go down
+- ui is messed up when leveling
+- piece human moves stays highlighted during opponents turn
+- looks like movement isn't increasing with level
 */
 
 // Balance

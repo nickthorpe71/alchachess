@@ -14,7 +14,7 @@ namespace Calc
             => (int)Math.Floor(((Math.Pow(currentLevel, 4) + 10 * Math.Pow(currentLevel, 3) + 37 * Math.Pow(currentLevel, 2) + 57 * currentLevel - 96) / 16) * 100);
 
         public static int ExpFromDefeatingOther(float myLevel, float opponentLevel)
-            => (int)Math.Floor(((Math.Pow(opponentLevel, 4) + 10 * Math.Pow(opponentLevel, 3) + 37 * Math.Pow(opponentLevel, 2) + 57 * opponentLevel - 96) / myLevel) * 10);
+            => (int)Math.Floor(((Math.Pow(opponentLevel, 4) + 10 * Math.Pow(opponentLevel, 3) + 37 * Math.Pow(opponentLevel, 2) + 57 * opponentLevel - 96) / myLevel) * 6);
 
         public static float ExpAsPercent(float exp, float level)
         {

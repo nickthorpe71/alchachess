@@ -21,6 +21,7 @@ public class Graphics : MonoBehaviour
         ["Y"] = "Elements/Yellow"
     };
     public List<GameObject> activePieces = new List<GameObject>();
+    public Dictionary<Vector2, GameObject> elementGraphics = new Dictionary<Vector2, GameObject>();
 
     // Piece Movement
     [HideInInspector] public bool pieceIsMoving = false;
@@ -93,12 +94,13 @@ public class Graphics : MonoBehaviour
         ElementGraphic graphicComponent = newElement.GetComponent<ElementGraphic>();
         graphicComponent.destroyAnimPrefab = elementDestroyAnim;
         graphicComponent.graphics = this;
+        elementGraphics[new Vector2(x, y)] = newElement;
     }
 
     public void RepopulateElements(Dictionary<Vector2, string> toRepopulate)
     {
         foreach (KeyValuePair<Vector2, string> kvp in toRepopulate)
-            InstantiateElement(kvp.Value, (int)kvp.Key.x, (int)kvp.Key.y);
+            elementGraphics[kvp.Key].GetComponent<ElementGraphic>().Activate();
     }
 
     // --- Update ---
@@ -173,7 +175,6 @@ public class Graphics : MonoBehaviour
             PieceStats statsUI = GraphicsC.GetPieceStatsUI(new Vector2(obj.transform.position.x, obj.transform.position.z), activePieces);
             statsUI.Toggle(isActive);
         }
-
     }
 
     public void ShowPieceStats(Vector2 piecePos, Piece piece)
@@ -244,9 +245,11 @@ public class Graphics : MonoBehaviour
         Tile caster,
         Dictionary<Vector2, Tile> targetsPreDmg,
         Dictionary<Vector2, Tile> targetsPostDmg,
-        Dictionary<Vector2, Tile> deadTargets)
+        Dictionary<Vector2, Tile> deadTargets,
+        Dictionary<Vector2, string> toRepopulate
+        )
     {
-        StartCoroutine(UpkeepAnims(levelPhase, caster, targetsPreDmg, targetsPostDmg, deadTargets));
+        StartCoroutine(UpkeepAnims(levelPhase, caster, targetsPreDmg, targetsPostDmg, deadTargets, toRepopulate));
     }
 
     IEnumerator UpkeepAnims(
@@ -255,7 +258,9 @@ public class Graphics : MonoBehaviour
         Tile caster,
         Dictionary<Vector2, Tile> targetsPreDmg,
         Dictionary<Vector2, Tile> targetsPostDmg,
-        Dictionary<Vector2, Tile> deadTargets)
+        Dictionary<Vector2, Tile> deadTargets,
+        Dictionary<Vector2, string> toRepopulate
+        )
     {
         ReduceHealth(targetsPreDmg, targetsPostDmg);
         yield return new WaitForSeconds(1);
@@ -286,6 +291,7 @@ public class Graphics : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(1);
+        RepopulateElements(toRepopulate);
         levelPhase(deadTargets, caster);
     }
 

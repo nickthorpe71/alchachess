@@ -314,10 +314,6 @@ public class GameLogic : MonoBehaviour
     public void UpkeepPhase(Tile movedPiece)
     {
         // --- Data ---
-        // restore all elements to the field
-        Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
-        board.tiles = BoardC.RepopulateElements(board.tiles, toRepopulate);
-
         // calculate effects and save a copy of effected pieces
         Dictionary<Vector2, StatusChange> currentEffects = PieceC.GetCurrentStatusEffects(board.tiles);
 
@@ -354,11 +350,13 @@ public class GameLogic : MonoBehaviour
             }
         });
 
-        // --- Graphics ---
-        graphics.RepopulateElements(toRepopulate);
+        // restore all elements to the field
+        Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
+        board.tiles = BoardC.RepopulateElements(board.tiles, toRepopulate);
 
+        // --- Graphics ---
         // show effect animations and remove health and destroy newly dead targets
-        graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets);
+        graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets, toRepopulate);
     }
 
     public void LevelUpPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
@@ -382,7 +380,6 @@ public class GameLogic : MonoBehaviour
 
         // calculate exp gained by piece that just moved
         int expGained = deadTargets.Values.ToList().Aggregate(0, (acc, tile) => acc + PieceC.ExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * Mathf.Max((multiTargetBonus / 2), 1);
-        Debug.Log(expGained);
 
         // add exp to piece
         Piece updatedExpPiece = movedPiece.piece.Clone();
@@ -396,7 +393,6 @@ public class GameLogic : MonoBehaviour
         // calculate new stats and level
         if (pieceLeveled)
         {
-            Debug.Log("made it");
             Piece leveledPiece = updatedExpPiece.Clone();
             leveledPiece.level += PieceC.CalcLevelFromExp(leveledPiece.experience);
             leveledPiece.power += leveledPiece.power / 5 * leveledPiece.level;

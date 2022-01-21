@@ -425,7 +425,6 @@ public class GameLogic : MonoBehaviour
 
 // BUGS:
 /*
-- elements are not respawning where a piece dies
 - health bar doesn't update when gaining levels
 - when health is 0.1321415 the piece doesn't die
 - after level 6 gaining a level makes exp go down

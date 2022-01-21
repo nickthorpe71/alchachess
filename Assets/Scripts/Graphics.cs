@@ -27,7 +27,7 @@ public class Graphics : MonoBehaviour
     [HideInInspector] public bool pieceIsMoving = false;
     private GameObject targetPiece;
     private Vector3 newPosition;
-    private float moveSpeed = 2;
+    private float moveSpeed = 3;
     private Action postMoveAction;
 
 
@@ -210,22 +210,22 @@ public class Graphics : MonoBehaviour
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
         castAnim.transform.position = new Vector3(caster.x, 0.35f, caster.y);
-        Destroy(castAnim, 8);
-        yield return new WaitForSeconds(1);
+        Destroy(castAnim, 2);
+        yield return new WaitForSeconds(1f);
 
         // play spell animation on each target
         foreach (Vector2 pos in aoeRange)
         {
             GameObject spellAnim = Instantiate(Resources.Load(spellAnimPath) as GameObject);
             spellAnim.transform.position = new Vector3(pos.x, 0.7f, pos.y);
-            yield return new WaitForSeconds(0.3f);
-            Destroy(spellAnim, 8);
+            yield return new WaitForSeconds(0.1f);
+            Destroy(spellAnim, 2);
         }
         yield return new WaitForSeconds(0.25f);
 
         // display health reduction and effect application to correct pieces
         ReduceHealth(targetsPreDmg, targetsPostDmg);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.5f);
 
         upkeepPhase(caster);
     }
@@ -275,7 +275,7 @@ public class Graphics : MonoBehaviour
                 Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
                 GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
                 deathAnim.transform.position = positionIn3D;
-                Destroy(deathAnim, 5);
+                Destroy(deathAnim, 3);
 
                 // remove pieces from active pieces
                 activePieces = activePieces.Where(piece =>
@@ -304,7 +304,7 @@ public class Graphics : MonoBehaviour
     {
         GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, new Vector3(pieceTile.x, pieceTile.y));
         pieceGraphic.GetComponentInChildren<PieceStats>().UpdateExpUI(pieceTile, startExp, startLevel, PlayLevelUpAnim, previousHealth);
-        yield return new WaitForSeconds(2f * (pieceTile.piece.level + 3));
+        yield return new WaitForSeconds(2f * pieceTile.piece.level);
         nextTurnPhase();
     }
 

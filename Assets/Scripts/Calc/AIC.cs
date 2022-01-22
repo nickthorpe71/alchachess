@@ -11,16 +11,6 @@ namespace Calc
         {
             // RandomTurn(board, logic);
             DamagingTurn(board, logic, difficulty);
-
-            // TODO: 
-            // - wipe board tiles state because sometimes they are staying highlighted after ai turn
-            // - need to be able to click through pieces and elements
-            // - need to flip opponent spell patterns as they are the same rotation as player right now
-            // - need to add healing team consideration to ai move score
-            // - need to display freezing and unfreezing anim
-            // - simplify stats and exp algo and other algos so it's easier(still probably not that easy, but this is for advanced players) for player to calc on the fly
-            // - add more elements to board?
-            // - SPEED UP TURNS!
         }
 
         private static void RandomTurn(Board board, GameLogic logic)
@@ -48,6 +38,9 @@ namespace Calc
         {
             // get pieces owned by ai player
             List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).Where(tile => tile.piece.currentSpellEffect != "frozen").ToList();
+
+            if (aiPieces.Count == 0)
+                logic.NextTurnPhase();
 
             List<ScoredMove> scoredMoves = new List<ScoredMove>();
 

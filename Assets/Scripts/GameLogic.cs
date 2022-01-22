@@ -439,3 +439,11 @@ public class GameLogic : MonoBehaviour
 - heal needs to be buffed
 - 
 */
+
+// TODO: 
+// - wipe board tiles state because sometimes they are staying highlighted after ai turn
+// - need to be able to click through pieces and elements
+// - need to flip opponent spell patterns as they are the same rotation as player right now
+// - need to add healing team consideration to ai move score
+// - need to display freezing and unfreezing anim
+// - simplify stats and exp algo and other algos so it's easier(still probably not that easy, but this is for advanced players) for player to calc on the fly

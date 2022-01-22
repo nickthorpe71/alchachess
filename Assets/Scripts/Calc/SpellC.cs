@@ -44,17 +44,6 @@ namespace Calc
             // add effect for spell color
             newSpell.spellEffect = ElementalComponents.list[color].Effect;
             return newSpell;
-
-            // var allPerms = GeneralC.GetPermutations(recipe, recipe.Length).ToList();
-
-            // for (int i = 0; i < allPerms.Count; i++)
-            // {
-            //     string perm = new string(allPerms[i].ToArray());
-            //     if (AllSpells.data.ContainsKey(perm))
-            //         return AllSpells.data[perm];
-            // }
-
-            // return null;
         }
 
         private static bool IsInPattern(List<V2Import> pattern, V2Import v2)
@@ -115,14 +104,13 @@ namespace Calc
             }
         }
 
-
         // Status effect calculations
-        public static float CalcHeal(float baseDmg, float power, float colorMod) => baseDmg * power * colorMod;
-        public static float CalcBurn(float damage) => (damage / 10) * 2;
-        public static float CalcPoison(float damage) => (damage / 10) * 2;
+        public static float CalcHeal(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
+        public static float CalcBurn(float damage) => Mathf.Floor((damage / 10) * 2);
+        public static float CalcPoison(float damage) => Mathf.Floor((damage / 10) * 2);
         public static float CalcIncreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
         public static float CalcDecreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
-        public static float CalcDamage(float baseDmg, float power, float colorMod) => baseDmg * power * colorMod;
+        public static float CalcDamage(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
 
         public static int DetermineEffectTurns(string effect, float colorMod, int currentTurns) => (effect == "burn" || effect == "poison" || effect == "frozen") ? 3 + (int)Mathf.Floor(colorMod) : currentTurns;
         public static string DetermineLastingEffect(string effect) => (effect == "burn" || effect == "poison" || effect == "frozen") ? effect : "";

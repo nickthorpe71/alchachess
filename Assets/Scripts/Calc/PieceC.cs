@@ -57,7 +57,7 @@ namespace Calc
             if (effect == "increase power" || effect == "decrease power")
                 return 0;
 
-            return (effect == "heal") ? SpellC.CalcHeal(damage, power, colorMod) : SpellC.CalcDamage(damage, power, colorMod) * -1;
+            return (effect == "heal") ? SpellC.CalcHeal(damage, power, colorMod) * 2 : SpellC.CalcDamage(damage, power, colorMod) * -1;
         }
 
         public static float PowerAdjust(float damage, float power, string effect, float colorMod)

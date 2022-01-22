@@ -35,12 +35,12 @@ namespace Data
     public static class ElementalComponents
     {
         public static Dictionary<string, ElementalComponent> list = new Dictionary<string, ElementalComponent>{
-            {"D", new ElementalComponent("D", new List<V2Import>{new V2Import(1, -1), new V2Import(-1, -1)}, 152, "")},
+            {"D", new ElementalComponent("D", new List<V2Import>{new V2Import(1, -1), new V2Import(-1, -1)}, 150, "")},
             {"W", new ElementalComponent("W", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0), new V2Import(0, -1), new V2Import(0, 1), new V2Import(1, 1), new V2Import(-1, 1), new V2Import(1, -1), new V2Import(-1, -1)}, 50, "heal")},
             {"R", new ElementalComponent("R", new List<V2Import>{new V2Import(0, 1),new V2Import(0, 2)}, 125, "burn")},
-            {"B", new ElementalComponent("B", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0)}, 75, "frozen")},
+            {"B", new ElementalComponent("B", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0)}, 50, "frozen")},
             {"Y", new ElementalComponent("Y", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0), new V2Import(0, -1), new V2Import(0, 1)}, 100, "")},
-            {"G", new ElementalComponent("G", new List<V2Import>{new V2Import(1, 1), new V2Import(-1, 1), new V2Import(1, -1), new V2Import(-1, -1)}, 76, "poison")}
+            {"G", new ElementalComponent("G", new List<V2Import>{new V2Import(1, 1), new V2Import(-1, 1), new V2Import(1, -1), new V2Import(-1, -1)}, 75, "poison")}
         };
     }
 

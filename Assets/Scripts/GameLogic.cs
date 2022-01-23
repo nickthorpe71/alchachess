@@ -426,7 +426,6 @@ public class GameLogic : MonoBehaviour
 // BUGS:
 /*
 - health bar doesn't update when gaining levels
-- when health is 0.1321415 the piece doesn't die
 - after level 6 gaining a level makes exp go down
 - ui is messed up when leveling
 - piece human moves stays highlighted during opponents turn
@@ -441,6 +440,9 @@ public class GameLogic : MonoBehaviour
 */
 
 // TODO: 
+// - remove leveling up
+// - when walking over elements you should gain stats instead
+
 // - wipe board tiles state because sometimes they are staying highlighted after ai turn
 // - need to be able to click through pieces and elements
 // - need to flip opponent spell patterns as they are the same rotation as player right now

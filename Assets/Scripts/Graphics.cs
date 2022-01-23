@@ -80,6 +80,7 @@ public class Graphics : MonoBehaviour
         newPiece.transform.eulerAngles = rotation;
 
         newPiece.GetComponent<SetBaseColor>().SetColor(piece.color == PieceColor.White ? whiteMat : blackMat);
+        newPiece.GetComponent<PieceStats>().UpdateUI(piece);
 
         activePieces.Add(newPiece);
     }

@@ -40,6 +40,8 @@ public class PieceStats : MonoBehaviour
         healthGreen.fillAmount = postDamageHealthPercent;
         healthRed.fillAmount = preDamageHealthPercent;
 
+        healthTxt.text = $"{piece.health} / {piece.maxHealth}";
+
         StartCoroutine(UpdateBar(healthRed, preDamageHealthPercent, postDamageHealthPercent));
     }
 

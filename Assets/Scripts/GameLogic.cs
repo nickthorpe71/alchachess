@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using Actions;
@@ -356,54 +355,9 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         // show effect animations and remove health and destroy newly dead targets
-        graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets, toRepopulate);
-    }
+        // graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets, toRepopulate);
 
-    public void LevelUpPhase(Dictionary<Vector2, Tile> deadTargets, Tile movedPiece)
-    {
-        // if dead targets is null then no spell was cast
-        // if dead targets length is 0 no exp is gained
-        if (deadTargets == null || deadTargets.Count <= 0)
-        {
-            NextTurnPhase();
-            return;
-        }
-
-        // --- Data ---
-        // store start level and exp for graphics
-        float startLevel = movedPiece.piece.level;
-        float startExp = movedPiece.piece.experience;
-        float startHealth = movedPiece.piece.health;
-
-        // calculate multiple target defeat bonus
-        int multiTargetBonus = deadTargets.Count;
-
-        // calculate exp gained by piece that just moved
-        int expGained = deadTargets.Values.ToList().Aggregate(0, (acc, tile) => acc + PieceC.ExpFromDefeatingOther(movedPiece.piece.level, tile.piece.level)) * Mathf.Max((multiTargetBonus / 2), 1);
-
-        // add exp to piece
-        Piece updatedExpPiece = movedPiece.piece.Clone();
-        updatedExpPiece.experience += expGained;
-        board.tiles = PieceC.UpdatePieceOnTile(board.tiles, new Vector2(movedPiece.x, movedPiece.y), updatedExpPiece);
-
-        // check if a piece levels up
-        int expToLevel = PieceC.ExpForNextLevel(movedPiece.piece.level);
-        bool pieceLeveled = (board.tiles[movedPiece.y][movedPiece.x].piece.experience >= expToLevel);
-
-        // calculate new stats and level
-        if (pieceLeveled)
-        {
-            Piece leveledPiece = updatedExpPiece.Clone();
-            leveledPiece.level += PieceC.CalcLevelFromExp(leveledPiece.experience);
-            leveledPiece.power += leveledPiece.power / 5 * leveledPiece.level;
-            leveledPiece.maxHealth += leveledPiece.maxHealth / 5 * leveledPiece.level;
-            leveledPiece.health = leveledPiece.maxHealth;
-            leveledPiece.moveDistance = Math.Min(6, leveledPiece.level % 3 == 0 ? leveledPiece.moveDistance + 1 : leveledPiece.moveDistance);
-            board.tiles = PieceC.UpdatePieceOnTile(board.tiles, new Vector2(movedPiece.x, movedPiece.y), leveledPiece);
-        }
-
-        // --- Graphics ---
-        graphics.PlayLevelPhaseAnims(() => NextTurnPhase(), board.tiles[movedPiece.y][movedPiece.x], startExp, startLevel, startHealth);
+        graphics.PlayUpkeepAnims((deadTargets, movedPiece) => NextTurnPhase(), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets, toRepopulate);
     }
 
     public void NextTurnPhase()
@@ -425,27 +379,14 @@ public class GameLogic : MonoBehaviour
 
 // BUGS:
 /*
-- health bar doesn't update when gaining levels
-- after level 6 gaining a level makes exp go down
-- ui is messed up when leveling
 - piece human moves stays highlighted during opponents turn
-- looks like movement isn't increasing with level
-*/
-
-// Balance
-/*
-- eden to far red element first turn is OP
-- heal needs to be buffed
-- 
 */
 
 // TODO: 
-// - remove leveling up
 // - when walking over elements you should gain stats instead
 
 // - wipe board tiles state because sometimes they are staying highlighted after ai turn
 // - need to be able to click through pieces and elements
-// - need to flip opponent spell patterns as they are the same rotation as player right now
 // - need to add healing team consideration to ai move score
-// - need to display freezing and unfreezing anim
+// - need to display freezing and unfreezing anim + other status effects
 // - simplify stats and exp algo and other algos so it's easier(still probably not that easy, but this is for advanced players) for player to calc on the fly

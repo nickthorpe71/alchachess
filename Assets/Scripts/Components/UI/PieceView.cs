@@ -31,7 +31,6 @@ public class PieceView : MonoBehaviour, IToggle
 
         Toggle(true);
         pieceName.text = Enum.GetName(typeof(PieceLabel), piece.label);
-        level.text = piece.level.ToString();
         element.text = SpellC.ColorToString(piece.element);
         player.text = Enum.GetName(typeof(PlayerToken), piece.player);
         health.text = piece.health.ToString();

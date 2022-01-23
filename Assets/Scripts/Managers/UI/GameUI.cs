@@ -11,5 +11,4 @@ public class GameUI : MonoBehaviour
         spellView.Toggle(isDisplayed);
         pieceView.Toggle(isDisplayed);
     }
-
 }

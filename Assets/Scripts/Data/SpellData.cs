@@ -1,23 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Data
 {
-    public static class AllSpells
-    {
-        public static Dictionary<string, Spell> data;
-    }
-
-    public static class SpellLoader
-    {
-        public static void LoadAllSpells(TextAsset json)
-        {
-            SpellImport spellImport = JsonUtility.FromJson<SpellImport>(json.text);
-            AllSpells.data = spellImport.allSpells.ToDictionary(spell => spell.recipe, spell => spell);
-        }
-    }
 
     public static class ElementOpposites
     {
@@ -35,28 +20,26 @@ namespace Data
     public static class ElementalComponents
     {
         public static Dictionary<string, ElementalComponent> list = new Dictionary<string, ElementalComponent>{
-            {"D", new ElementalComponent("D", new List<V2Import>{new V2Import(1, -1), new V2Import(-1, -1)}, 150, "")},
-            {"W", new ElementalComponent("W", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0), new V2Import(0, -1), new V2Import(0, 1), new V2Import(1, 1), new V2Import(-1, 1), new V2Import(1, -1), new V2Import(-1, -1)}, 50, "heal")},
-            {"R", new ElementalComponent("R", new List<V2Import>{new V2Import(0, 1),new V2Import(0, 2)}, 125, "burn")},
-            {"B", new ElementalComponent("B", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0)}, 50, "frozen")},
-            {"Y", new ElementalComponent("Y", new List<V2Import>{new V2Import(1, 0), new V2Import(-1, 0), new V2Import(0, -1), new V2Import(0, 1)}, 100, "")},
-            {"G", new ElementalComponent("G", new List<V2Import>{new V2Import(1, 1), new V2Import(-1, 1), new V2Import(1, -1), new V2Import(-1, -1)}, 75, "poison")}
+            {"D", new ElementalComponent("D", new List<Vector2>{new Vector2(1, -1), new Vector2(-1, -1)}, 150)},
+            {"W", new ElementalComponent("W", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1), new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 80)},
+            {"R", new ElementalComponent("R", new List<Vector2>{new Vector2(0, 1),new Vector2(0, 2)}, 125)},
+            {"B", new ElementalComponent("B", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0)}, 120)},
+            {"Y", new ElementalComponent("Y", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1)}, 110)},
+            {"G", new ElementalComponent("G", new List<Vector2>{new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 110)}
         };
     }
 
     public class ElementalComponent
     {
         private readonly string _element;
-        private readonly List<V2Import> _pattern;
+        private readonly List<Vector2> _pattern;
         private readonly int _damage;
-        private readonly string _effect;
 
-        public ElementalComponent(string element, List<V2Import> pattern, int damage, string effect)
+        public ElementalComponent(string element, List<Vector2> pattern, int damage)
         {
             _element = element;
             _pattern = pattern;
             _damage = damage;
-            _effect = effect;
         }
 
         public string Element
@@ -64,7 +47,7 @@ namespace Data
             get { return _element; }
         }
 
-        public List<V2Import> Pattern
+        public List<Vector2> Pattern
         {
             get { return _pattern; }
         }
@@ -72,11 +55,6 @@ namespace Data
         public int Damage
         {
             get { return _damage; }
-        }
-
-        public string Effect
-        {
-            get { return _effect; }
         }
     }
 
@@ -239,24 +217,16 @@ namespace Data
         };
     }
 
-    [Serializable]
-    public class SpellImport
-    {
-        public List<Spell> allSpells;
-    }
-
-    [Serializable]
     public class Spell
     {
         public string recipe;
         public string color;
         public string name;
         public int totalCost;
-        public List<V2Import> pattern;
+        public List<Vector2> pattern;
         public int damage;
-        public string spellEffect;
 
-        public Spell(string _recipe, string _color, string _name, int _totalCost, List<V2Import> _pattern, int _damage, string _spellEffect)
+        public Spell(string _recipe, string _color, string _name, int _totalCost, List<Vector2> _pattern, int _damage)
         {
             recipe = _recipe;
             color = _color;
@@ -264,20 +234,6 @@ namespace Data
             totalCost = _totalCost;
             pattern = _pattern;
             damage = _damage;
-            spellEffect = _spellEffect;
-        }
-    }
-
-    [Serializable]
-    public class V2Import
-    {
-        public int x;
-        public int y;
-
-        public V2Import(int _x, int _y)
-        {
-            x = _x;
-            y = _y;
         }
     }
 }

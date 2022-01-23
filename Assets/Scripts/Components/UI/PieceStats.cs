@@ -9,14 +9,11 @@ public class PieceStats : MonoBehaviour
     public GameObject statsCanvas;
 
     public TextMeshProUGUI characterName;
-
     public Image healthGreen;
     public Image healthRed;
     public TextMeshProUGUI healthTxt;
 
-    public TextMeshProUGUI effectText;
-
-    private float updateSpeed = 0.1f;
+    private float updateSpeed = 0.75f;
 
     public void Toggle(bool isActive)
     {
@@ -29,7 +26,6 @@ public class PieceStats : MonoBehaviour
         healthRed.fillAmount = piece.health / piece.maxHealth;
         healthTxt.text = $"{piece.health} / {piece.maxHealth}";
         characterName.text = piece.label.ToString();
-        UpdateEffect(piece.currentSpellEffect);
         // TODO:
         // update power
         // update movement
@@ -44,23 +40,10 @@ public class PieceStats : MonoBehaviour
         healthGreen.fillAmount = postDamageHealthPercent;
         healthRed.fillAmount = preDamageHealthPercent;
 
-        StartCoroutine(UpdateBar(healthRed, preDamageHealthPercent, postDamageHealthPercent, true));
-        UpdateEffect(piece.currentSpellEffect);
+        StartCoroutine(UpdateBar(healthRed, preDamageHealthPercent, postDamageHealthPercent));
     }
 
-    private void UpdateEffect(string effect)
-    {
-        if (effect == "" || effect == "none" || effect == null)
-        {
-            effectText.gameObject.SetActive(false);
-            return;
-        }
-
-        effectText.gameObject.SetActive(true);
-        effectText.text = effect;
-    }
-
-    IEnumerator UpdateBar(Image targetBar, float startPercent, float endPercent, bool deactivateCanvasPost)
+    IEnumerator UpdateBar(Image targetBar, float startPercent, float endPercent)
     {
         float preChangePercent = startPercent;
         float elapsed = 0f;
@@ -75,10 +58,8 @@ public class PieceStats : MonoBehaviour
         }
 
         targetBar.fillAmount = endPercent;
-
-        statsCanvas.gameObject.SetActive(!deactivateCanvasPost);
-        if (deactivateCanvasPost)
-            yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
+        statsCanvas.gameObject.SetActive(false);
     }
 
     private void LateUpdate()

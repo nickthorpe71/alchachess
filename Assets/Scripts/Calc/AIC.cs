@@ -37,7 +37,7 @@ namespace Calc
         private static void DamagingTurn(Board board, GameLogic logic, int difficulty)
         {
             // get pieces owned by ai player
-            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).Where(tile => tile.piece.currentSpellEffect != "frozen").ToList();
+            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
 
             if (aiPieces.Count == 0)
                 logic.NextTurnPhase();

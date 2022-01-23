@@ -36,6 +36,5 @@ public class PieceView : MonoBehaviour, IToggle
         health.text = piece.health.ToString();
         power.text = piece.power.ToString();
         moveDistance.text = piece.moveDistance.ToString();
-        effect.text = piece.currentSpellEffect;
     }
 }

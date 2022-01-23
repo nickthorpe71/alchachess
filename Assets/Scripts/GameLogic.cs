@@ -11,7 +11,6 @@ public class GameLogic : MonoBehaviour
     // Data
     [SerializeField] public PlayerToken humanPlayer = PlayerToken.P1;
     [SerializeField] public PlayerToken aiPlayer = PlayerToken.P2;
-    public TextAsset masterSpellList;
 
     // GameState
     [NonSerialized] public Board board;
@@ -29,8 +28,6 @@ public class GameLogic : MonoBehaviour
     private void Awake()
     {
         board = new Board();
-
-        SpellLoader.LoadAllSpells(masterSpellList);
 
         graphics = GetComponent<Graphics>();
         graphics.InstantiateInitialBoard(board);
@@ -127,13 +124,6 @@ public class GameLogic : MonoBehaviour
         {
             if (!humanCanInput)
                 return;
-
-            if (currentClicked.piece.currentSpellEffect == "frozen")
-            {
-                // TODO: need to display this message in UI
-                Debug.Log("cannot move a frozen piece");
-                return;
-            }
 
             Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
 
@@ -287,13 +277,12 @@ public class GameLogic : MonoBehaviour
             return;
         }
 
-        // calculate damage and effects of spell
+        // calculate damage
         Tile caster = board.tiles[end.y][end.x];
-        string effect = spell.spellEffect;
 
-        // apply damage and effects to pieces in range
+        // apply damage to pieces in range
         List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.piece.player);
-        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, BoardC.ChoosePlayerTargetForEffect(currentPlayer, effect));
+        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, PlayerC.GetOppositePlayer(currentPlayer));
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
 
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
@@ -313,28 +302,6 @@ public class GameLogic : MonoBehaviour
     public void UpkeepPhase(Tile movedPiece)
     {
         // --- Data ---
-        // calculate effects and save a copy of effected pieces
-        Dictionary<Vector2, StatusChange> currentEffects = PieceC.GetCurrentStatusEffects(board.tiles);
-
-        // apply effects and record health pre and post effect
-        Dictionary<Vector2, Tile> targetsPreDamage = new Dictionary<Vector2, Tile>();
-        Dictionary<Vector2, Tile> targetsPostDamage = new Dictionary<Vector2, Tile>();
-        board.tiles = BoardC.MapTiles(board.tiles, tileCopy =>
-        {
-            Vector2 pos = new Vector2(tileCopy.x, tileCopy.y);
-            if (!currentEffects.ContainsKey(pos)) return tileCopy;
-
-            // store pre damage targets
-            targetsPreDamage[pos] = tileCopy;
-
-            // apply status effect/damage
-            tileCopy = PieceC.ApplyStatusEffects(tileCopy, currentEffects[pos]);
-
-            // store post damage targets
-            targetsPostDamage[pos] = tileCopy;
-            return tileCopy;
-        });
-
         // scan board for dead pieces
         Dictionary<Vector2, Tile> deadTargets = new Dictionary<Vector2, Tile>();
         board.tiles = BoardC.MapTiles(board.tiles, tile =>
@@ -355,9 +322,7 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         // show effect animations and remove health and destroy newly dead targets
-        // graphics.PlayUpkeepAnims((deadTargets, movedPiece) => LevelUpPhase(deadTargets, movedPiece), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets, toRepopulate);
-
-        graphics.PlayUpkeepAnims((deadTargets, movedPiece) => NextTurnPhase(), movedPiece, targetsPreDamage, targetsPostDamage, deadTargets, toRepopulate);
+        graphics.PlayUpkeepAnims(NextTurnPhase, movedPiece, deadTargets, toRepopulate);
     }
 
     public void NextTurnPhase()
@@ -366,7 +331,7 @@ public class GameLogic : MonoBehaviour
         turnCount++;
 
         // switch current player token
-        currentPlayer = PlayerC.SwitchPlayers(currentPlayer);
+        currentPlayer = PlayerC.GetOppositePlayer(currentPlayer);
 
         // give control to the correct player
         humanCanInput = PlayerC.CanHumanInput(currentPlayer);
@@ -382,11 +347,28 @@ public class GameLogic : MonoBehaviour
 - piece human moves stays highlighted during opponents turn
 */
 
-// TODO: 
-// - when walking over elements you should gain stats instead
-
+// TODO:
 // - wipe board tiles state because sometimes they are staying highlighted after ai turn
 // - need to be able to click through pieces and elements
-// - need to add healing team consideration to ai move score
-// - need to display freezing and unfreezing anim + other status effects
-// - simplify stats and exp algo and other algos so it's easier(still probably not that easy, but this is for advanced players) for player to calc on the fly
+
+// New Spell Effects
+// R
+// piece = damage enemies
+// B = 
+// empty = create impassable water for 1 turn
+// piece = heal allies 
+// D = 
+// piece = damage allies and enemies
+// W = 
+// piece = damage enemies heal allies
+// Y 
+// empty = create impassable boulder for 1 turn
+// piece = damage
+// G =
+// empty = create impassable tree for 1 turns
+// piece = damage enemies heal allies
+
+// Notes on new spell effects
+// implement the above first then consider whats below
+// it would be cool if elements were effected by spells somehow
+// it would cool if environment changes lasted longer but could be destroyed by spells

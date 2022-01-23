@@ -25,11 +25,6 @@ namespace Data
         public float maxHealth;
         public float power;
         public int moveDistance;
-        public int effectTurnsLeft = 0;
-        public float effectDamage = 0;
-        public PieceLabel effectInflictor = PieceLabel.None;
-
-        public string currentSpellEffect = "";
 
         public PlayerToken player;
 
@@ -58,7 +53,7 @@ namespace Data
             player = _player;
         }
 
-        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _power, int _moveDistance, PlayerToken _player, string _currentSpellEffect, int _effectTurnsLeft, float _effectDamage, PieceLabel _effectInflictor)
+        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _power, int _moveDistance, PlayerToken _player)
         {
             label = _label;
             color = _color;
@@ -68,15 +63,11 @@ namespace Data
             power = _power;
             moveDistance = _moveDistance;
             player = _player;
-            currentSpellEffect = _currentSpellEffect;
-            effectTurnsLeft = _effectTurnsLeft;
-            effectDamage = _effectDamage;
-            effectInflictor = _effectInflictor;
         }
 
         public Piece Clone()
         {
-            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.power, this.moveDistance, this.player, this.currentSpellEffect, this.effectTurnsLeft, this.effectDamage, this.effectInflictor);
+            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.power, this.moveDistance, this.player);
         }
     }
 
@@ -97,19 +88,5 @@ namespace Data
         Black,
         White,
         None
-    }
-
-    public class StatusChange
-    {
-        public float damage;
-        public string effect;
-        public PieceLabel inflictor;
-
-        public StatusChange(float _damage, string _effect, PieceLabel _inflictor)
-        {
-            damage = _damage;
-            effect = _effect;
-            inflictor = _inflictor;
-        }
     }
 }

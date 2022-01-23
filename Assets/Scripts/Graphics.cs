@@ -242,32 +242,22 @@ public class Graphics : MonoBehaviour
     }
 
     public void PlayUpkeepAnims(
-        Action<Dictionary<Vector2, Tile>, Tile> levelPhase,
+        Action nextTurnPhase,
         Tile caster,
-        Dictionary<Vector2, Tile> targetsPreDmg,
-        Dictionary<Vector2, Tile> targetsPostDmg,
         Dictionary<Vector2, Tile> deadTargets,
         Dictionary<Vector2, string> toRepopulate
         )
     {
-        StartCoroutine(UpkeepAnims(levelPhase, caster, targetsPreDmg, targetsPostDmg, deadTargets, toRepopulate));
+        StartCoroutine(UpkeepAnims(nextTurnPhase, caster, deadTargets, toRepopulate));
     }
 
     IEnumerator UpkeepAnims(
-        Action<Dictionary<Vector2, Tile>, Tile>
-        levelPhase,
+        Action nextTurnPhase,
         Tile caster,
-        Dictionary<Vector2, Tile> targetsPreDmg,
-        Dictionary<Vector2, Tile> targetsPostDmg,
         Dictionary<Vector2, Tile> deadTargets,
         Dictionary<Vector2, string> toRepopulate
         )
     {
-        ReduceHealth(targetsPreDmg, targetsPostDmg);
-        yield return new WaitForSeconds(1);
-
-        // TODO: show anim to add status effects and pass this function the currentEffects dict
-
         if (deadTargets.Count > 0)
         {
             foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
@@ -293,6 +283,6 @@ public class Graphics : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
         RepopulateElements(toRepopulate);
-        levelPhase(deadTargets, caster);
+        nextTurnPhase();
     }
 }

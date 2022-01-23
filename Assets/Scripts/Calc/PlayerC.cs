@@ -4,7 +4,7 @@ namespace Calc
 {
     public static class PlayerC
     {
-        public static PlayerToken SwitchPlayers(PlayerToken currentPlayer) => currentPlayer == PlayerToken.P1 ? PlayerToken.P2 : PlayerToken.P1;
+        public static PlayerToken GetOppositePlayer(PlayerToken currentPlayer) => currentPlayer == PlayerToken.P1 ? PlayerToken.P2 : PlayerToken.P1;
 
         public static bool CanHumanInput(PlayerToken currentPlayer) => currentPlayer == PlayerToken.P1;
 

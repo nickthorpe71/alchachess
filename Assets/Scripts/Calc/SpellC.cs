@@ -15,7 +15,7 @@ namespace Calc
             // color of the spell is == to the last element 
             string color = recipe[recipe.Length - 1].ToString();
 
-            Spell newSpell = new Spell(recipe, color, SpellNameFromRecipe(recipe, color), recipe.Length, new List<V2Import>(), 0, "");
+            Spell newSpell = new Spell(recipe, color, SpellNameFromRecipe(recipe, color), recipe.Length, new List<Vector2>(), 0);
 
             for (int i = 0; i < recipe.Length; i++)
             {
@@ -25,9 +25,8 @@ namespace Calc
                 ElementalComponent component = ElementalComponents.list[element];
 
                 // stack pattern on existing pattern
-                List<V2Import> amplifiedPattern = component.Pattern.Select(v2Import =>
+                List<Vector2> amplifiedPattern = component.Pattern.Select(v2 =>
                 {
-                    V2Import v2 = new V2Import(v2Import.x, v2Import.y);
                     while (IsInPattern(newSpell.pattern, v2))
                     {
                         v2.x += (v2.x < 0) ? -1 : (v2.x > 0) ? 1 : 0;
@@ -41,12 +40,10 @@ namespace Calc
                 newSpell.damage += component.Damage;
             }
 
-            // add effect for spell color
-            newSpell.spellEffect = ElementalComponents.list[color].Effect;
             return newSpell;
         }
 
-        private static bool IsInPattern(List<V2Import> pattern, V2Import v2)
+        private static bool IsInPattern(List<Vector2> pattern, Vector2 v2)
         {
             bool inPattern = false;
             for (int i = 0; i < pattern.Count; i++)
@@ -83,37 +80,9 @@ namespace Calc
             return name.Trim();
         }
 
-        public static string SpellEffectString(string effect, float damage, float power, float colorMod)
-        {
-            switch (effect)
-            {
-                case "heal":
-                    return $"Heal your pieces in range for {CalcHeal(damage, power, colorMod)} HP.";
-                case "burn":
-                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and an additional {CalcBurn(CalcDamage(damage, power, colorMod))} damage each upkeep for 3 turns.";
-                case "poison":
-                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and an additional {CalcPoison(CalcDamage(damage, power, colorMod))} damage each upkeep for 3 turns.";
-                case "frozen":
-                    return $"Opponent's pieces in range take {CalcDamage(damage, power, colorMod)} damage and can't move for 2 turns.";
-                case "increase power":
-                    return $"Your pieces in range have their power permanently increased by {CalcIncreasePower(damage, power, colorMod)}.";
-                case "decrease power":
-                    return $"Opponent's pieces in range have their power permanently decreased by {CalcDecreasePower(damage, power, colorMod)}.";
-                default:
-                    return $"Deal {CalcDamage(damage, power, colorMod)} to opponent's pieces in range.";
-            }
-        }
+        public static string SpellEffectString(float damage, float power, float colorMod) => $"Deal {CalcDamage(damage, power, colorMod)} to opponent's pieces in range.";
 
-        // Status effect calculations
-        public static float CalcHeal(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
-        public static float CalcBurn(float damage) => Mathf.Floor((damage / 10) * 2);
-        public static float CalcPoison(float damage) => Mathf.Floor((damage / 10) * 2);
-        public static float CalcIncreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
-        public static float CalcDecreasePower(float baseDmg, float power, float colorMod) => baseDmg / 1000 * power * colorMod;
         public static float CalcDamage(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
-
-        public static int DetermineEffectTurns(string effect, float colorMod, int currentTurns) => (effect == "burn" || effect == "poison" || effect == "frozen") ? 3 + (int)Mathf.Floor(colorMod) : currentTurns;
-        public static string DetermineLastingEffect(string effect) => (effect == "burn" || effect == "poison" || effect == "frozen") ? effect : "";
 
         public static string ColorToString(string color)
         {

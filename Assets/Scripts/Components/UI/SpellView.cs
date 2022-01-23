@@ -28,6 +28,6 @@ public class SpellView : MonoBehaviour, IToggle
         colorMatch.SetActive(colorMod == 1.5f);
         spellName.text = spell.name;
         color.text = SpellC.ColorToString(spell.color);
-        effect.text = SpellC.SpellEffectString(spell.spellEffect, spell.damage, selectedPiece.power, colorMod);
+        effect.text = SpellC.SpellEffectString(spell.damage, selectedPiece.power, colorMod);
     }
 }

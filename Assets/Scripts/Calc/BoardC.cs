@@ -102,7 +102,7 @@ namespace Calc
                     return tileCopy;
                 });
 
-        public static List<Vector2> CalculateAOEPatterns(List<V2Import> pattern, Tile tile, PlayerToken player)
+        public static List<Vector2> CalculateAOEPatterns(List<Vector2> pattern, Tile tile, PlayerToken player)
         {
             List<Vector2> result = new List<Vector2>();
             float playerMod = (player == PlayerToken.P1) ? 1 : -1;
@@ -198,16 +198,6 @@ namespace Calc
                     result[tilePosition] = tile;
             });
             return result;
-        }
-
-        public static PlayerToken ChoosePlayerTargetForEffect(PlayerToken currentPlayer, string effect)
-        {
-            // if effect is a buff return current player
-            if (effect == "increase power" || effect == "heal")
-                return currentPlayer;
-
-            // otherwise return the opponent
-            return (currentPlayer == PlayerToken.P1) ? PlayerToken.P2 : PlayerToken.P1;
         }
 
         public static string GetBoardAsString(Board board)

@@ -39,9 +39,6 @@ namespace Calc
             // get pieces owned by ai player
             List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
 
-            if (aiPieces.Count == 0)
-                logic.NextTurnPhase();
-
             List<ScoredMove> scoredMoves = new List<ScoredMove>();
 
             // for each piece calc possible moves and score them

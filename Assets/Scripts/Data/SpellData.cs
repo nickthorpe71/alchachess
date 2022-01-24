@@ -21,11 +21,11 @@ namespace Data
     {
         public static Dictionary<string, ElementalComponent> list = new Dictionary<string, ElementalComponent>{
             {"D", new ElementalComponent("D", new List<Vector2>{new Vector2(1, -1), new Vector2(-1, -1)}, 150)},
-            {"W", new ElementalComponent("W", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1), new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 80)},
+            {"W", new ElementalComponent("W", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1), new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 150)},
             {"R", new ElementalComponent("R", new List<Vector2>{new Vector2(0, 1),new Vector2(0, 2)}, 125)},
-            {"B", new ElementalComponent("B", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0)}, 120)},
-            {"Y", new ElementalComponent("Y", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1)}, 110)},
-            {"G", new ElementalComponent("G", new List<Vector2>{new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 110)}
+            {"B", new ElementalComponent("B", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0)}, 50)},
+            {"Y", new ElementalComponent("Y", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1)}, 75)},
+            {"G", new ElementalComponent("G", new List<Vector2>{new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 50)}
         };
     }
 
@@ -215,6 +215,48 @@ namespace Data
             }},
 
         };
+    }
+
+    public static class SpellEffects
+    {
+        public static Dictionary<string, SpellEffect> list = new Dictionary<string, SpellEffect>{
+            {"D", new SpellEffect(false, true, false, true, false)},
+            {"W", new SpellEffect(false, false, true, false, true)},
+            {"R", new SpellEffect(false, true, false, false, false)},
+            {"B", new SpellEffect(true, true, false, false, true)},
+            {"Y", new SpellEffect(true, true, false, false, false)},
+            {"G", new SpellEffect(true, true, false, false, true)},
+        };
+    }
+
+    public class SpellEffect
+    {
+        private readonly bool _altersEnvironment;
+        private readonly bool _damagesEnemies;
+        private readonly bool _healsEnemies;
+        private readonly bool _damagesAllies;
+        private readonly bool _healsAllies;
+
+        public SpellEffect(
+            bool altersEnvironment,
+            bool damagesEnemies,
+            bool healsEnemies,
+            bool damagesAllies,
+            bool healsAllies
+            )
+        {
+            _altersEnvironment = altersEnvironment;
+            _damagesEnemies = damagesEnemies;
+            _healsEnemies = healsEnemies;
+            _damagesAllies = damagesAllies;
+            _healsAllies = healsAllies;
+        }
+
+        public bool AltersEnvironment { get { return _altersEnvironment; } }
+        public bool DamagesEnemies { get { return _damagesEnemies; } }
+        public bool HealsEnemies { get { return _healsEnemies; } }
+        public bool DamagesAllies { get { return _damagesAllies; } }
+        public bool HealsAllies { get { return _healsAllies; } }
     }
 
     public class Spell

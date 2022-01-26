@@ -21,6 +21,7 @@ public class Graphics : MonoBehaviour
         ["Y"] = "Elements/Yellow"
     };
     public List<GameObject> activePieces = new List<GameObject>();
+    public Dictionary<Vector2, GameObject> activeEnvironments = new Dictionary<Vector2, GameObject>();
     public Dictionary<Vector2, GameObject> elementGraphics = new Dictionary<Vector2, GameObject>();
 
     // Piece Movement
@@ -187,26 +188,28 @@ public class Graphics : MonoBehaviour
 
     public void PlayCastAnims(
         Spell spell,
+        List<Vector2> nonPieceTilesInRange,
         Action<Tile> upkeepPhase,
         Tile caster,
         Dictionary<Vector2, Tile> targetsPreDmg,
-        Dictionary<Vector2, Tile> targetsPostDmg,
-        List<Vector2> aoeRange)
+        Dictionary<Vector2, Tile> targetsPostDmg)
     {
         string spellAnimPath = GraphicsC.GetSpellAnimPrefabPath(spell);
         string castAnimPath = GraphicsC.GetCastAnimPrefabPath(spell);
+        string environmentPrefabPath = nonPieceTilesInRange.Count > 0 ? GraphicsC.GetEnvironmentPrefabPath(spell) : null;
 
-        StartCoroutine(CastAnims(castAnimPath, spellAnimPath, upkeepPhase, caster, targetsPreDmg, targetsPostDmg, aoeRange));
+        StartCoroutine(CastAnims(castAnimPath, spellAnimPath, environmentPrefabPath, nonPieceTilesInRange, upkeepPhase, caster, targetsPreDmg, targetsPostDmg));
     }
 
     IEnumerator CastAnims(
         string castAnimPath,
         string spellAnimPath,
+        string environmentPrefabPath,
+        List<Vector2> nonPieceTilesInRange,
         Action<Tile> upkeepPhase,
         Tile caster,
         Dictionary<Vector2, Tile> targetsPreDmg,
-        Dictionary<Vector2, Tile> targetsPostDmg,
-        List<Vector2> aoeRange)
+        Dictionary<Vector2, Tile> targetsPostDmg)
     {
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
@@ -215,13 +218,29 @@ public class Graphics : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // play spell animation on each target
-        foreach (Vector2 pos in aoeRange)
+        foreach (Vector2 pos in targetsPreDmg.Keys)
         {
             GameObject spellAnim = Instantiate(Resources.Load(spellAnimPath) as GameObject);
             spellAnim.transform.position = new Vector3(pos.x, 0.7f, pos.y);
             yield return new WaitForSeconds(0.1f);
             Destroy(spellAnim, 2);
         }
+
+        // if this spell affects the environment
+        if (environmentPrefabPath != null)
+            // create environment effect on all non piece tiles
+            foreach (Vector2 pos in nonPieceTilesInRange)
+            {
+
+                GameObject environmentEffect = Instantiate(Resources.Load(environmentPrefabPath) as GameObject);
+                environmentEffect.transform.position = new Vector3(pos.x, 0, pos.y);
+                environmentEffect.GetComponent<EnvironmentEffect>().Raise();
+                activeEnvironments[pos] = environmentEffect;
+                if (elementGraphics.Keys.Contains(pos))
+                    elementGraphics[pos].GetComponent<ElementGraphic>().Deactivate();
+                yield return new WaitForSeconds(0.1f);
+            }
+
         yield return new WaitForSeconds(0.25f);
 
         // display health reduction and effect application to correct pieces
@@ -245,17 +264,19 @@ public class Graphics : MonoBehaviour
         Action nextTurnPhase,
         Tile caster,
         Dictionary<Vector2, Tile> deadTargets,
-        Dictionary<Vector2, string> toRepopulate
+        Dictionary<Vector2, string> toRepopulate,
+        List<Vector2> environmentsToRemove
         )
     {
-        StartCoroutine(UpkeepAnims(nextTurnPhase, caster, deadTargets, toRepopulate));
+        StartCoroutine(UpkeepAnims(nextTurnPhase, caster, deadTargets, toRepopulate, environmentsToRemove));
     }
 
     IEnumerator UpkeepAnims(
         Action nextTurnPhase,
         Tile caster,
         Dictionary<Vector2, Tile> deadTargets,
-        Dictionary<Vector2, string> toRepopulate
+        Dictionary<Vector2, string> toRepopulate,
+        List<Vector2> environmentsToRemove
         )
     {
         if (deadTargets.Count > 0)
@@ -281,6 +302,21 @@ public class Graphics : MonoBehaviour
                 }).ToList();
             }
         }
+
+        // remove environments
+        if (environmentsToRemove.Count > 0)
+        {
+            float duration = 1.05f;
+            foreach (Vector2 pos in environmentsToRemove)
+            {
+                GameObject env = activeEnvironments[pos];
+                env.GetComponent<EnvironmentEffect>().Lower();
+                activeEnvironments.Remove(pos);
+                Destroy(env, duration);
+            }
+            yield return new WaitForSeconds(duration);
+        }
+
         yield return new WaitForSeconds(1);
         RepopulateElements(toRepopulate);
         nextTurnPhase();

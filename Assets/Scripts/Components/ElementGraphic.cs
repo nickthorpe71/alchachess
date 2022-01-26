@@ -11,7 +11,7 @@ public class ElementGraphic : MonoBehaviour
             Deactivate();
     }
 
-    private void Deactivate()
+    public void Deactivate()
     {
         GameObject destroyAnim = Instantiate(destroyAnimPrefab, transform.position, Quaternion.identity);
         Destroy(destroyAnim, 2);

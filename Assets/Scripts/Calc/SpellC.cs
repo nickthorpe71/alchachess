@@ -84,6 +84,8 @@ namespace Calc
 
         public static float CalcDamage(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
 
+        public static float CalcHeal(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod) * 3;
+
         public static string ColorToString(string color)
         {
             switch (color)

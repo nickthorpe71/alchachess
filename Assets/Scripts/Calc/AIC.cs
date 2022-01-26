@@ -73,8 +73,7 @@ namespace Calc
 
                         Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(
                             board.tiles,
-                            aoeRange,
-                            logic.humanPlayer
+                            aoeRange
                         );
 
                         // calculate pieces health post damage

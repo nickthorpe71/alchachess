@@ -106,6 +106,7 @@ namespace Data
         public string element;
         public int x;
         public int y;
+        public int remainingTimeOnEnvironment = 0;
 
         // States
         public bool isClicked = false;
@@ -147,7 +148,8 @@ namespace Data
             bool _isClicked,
             bool _isHovered,
             bool _isHighlighted,
-            bool _isAOE
+            bool _isAOE,
+            int _remainingTimeOnEnvironment
         )
         {
             x = _x;
@@ -159,6 +161,7 @@ namespace Data
             isHovered = _isHovered;
             isHighlighted = _isHighlighted;
             isAOE = _isAOE;
+            remainingTimeOnEnvironment = _remainingTimeOnEnvironment;
         }
 
         public Tile Clone()
@@ -173,7 +176,8 @@ namespace Data
                 isClicked = this.isClicked,
                 isHovered = this.isHovered,
                 isHighlighted = this.isHighlighted,
-                isAOE = this.isAOE
+                isAOE = this.isAOE,
+                remainingTimeOnEnvironment = this.remainingTimeOnEnvironment
             };
         }
     }
@@ -182,6 +186,7 @@ namespace Data
     {
         Piece,
         Element,
+        Environment,
         Empty
     }
 

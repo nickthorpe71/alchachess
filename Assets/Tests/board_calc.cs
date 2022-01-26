@@ -47,20 +47,6 @@ public class board_calc
     }
 
     [Test]
-    public void GetTileDataByPos_returns_correct_tile()
-    {
-        // arrange
-        Board board = new Board();
-
-        // act
-        Tile result = BoardC.GetTileDataByPos(new UnityEngine.Vector3(1, 0, 0), board);
-
-        // assert
-        Assert.AreEqual(PieceLabel.Esa, result.piece.label);
-        Assert.AreEqual(PlayerToken.P1, result.piece.player);
-    }
-
-    [Test]
     public void GetTile_returns_correct_tile()
     {
         // arrange
@@ -150,34 +136,6 @@ public class board_calc
 
         // act
         bool result = BoardC.InBounds(location);
-
-        // assert
-        Assert.AreEqual(false, result);
-    }
-
-    [Test]
-    public void TileHasPiece_returns_true()
-    {
-        // arrange
-        Board board = new Board();
-        Vector2 location = new Vector3(1, 0);
-
-        // act
-        bool result = BoardC.TileHasPiece(board.tiles, location);
-
-        // assert
-        Assert.AreEqual(true, result);
-    }
-
-    [Test]
-    public void TileHasPiece_returns_false()
-    {
-        // arrange
-        Board board = new Board();
-        Vector2 location = new Vector3(1, 1);
-
-        // act
-        bool result = BoardC.TileHasPiece(board.tiles, location);
 
         // assert
         Assert.AreEqual(false, result);

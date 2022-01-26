@@ -53,7 +53,7 @@ public class GameLogic : MonoBehaviour
     public void TileClick(GameObject clicked)
     {
         // Get tile data for clicked tile
-        Tile newClickedTile = BoardC.GetTileDataByPos(clicked.transform.position, board);
+        Tile newClickedTile = BoardC.GetTile(board.tiles, (int)clicked.transform.position.x, (int)clicked.transform.position.z);
 
         // check if clicked tile has a piece owned by human player
         if (newClickedTile.contents == TileContents.Piece && newClickedTile.piece.player == humanPlayer)
@@ -144,7 +144,8 @@ public class GameLogic : MonoBehaviour
     {
         if (hovered == null) return;
 
-        Tile newHover = BoardC.GetTileDataByPos(hovered.transform.position, board);
+        Tile newHover = BoardC.GetTile(board.tiles, (int)hovered.transform.position.x, (int)hovered.transform.position.z);
+
 
         // if we are hovering on the same thing as before
         if (currentHover != null && new Vector3(newHover.x, 0, newHover.y) == new Vector3(currentHover.x, 0, currentHover.y))
@@ -230,6 +231,7 @@ public class GameLogic : MonoBehaviour
 
     public void ExecuteMove(Tile start, Tile end, Spell spell)
     {
+        // take control away from human player
         humanCanInput = false;
         currentClicked = null;
         currentHover = null;
@@ -277,14 +279,18 @@ public class GameLogic : MonoBehaviour
             return;
         }
 
-        // calculate damage
+        // save caster
         Tile caster = board.tiles[end.y][end.x];
 
-        // apply damage to pieces in range
+        // get aoe pattern
         List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.piece.player);
-        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange, PlayerC.GetOppositePlayer(currentPlayer));
+        List<Vector2> nonPieceTilesInRange = new List<Vector2>();
+
+        // apply damage to pieces in range
+        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange);
         Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
 
+        // apply damage/healing to pieces
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
             Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.piece, kvp.Value.piece, spell);
@@ -294,9 +300,30 @@ public class GameLogic : MonoBehaviour
             targetsPostDmg[kvp.Key] = tileWithNewPiece;
         };
 
+
+        // if this spell alters the environment 
+        if (SpellEffects.list[spell.color].AltersEnvironment)
+        {
+            // store tiles with no piece in range
+            board.tiles = BoardC.MapTiles(board.tiles, tile =>
+            {
+                if (!BoardC.TileInRange(tile, aoeRange)) return tile;
+
+                // and save positions to place environment pieces to send to graphics
+                Tile tileCopy = tile.Clone();
+                if (tileCopy.contents != TileContents.Piece && tileCopy.contents != TileContents.Environment)
+                {
+                    nonPieceTilesInRange.Add(new Vector2(tile.x, tile.y));
+                    tileCopy.remainingTimeOnEnvironment = SpellEffects.list[spell.color].Duration;
+                    tileCopy.contents = TileContents.Environment;
+                }
+                return tileCopy;
+            });
+        }
+
         // --- Graphics ---
-        // play spell animation
-        graphics.PlayCastAnims(spell, (caster) => UpkeepPhase(caster), caster, targetsPreDmg, targetsPostDmg, aoeRange);
+        // play spell animations
+        graphics.PlayCastAnims(spell, nonPieceTilesInRange, (caster) => UpkeepPhase(caster), caster, targetsPreDmg, targetsPostDmg);
     }
 
     public void UpkeepPhase(Tile movedPiece)
@@ -307,13 +334,29 @@ public class GameLogic : MonoBehaviour
         board.tiles = BoardC.MapTiles(board.tiles, tile =>
         {
             if (tile.contents != TileContents.Piece || tile.piece.health > 0) return tile;
-            else
+            // if found remove from board data and create list to 
+            //send to graphics to be removed as well
+            deadTargets[new Vector2(tile.x, tile.y)] = tile;
+            return BoardC.RemovePiece(tile);
+        });
+
+        // upkeep environment effects
+        List<Vector2> environmentsToRemove = new List<Vector2>();
+        board.tiles = BoardC.MapTiles(board.tiles, tile =>
+        {
+            if (tile.contents != TileContents.Environment) return tile;
+            Tile tileCopy = tile.Clone();
+            // reduce count on environmet effects
+            tileCopy.remainingTimeOnEnvironment -= 1;
+
+            // remove expired environmet effects from the board
+            if (tileCopy.remainingTimeOnEnvironment == 0)
             {
-                // if found remove from board data and create list to 
-                //send to graphics to be removed as well
-                deadTargets[new Vector2(tile.x, tile.y)] = tile;
-                return BoardC.RemovePiece(tile);
+                environmentsToRemove.Add(new Vector2(tileCopy.x, tileCopy.y));
+                tileCopy.contents = TileContents.Empty;
             }
+
+            return tileCopy;
         });
 
         // restore all elements to the field
@@ -322,7 +365,7 @@ public class GameLogic : MonoBehaviour
 
         // --- Graphics ---
         // show effect animations and remove health and destroy newly dead targets
-        graphics.PlayUpkeepAnims(NextTurnPhase, movedPiece, deadTargets, toRepopulate);
+        graphics.PlayUpkeepAnims(NextTurnPhase, movedPiece, deadTargets, toRepopulate, environmentsToRemove);
     }
 
     public void NextTurnPhase()
@@ -342,33 +385,9 @@ public class GameLogic : MonoBehaviour
     }
 }
 
-// BUGS:
-/*
-- piece human moves stays highlighted during opponents turn
-*/
-
 // TODO:
-// - wipe board tiles state because sometimes they are staying highlighted after ai turn
 // - need to be able to click through pieces and elements
+// - fix tool tips so they accurately reflect what spell will do
+// - make it so that health bar goes the right direction for healing
 
-// New Spell Effects
-// R
-// piece = damage enemies
-// B = 
-// empty = create impassable water for 1 turn
-// piece = heal allies 
-// D = 
-// piece = damage allies and enemies
-// W = 
-// piece = damage enemies heal allies
-// Y 
-// empty = create impassable boulder for 1 turn
-// piece = damage
-// G =
-// empty = create impassable tree for 1 turns
-// piece = damage enemies heal allies
-
-// Notes on new spell effects
-// implement the above first then consider whats below
-// it would be cool if elements were effected by spells somehow
-// it would cool if environment changes lasted longer but could be destroyed by spells
+// Notes on new spell effectsat you walk through and get damaged?

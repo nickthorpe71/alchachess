@@ -220,12 +220,12 @@ namespace Data
     public static class SpellEffects
     {
         public static Dictionary<string, SpellEffect> list = new Dictionary<string, SpellEffect>{
-            {"D", new SpellEffect(false, true, false, true, false)},
-            {"W", new SpellEffect(false, false, true, false, true)},
-            {"R", new SpellEffect(false, true, false, false, false)},
-            {"B", new SpellEffect(true, true, false, false, true)},
-            {"Y", new SpellEffect(true, true, false, false, false)},
-            {"G", new SpellEffect(true, true, false, false, true)},
+            {"D", new SpellEffect(false, true, false, true, false, 0)},
+            {"W", new SpellEffect(false, false, true, false, true, 0)},
+            {"R", new SpellEffect(false, true, false, false, false, 0)},
+            {"B", new SpellEffect(true, true, false, false, true, 2)},
+            {"Y", new SpellEffect(true, true, false, false, false, 2)},
+            {"G", new SpellEffect(true, true, false, false, true, 2)},
         };
     }
 
@@ -236,13 +236,15 @@ namespace Data
         private readonly bool _healsEnemies;
         private readonly bool _damagesAllies;
         private readonly bool _healsAllies;
+        private readonly int _duration;
 
         public SpellEffect(
             bool altersEnvironment,
             bool damagesEnemies,
             bool healsEnemies,
             bool damagesAllies,
-            bool healsAllies
+            bool healsAllies,
+            int duration
             )
         {
             _altersEnvironment = altersEnvironment;
@@ -250,6 +252,7 @@ namespace Data
             _healsEnemies = healsEnemies;
             _damagesAllies = damagesAllies;
             _healsAllies = healsAllies;
+            _duration = duration;
         }
 
         public bool AltersEnvironment { get { return _altersEnvironment; } }
@@ -257,6 +260,7 @@ namespace Data
         public bool HealsEnemies { get { return _healsEnemies; } }
         public bool DamagesAllies { get { return _damagesAllies; } }
         public bool HealsAllies { get { return _healsAllies; } }
+        public int Duration { get { return _duration; } }
     }
 
     public class Spell

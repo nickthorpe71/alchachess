@@ -25,7 +25,30 @@ namespace Calc
         {
             Piece tileCopy = defender.Clone();
             float colorMod = SpellC.ColorMod(attacker.element, tileCopy.element, spell.color);
-            tileCopy.health -= SpellC.CalcDamage(spell.damage, attacker.power, colorMod);
+            SpellEffect spellEffect = SpellEffects.list[spell.color];
+            bool isEnemy = attacker.player != defender.player;
+
+            if (isEnemy)
+            {
+                if (spellEffect.DamagesEnemies)
+                    tileCopy.health -= SpellC.CalcDamage(spell.damage, attacker.power, colorMod);
+                if (spellEffect.HealsEnemies)
+                    tileCopy.health += SpellC.CalcHeal(spell.damage, attacker.power, colorMod);
+            }
+            else // it's an ally
+            {
+                if (spellEffect.DamagesAllies)
+                    tileCopy.health -= SpellC.CalcDamage(spell.damage, attacker.power, colorMod);
+                if (spellEffect.HealsAllies)
+                    tileCopy.health += SpellC.CalcHeal(spell.damage, attacker.power, colorMod);
+            }
+
+            if (tileCopy.health > tileCopy.maxHealth)
+                tileCopy.health = tileCopy.maxHealth;
+
+            if (tileCopy.health < 0)
+                tileCopy.health = 0;
+
             return tileCopy;
         }
     }

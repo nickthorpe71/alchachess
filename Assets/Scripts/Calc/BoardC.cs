@@ -50,9 +50,6 @@ namespace Calc
             return tilesCopy;
         }
 
-        public static Tile GetTileDataByPos(Vector3 tilePos, Board board)
-        => BoardC.GetTile(board.tiles, (int)tilePos.x, (int)tilePos.z);
-
         public static Tile GetTile(Tile[][] tiles, int x, int y) => tiles[y][x];
 
         public static List<Tile> GetTilesWithPieceForPlayer(Tile[][] tiles, PlayerToken player)
@@ -157,7 +154,10 @@ namespace Calc
         {
             if (!InBounds(location))
                 return false;
-            if (TileHasPiece(tiles, location))
+            Tile tile = GetTile(tiles, (int)location.x, (int)location.y);
+            if (tile.contents == TileContents.Piece)
+                return false;
+            if (tile.contents == TileContents.Environment)
                 return false;
 
             return true;
@@ -166,8 +166,6 @@ namespace Calc
         public static bool InBounds(Vector2 location)
             => (location.x < Const.BOARD_WIDTH) && (location.x >= 0) && (location.y < Const.BOARD_HEIGHT) && (location.y >= 0);
 
-        public static bool TileHasPiece(Tile[][] tiles, Vector2 location)
-            => tiles[(int)location.y][(int)location.x].contents == TileContents.Piece;
 
         public static string GetRecipeByPath(Tile pathStart, Tile pathEnd, Tile[][] tiles, PlayerToken humanPlayer, PlayerToken currentPlayer)
         {
@@ -188,17 +186,19 @@ namespace Calc
             return result;
         }
 
-        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range, PlayerToken targetSide)
+        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range)
         {
             Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
             LoopTiles(tiles, (tile) =>
             {
                 Vector2 tilePosition = new Vector2(tile.x, tile.y);
-                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece && tile.piece.player == targetSide)
+                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece)
                     result[tilePosition] = tile;
             });
             return result;
         }
+
+        public static bool TileInRange(Tile tile, List<Vector2> range) => range.Contains(new Vector2(tile.x, tile.y));
 
         public static string GetBoardAsString(Board board)
         {
@@ -220,7 +220,8 @@ namespace Calc
         public static Tile RemovePiece(Tile tile)
         {
             Tile tileWithPieceRemoved = tile.Clone();
-            tileWithPieceRemoved.contents = tileWithPieceRemoved.element != "N" ? TileContents.Empty : TileContents.Element;
+            // tileWithPieceRemoved.contents = tileWithPieceRemoved.element != "N" ? TileContents.Empty : TileContents.Element;
+            tileWithPieceRemoved.contents = TileContents.Empty;
             tileWithPieceRemoved.piece = null;
             return tileWithPieceRemoved;
         }

@@ -9,6 +9,5 @@ public class GameUI : MonoBehaviour
     public void ToggleAllUI(bool isDisplayed)
     {
         spellView.Toggle(isDisplayed);
-        pieceView.Toggle(isDisplayed);
     }
 }

@@ -385,9 +385,29 @@ public class GameLogic : MonoBehaviour
     }
 }
 
+// 9h per week
 // TODO:
-// - need to be able to click through pieces and elements
-// - fix tool tips so they accurately reflect what spell will do
-// - make it so that health bar goes the right direction for healing
-
-// Notes on new spell effectsat you walk through and get damaged?
+// - make it so that health bar goes the right direction for healing (1h)
+// - list spell recipe in UI?
+// - add fire effect (2h)
+// - do programming design patterns course (5h)
+// --- 1/30/2022 ---
+// - improve AI (4h)
+// - implement minimax (4h)
+// --- 2/6/2022 ---
+// --- Week away so only 5 hours  ---
+// - improve VFX (3h)
+// - add sound (2h)
+// --- 2/13/2022 ---
+// - improve UI (make sure player easily knows what's going on) (3h)
+// - create mechanic to walk around then sit at table (3h)
+// - write simple story (3h)
+// --- 2/20/2022 ---
+// - create environment for story (4h)
+// - do multiplayer course (5h)
+// --- 2/27/2022 ---
+// - add multiplayer (4h)
+// - polish (5h)
+// --- 3/5/2022 ---
+// - deploy (9h)
+// --- 3/12/2022 ---

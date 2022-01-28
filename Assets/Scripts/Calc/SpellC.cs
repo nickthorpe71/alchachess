@@ -80,11 +80,84 @@ namespace Calc
             return name.Trim();
         }
 
-        public static string SpellEffectString(float damage, float power, float colorMod) => $"Deal {CalcDamage(damage, power, colorMod)} to opponent's pieces in range.";
+        public static string SpellEffectString(Spell spell, float power, float colorMod)
+        {
+            string txt = "";
+            SpellEffect effect = SpellEffects.list[spell.color];
+
+            txt += $"A {SpellLetterToWord(spell.color)} spell that:\n";
+
+            if (effect.DamagesAllies)
+                txt += $"- damages allies for {CalcDamage(spell.damage, power, colorMod)}\n";
+            if (effect.DamagesEnemies)
+                txt += $"- damages enemies for {CalcDamage(spell.damage, power, colorMod)}\n";
+            if (effect.HealsAllies)
+                txt += $"- heals allies for {CalcHeal(spell.damage, power, colorMod)}\n";
+            if (effect.HealsEnemies)
+                txt += $"- heals enemies for {CalcHeal(spell.damage, power, colorMod)}\n";
+            if (effect.AltersEnvironment)
+                txt += $"- creates {GetEnvironmentEffectAsStr(spell.color)}";
+
+            return txt;
+        }
+
+        public static string SpellLetterToWord(string spellColor)
+        {
+            string res = "";
+            switch (spellColor)
+            {
+                case "G":
+                    res = "green";
+                    break;
+                case "R":
+                    res = "red";
+                    break;
+                case "D":
+                    res = "black";
+                    break;
+                case "W":
+                    res = "white";
+                    break;
+                case "B":
+                    res = "blue";
+                    break;
+                case "Y":
+                    res = "yellow";
+                    break;
+            }
+            return res;
+        }
+
+        public static string GetEnvironmentEffectAsStr(string spellColor)
+        {
+            string res = "";
+            switch (spellColor)
+            {
+                case "G":
+                    res = "groves of vines that block movement";
+                    break;
+                case "R":
+                    res = "flames which burn pieces that move over them";
+                    break;
+                case "D":
+                    res = null;
+                    break;
+                case "W":
+                    res = null;
+                    break;
+                case "B":
+                    res = "ice spears that block movement";
+                    break;
+                case "Y":
+                    res = "boulders that block movement";
+                    break;
+            }
+            return res;
+        }
 
         public static float CalcDamage(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
 
-        public static float CalcHeal(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod) * 3;
+        public static float CalcHeal(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod) * 2.5f;
 
         public static string ColorToString(string color)
         {

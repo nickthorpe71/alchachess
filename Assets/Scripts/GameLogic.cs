@@ -387,11 +387,6 @@ public class GameLogic : MonoBehaviour
 
 // 9h per week
 // TODO:
-// - make it so that health bar goes the right direction for healing (1h)
-// - list spell recipe in UI?
-// - add fire effect (2h)
-// - do programming design patterns course (5h)
-// --- 1/30/2022 ---
 // - improve AI (4h)
 // - implement minimax (4h)
 // --- 2/6/2022 ---

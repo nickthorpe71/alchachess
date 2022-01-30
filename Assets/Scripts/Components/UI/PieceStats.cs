@@ -37,12 +37,22 @@ public class PieceStats : MonoBehaviour
         float preDamageHealthPercent = previousHealth / piece.maxHealth;
         float postDamageHealthPercent = piece.health / piece.maxHealth;
 
-        healthGreen.fillAmount = postDamageHealthPercent;
-        healthRed.fillAmount = preDamageHealthPercent;
+        // if damaged
+        if (preDamageHealthPercent > postDamageHealthPercent)
+        {
+            healthGreen.fillAmount = postDamageHealthPercent;
+            healthRed.fillAmount = preDamageHealthPercent;
+            StartCoroutine(UpdateBar(healthRed, preDamageHealthPercent, postDamageHealthPercent));
+
+        } // if heal
+        else if (preDamageHealthPercent < postDamageHealthPercent)
+        {
+            healthRed.fillAmount = postDamageHealthPercent;
+            healthGreen.fillAmount = preDamageHealthPercent;
+            StartCoroutine(UpdateBar(healthGreen, preDamageHealthPercent, postDamageHealthPercent));
+        }
 
         healthTxt.text = $"{piece.health} / {piece.maxHealth}";
-
-        StartCoroutine(UpdateBar(healthRed, preDamageHealthPercent, postDamageHealthPercent));
     }
 
     IEnumerator UpdateBar(Image targetBar, float startPercent, float endPercent)

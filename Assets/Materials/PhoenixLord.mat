@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AngelOfEden
+  m_Name: PhoenixLord
   m_Shader: {fileID: 4800000, guid: 36a7c180b6f05df44ade952ee6ae8f4b, type: 3}
   m_ShaderKeywords: _NORMALMAP_TANGENT_SPACE _NORMALMAP_TANGENT_SPACE0 _NORMALMAP_TANGENT_SPACE1
     _NORMALMAP_TANGENT_SPACE2 _NORMALMAP_TANGENT_SPACE3
@@ -26,15 +26,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_427622CF:
-        m_Texture: {fileID: 2800000, guid: 009f6ee73033ff643a6784ca73c66bf4, type: 3}
+        m_Texture: {fileID: 2800000, guid: c67df86d883811041b8fa79167f9df34, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_545F0D7F:
-        m_Texture: {fileID: 2800000, guid: 22c3f8e881bca5740aa7e4afcc5d028d, type: 3}
+        m_Texture: {fileID: 2800000, guid: c97fdf2ccff276d479cc6028229ec885, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_5E38D3F7:
-        m_Texture: {fileID: 2800000, guid: d3447a0fdcf3ef646af8ed6d5735ad87, type: 3}
+        m_Texture: {fileID: 2800000, guid: 000a51c437d6edd459994217a253f5d3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_69E9289C:
@@ -42,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: 0f0fc15beee7b54408e1cc9cc486cbc5, type: 3}
+        m_Texture: {fileID: 2800000, guid: f573764b7b31aeb4795b619daf3a819e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
@@ -226,7 +226,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: adf215623d858794897f2a76ce244158, type: 3}
+        m_Texture: {fileID: 2800000, guid: a1ce74bf910f0e34ea10ebc2b03ce9ff, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -362,13 +362,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_1DDBF016: 0
-    - Vector1_2ED6DB08: 1.82
-    - Vector1_65D4F10: 0.51
-    - Vector1_7F95706: 0.141
-    - Vector1_857D9C5E: 0
-    - Vector1_AD123FE6: 0
-    - Vector1_BD6B229C: 0.349
+    - Vector1_1DDBF016: 1.605
+    - Vector1_2ED6DB08: 1.95
+    - Vector1_65D4F10: 0.557
+    - Vector1_7F95706: 1
+    - Vector1_857D9C5E: 0.201
+    - Vector1_AD123FE6: 0.46
+    - Vector1_BD6B229C: 0.158
     - _AORemapMax: 1
     - _AORemapMax0: 1
     - _AORemapMax1: 1
@@ -379,7 +379,7 @@ Material:
     - _AORemapMin1: 0
     - _AORemapMin2: 0
     - _AORemapMin3: 0
-    - _AO_Intensity: 0.768
+    - _AO_Intensity: -0.605
     - _ATDistance: 1
     - _AlbedoAffectEmissive: 0
     - _AlphaCutoff: 0.5
@@ -625,9 +625,9 @@ Material:
     - _ZTestModeDistortion: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_197F56AE: {r: 0.16690892, g: 0.74509805, b: 0.15294117, a: 0}
-    - Color_32B7CC81: {r: 0.6132076, g: 0.6132076, b: 0.6132076, a: 0}
-    - Color_8F65E2D2: {r: 0.33107868, g: 0.42339575, b: 0.4528302, a: 0}
+    - Color_197F56AE: {r: 0.74509805, g: 0.18381043, b: 0.15294117, a: 0}
+    - Color_32B7CC81: {r: 0.2735849, g: 0.099368095, b: 0.099368095, a: 0}
+    - Color_8F65E2D2: {r: 0.5377358, g: 0.1526153, b: 0.12936096, a: 0}
     - Vector2_3838B30A: {r: 10, g: 10, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColor0: {r: 1, g: 1, b: 1, a: 1}

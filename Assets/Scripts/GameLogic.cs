@@ -387,6 +387,8 @@ public class GameLogic : MonoBehaviour
 
 // 9h per week
 // TODO:
+// - opponent should have a move anim where they wave their hand which will be played before their piece moves
+// - opponent should have a talk animation and should have voice lines happen randomly after some events
 // - improve AI (4h)
 // - implement minimax (4h)
 // --- 2/6/2022 ---

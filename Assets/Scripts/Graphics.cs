@@ -63,10 +63,10 @@ public class Graphics : MonoBehaviour
 
     private void InitTileOccupant(Tile tile)
     {
-        if (tile.contents == TileContents.Piece)
-            InstantiatePiece(tile.piece, tile.x, tile.y);
-        else if (tile.contents == TileContents.Element)
-            InstantiateElement(tile.element, tile.x, tile.y);
+        if (tile.Contents == TileContents.Piece)
+            InstantiatePiece(tile.Piece, tile.X, tile.Y);
+        else if (tile.Contents == TileContents.Element)
+            InstantiateElement(tile.Element, tile.X, tile.Y);
     }
 
     private void InstantiatePiece(Piece piece, int x, int y)
@@ -112,22 +112,22 @@ public class Graphics : MonoBehaviour
         {
             Tile currentTile = tiles[y][x];
 
-            if (currentTile.isAOE)
+            if (currentTile.IsAOE)
             {
                 graphic.AOE();
                 return;
             }
-            else if (currentTile.isClicked)
+            else if (currentTile.IsClicked)
             {
                 graphic.Click();
                 return;
             }
-            else if (currentTile.isHovered)
+            else if (currentTile.IsHovered)
             {
                 graphic.Hover();
                 return;
             }
-            else if (currentTile.isHighlighted)
+            else if (currentTile.IsHighlighted)
             {
                 graphic.Highlight();
                 return;
@@ -213,7 +213,7 @@ public class Graphics : MonoBehaviour
     {
         // play cast animation
         GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
-        castAnim.transform.position = new Vector3(caster.x, 0.35f, caster.y);
+        castAnim.transform.position = new Vector3(caster.X, 0.35f, caster.Y);
         Destroy(castAnim, 2);
         yield return new WaitForSeconds(1f);
 
@@ -255,8 +255,8 @@ public class Graphics : MonoBehaviour
         foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
         {
             PieceStats pieceStatsUI = GraphicsC.GetPieceStatsUI(target.Key, activePieces);
-            float previousHealth = targetsPreDmg[target.Key].piece.health;
-            pieceStatsUI.UpdateHealthUI(target.Value.piece, previousHealth);
+            float previousHealth = targetsPreDmg[target.Key].Piece.health;
+            pieceStatsUI.UpdateHealthUI(target.Value.Piece, previousHealth);
         }
     }
 

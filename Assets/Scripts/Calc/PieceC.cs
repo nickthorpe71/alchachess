@@ -11,9 +11,7 @@ namespace Calc
 
         public static Tile[][] UpdatePieceOnTile(Tile[][] tiles, Vector2 position, Piece piece)
         {
-            Tile[][] tilesCopy = BoardC.MapTiles(tiles, (tile) => tile.Clone());
-            tilesCopy[(int)position.y][(int)position.x].piece = piece;
-            return tilesCopy;
+            return BoardC.MapTiles(tiles, (tile) => (new Vector2(tile.X, tile.Y) != position) ? tile.Clone() : tile.Clone(piece));
         }
 
         public static string PieceAsString(Piece piece)

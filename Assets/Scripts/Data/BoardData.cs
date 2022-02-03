@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Data
 {
     public class Board
@@ -93,85 +95,178 @@ namespace Data
 
     public class Tile
     {
-        public TileContents contents;
-        public Piece piece;
-        public string element;
-        public int x;
-        public int y;
-        public int remainingTimeOnEnvironment = 0;
+        private readonly TileContents _contents;
+        private readonly Piece _piece;
+        private readonly string _element;
+        private readonly int _x;
+        private readonly int _y;
+        private readonly int _remainingTimeOnEnvironment = 0;
 
         // States
-        public bool isClicked = false;
-        public bool isHovered = false;
-        public bool isHighlighted = false;
-        public bool isAOE = false;
+        private readonly bool _isClicked = false;
+        private readonly bool _isHovered = false;
+        private readonly bool _isHighlighted = false;
+        private readonly bool _isAOE = false;
 
-        public Tile(int _x, int _y)
+        public Tile(int x, int y)
         {
-            contents = TileContents.Empty;
-            piece = null;
-            element = "N";
-            x = _x;
-            y = _y;
+            _contents = TileContents.Empty;
+            _piece = null;
+            _element = "N";
+            _x = x;
+            _y = y;
         }
 
-        public Tile(int _x, int _y, PieceLabel peiceLabel, PieceColor pieceColor, PlayerToken player)
+        public Tile(int x, int y, PieceLabel pieceLabel, PieceColor pieceColor, PlayerToken player)
         {
-            contents = TileContents.Piece;
-            piece = new Piece(peiceLabel, pieceColor, player);
-            element = "N";
-            x = _x;
-            y = _y;
+            _contents = TileContents.Piece;
+            _piece = new Piece(pieceLabel, pieceColor, player);
+            _element = "N";
+            _x = x;
+            _y = y;
         }
 
-        public Tile(int _x, int _y, string _element)
+        public Tile(int x, int y, string element)
         {
-            contents = TileContents.Element;
-            piece = null;
-            element = _element;
-            x = _x;
-            y = _y;
+            _contents = TileContents.Element;
+            _piece = null;
+            _element = element;
+            _x = x;
+            _y = y;
         }
 
-        public Tile(int _x, int _y,
-            Piece _piece,
-            string _element,
-            TileContents _contents,
-            bool _isClicked,
-            bool _isHovered,
-            bool _isHighlighted,
-            bool _isAOE,
-            int _remainingTimeOnEnvironment
+        public Tile(int x, int y,
+            Piece piece,
+            string element,
+            TileContents contents,
+            bool isClicked,
+            bool isHovered,
+            bool isHighlighted,
+            bool isAOE,
+            int remainingTimeOnEnvironment
         )
         {
-            x = _x;
-            y = _y;
-            piece = _piece;
-            element = _element;
-            contents = _contents;
-            isClicked = _isClicked;
-            isHovered = _isHovered;
-            isHighlighted = _isHighlighted;
-            isAOE = _isAOE;
-            remainingTimeOnEnvironment = _remainingTimeOnEnvironment;
+            _x = x;
+            _y = y;
+            _piece = piece;
+            _element = element;
+            _contents = contents;
+            _isClicked = isClicked;
+            _isHovered = isHovered;
+            _isHighlighted = isHighlighted;
+            _isAOE = isAOE;
+            _remainingTimeOnEnvironment = remainingTimeOnEnvironment;
         }
 
         public Tile Clone()
         {
-            return new Tile(x, y)
-            {
-                x = this.x,
-                y = this.y,
-                piece = this.piece == null ? null : this.piece.Clone(),
-                element = this.element,
-                contents = this.contents,
-                isClicked = this.isClicked,
-                isHovered = this.isHovered,
-                isHighlighted = this.isHighlighted,
-                isAOE = this.isAOE,
-                remainingTimeOnEnvironment = this.remainingTimeOnEnvironment
-            };
+            return new Tile(
+                this._x,
+                this._y,
+                this._piece == null ? null : this._piece.Clone(),
+                this._element,
+                this._contents,
+                this._isClicked,
+                this._isHovered,
+                this._isHighlighted,
+                this._isAOE,
+                this._remainingTimeOnEnvironment
+            );
         }
+
+        public Tile Clone(Piece newPiece)
+        {
+            return new Tile(
+                this._x,
+                this._y,
+                newPiece,
+                this._element,
+                TileContents.Piece,
+                this._isClicked,
+                this._isHovered,
+                this._isHighlighted,
+                this._isAOE,
+                this._remainingTimeOnEnvironment
+            );
+        }
+
+        public Tile Clone(bool newState, List<TileState> statesToChange)
+        {
+            return new Tile(
+                this._x,
+                this._y,
+                this._piece == null ? null : this._piece.Clone(),
+                this._element,
+                this._contents,
+                statesToChange.Contains(TileState.isClicked) ? newState : this._isClicked,
+                statesToChange.Contains(TileState.isHovered) ? newState : this._isHovered,
+                statesToChange.Contains(TileState.isHighlighted) ? newState : this._isHighlighted,
+                statesToChange.Contains(TileState.isAOE) ? newState : this._isAOE,
+                this._remainingTimeOnEnvironment
+            );
+        }
+
+        public Tile Clone(int newRemainingTimeOnEnv)
+        {
+            return new Tile(
+                this._x,
+                this._y,
+                this._piece == null ? null : this._piece.Clone(),
+                this._element,
+                this._contents,
+                this._isClicked,
+                this._isHovered,
+                this._isHighlighted,
+                this._isAOE,
+                newRemainingTimeOnEnv
+            );
+        }
+
+        public Tile Clone(TileContents newContents)
+        {
+            return new Tile(
+                this._x,
+                this._y,
+                this._piece == null ? null : this._piece.Clone(),
+                this._element,
+                newContents,
+                this._isClicked,
+                this._isHovered,
+                this._isHighlighted,
+                this._isAOE,
+                this._remainingTimeOnEnvironment
+            );
+        }
+
+        public Tile CloneRemovePiece()
+        {
+            return new Tile(
+                this._x,
+                this._y,
+                null,
+                this._element,
+                TileContents.Empty,
+                this._isClicked,
+                this._isHovered,
+                this._isHighlighted,
+                this._isAOE,
+                this._remainingTimeOnEnvironment
+            );
+        }
+
+        public TileContents Contents { get { return _contents; } }
+        public Piece Piece { get { return _piece; } }
+        public string Element { get { return _element; } }
+        public int X { get { return _x; } }
+        public int Y { get { return _y; } }
+        public int RemainingTimeOnEnvironment { get { return _remainingTimeOnEnvironment; } }
+
+        // States
+        public bool IsClicked { get { return _isClicked; } }
+        public bool IsHovered { get { return _isHovered; } }
+        public bool IsHighlighted { get { return _isHighlighted; } }
+        public bool IsAOE { get { return _isAOE; } }
+
     }
 
     public enum TileContents

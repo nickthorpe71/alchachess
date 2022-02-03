@@ -56,7 +56,7 @@ public class GameLogic : MonoBehaviour
         Tile newClickedTile = BoardC.GetTile(board.tiles, (int)clicked.transform.position.x, (int)clicked.transform.position.z);
 
         // check if clicked tile has a piece owned by human player
-        if (newClickedTile.contents == TileContents.Piece && newClickedTile.piece.player == humanPlayer)
+        if (newClickedTile.Contents == TileContents.Piece && newClickedTile.Piece.player == humanPlayer)
         {
             // Reset temporary states
             board.tiles = BoardC.ChangeTilesState(board.tiles, new List<TileState> { TileState.isAOE, TileState.isHighlighted }, false);
@@ -68,9 +68,9 @@ public class GameLogic : MonoBehaviour
                     board.tiles,
                     new List<TileState> { TileState.isClicked },
                     true,
-                    new List<Vector2> { new Vector2(newClickedTile.x, newClickedTile.y) }
+                    new List<Vector2> { new Vector2(newClickedTile.X, newClickedTile.Y) }
                 );
-                currentClicked = board.tiles[newClickedTile.y][newClickedTile.x];
+                currentClicked = board.tiles[newClickedTile.Y][newClickedTile.X];
 
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
@@ -80,13 +80,13 @@ public class GameLogic : MonoBehaviour
                 );
             }
             // if clicked the thing that is currently clicked
-            else if (new Vector3(newClickedTile.x, 0, newClickedTile.y) == new Vector3(currentClicked.x, 0, currentClicked.y))
+            else if (new Vector3(newClickedTile.X, 0, newClickedTile.Y) == new Vector3(currentClicked.X, 0, currentClicked.Y))
             {
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isClicked },
                     false,
-                    new List<Vector2> { new Vector2(currentClicked.x, currentClicked.y) }
+                    new List<Vector2> { new Vector2(currentClicked.X, currentClicked.Y) }
                 );
                 currentClicked = null;
             }
@@ -98,7 +98,7 @@ public class GameLogic : MonoBehaviour
                     board.tiles,
                     new List<TileState> { TileState.isClicked },
                     false,
-                    new List<Vector2> { new Vector2(currentClicked.x, currentClicked.y) }
+                    new List<Vector2> { new Vector2(currentClicked.X, currentClicked.Y) }
                 );
 
                 // switch previously selected tile to newly selected tile (which has isClicked state of true)
@@ -106,9 +106,9 @@ public class GameLogic : MonoBehaviour
                     board.tiles,
                     new List<TileState> { TileState.isClicked },
                     true,
-                    new List<Vector2> { new Vector2(newClickedTile.x, newClickedTile.y) }
+                    new List<Vector2> { new Vector2(newClickedTile.X, newClickedTile.Y) }
                 );
-                currentClicked = board.tiles[newClickedTile.y][newClickedTile.x];
+                currentClicked = board.tiles[newClickedTile.Y][newClickedTile.X];
 
                 // update highlight data
                 board.tiles = BoardC.ChangeTilesState(
@@ -120,7 +120,7 @@ public class GameLogic : MonoBehaviour
             }
         }
         // if we clicked an element or empty tile which is highlighted
-        else if (currentClicked != null && currentHover.isHighlighted)
+        else if (currentClicked != null && currentHover.IsHighlighted)
         {
             if (!humanCanInput)
                 return;
@@ -148,7 +148,7 @@ public class GameLogic : MonoBehaviour
 
 
         // if we are hovering on the same thing as before
-        if (currentHover != null && new Vector3(newHover.x, 0, newHover.y) == new Vector3(currentHover.x, 0, currentHover.y))
+        if (currentHover != null && new Vector3(newHover.X, 0, newHover.Y) == new Vector3(currentHover.X, 0, currentHover.Y))
             return;
 
         // on new hover remove all AOE markers
@@ -165,9 +165,9 @@ public class GameLogic : MonoBehaviour
                 board.tiles,
                 new List<TileState> { TileState.isHovered },
                 true,
-                new List<Vector2> { new Vector2(newHover.x, newHover.y) }
+                new List<Vector2> { new Vector2(newHover.X, newHover.Y) }
             );
-            currentHover = board.tiles[newHover.y][newHover.x];
+            currentHover = board.tiles[newHover.Y][newHover.X];
         }
 
         // if we are hovering on a new thing
@@ -176,7 +176,7 @@ public class GameLogic : MonoBehaviour
             board.tiles,
             new List<TileState> { TileState.isHovered },
             false,
-            new List<Vector2> { new Vector2(currentHover.x, currentHover.y) }
+            new List<Vector2> { new Vector2(currentHover.X, currentHover.Y) }
         );
 
         graphics.ToggleAllPieceStatsUI(false);
@@ -186,37 +186,37 @@ public class GameLogic : MonoBehaviour
             board.tiles,
             new List<TileState> { TileState.isHovered },
             true,
-            new List<Vector2> { new Vector2(newHover.x, newHover.y) }
+            new List<Vector2> { new Vector2(newHover.X, newHover.Y) }
         );
-        currentHover = board.tiles[newHover.y][newHover.x];
+        currentHover = board.tiles[newHover.Y][newHover.X];
 
         // if hovering a piece
-        if (currentHover.contents == TileContents.Piece)
+        if (currentHover.Contents == TileContents.Piece)
         {
             ui.spellView.Toggle(false);
             if (!graphics.pieceIsMoving)
-                graphics.ShowPieceStats(new Vector2(currentHover.x, currentHover.y), currentHover.piece);
+                graphics.ShowPieceStats(new Vector2(currentHover.X, currentHover.Y), currentHover.Piece);
         }
         else // if hoverint an element
         {
             if (currentClicked == null) return;
 
             Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
-            graphics.TogglePieceStatsUI(new Vector2(currentClicked.x, currentClicked.y), false);
+            graphics.TogglePieceStatsUI(new Vector2(currentClicked.X, currentClicked.Y), false);
 
             // if piece is clicked and there are elements in our path
             if (currentClicked != null && potentialSpell != null)
             {
                 // show stats of potential spell
-                float colorMod = SpellC.ColorMod(currentClicked.piece.element, "N", potentialSpell.color);
-                ui.spellView.UpdateView(potentialSpell, currentClicked.piece, colorMod);
+                float colorMod = SpellC.ColorMod(currentClicked.Piece.element, "N", potentialSpell.color);
+                ui.spellView.UpdateView(potentialSpell, currentClicked.Piece, colorMod);
 
                 // show potential spell AOE
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isAOE },
                     true,
-                    BoardC.CalculateAOEPatterns(potentialSpell.pattern, currentHover, currentClicked.piece.player)
+                    BoardC.CalculateAOEPatterns(potentialSpell.pattern, currentHover, currentClicked.Piece.player)
                 );
             }
             else
@@ -244,26 +244,22 @@ public class GameLogic : MonoBehaviour
         Tile startTile = start.Clone();
         Tile endTile = end.Clone();
 
-        Vector2 startPos = new Vector2(startTile.x, startTile.y);
-        Vector2 endPos = new Vector2(endTile.x, endTile.y);
+        Vector2 startPos = new Vector2(startTile.X, startTile.Y);
+        Vector2 endPos = new Vector2(endTile.X, endTile.Y);
 
         // update piece data and contents state of start and end tiles
         board.tiles = BoardC.MapTilesBetween(board.tiles, startPos, endPos, (tile, x, y) =>
-        {
-            Vector2 pos = new Vector2(x, y);
-            if (pos == endPos)
-            {   // set end tile contents to piece and piece data to moved piece
-                tile.contents = TileContents.Piece;
-                tile.piece = startTile.piece;
-            }
-            else
-            {   // for all other tiles set contents to empty and piece to null
-                tile.contents = TileContents.Empty;
-                tile.piece = null;
-            }
-
-            return tile;
-        });
+            (new Vector2(x, y) == endPos)
+            ? new Tile(
+                tile.X, tile.Y, startTile.Piece,
+                tile.Element, TileContents.Piece,
+                tile.IsClicked, tile.IsHovered,
+                tile.IsHighlighted, tile.IsAOE,
+                tile.RemainingTimeOnEnvironment
+            )
+            :
+            tile.CloneRemovePiece()
+        );
 
         // --- Graphics ---
         graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(endTile, spell));
@@ -280,10 +276,10 @@ public class GameLogic : MonoBehaviour
         }
 
         // save caster
-        Tile caster = board.tiles[end.y][end.x];
+        Tile caster = board.tiles[end.Y][end.X];
 
         // get aoe pattern
-        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.piece.player);
+        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.Piece.player);
         List<Vector2> nonPieceTilesInRange = new List<Vector2>();
 
         // apply damage to pieces in range
@@ -293,9 +289,8 @@ public class GameLogic : MonoBehaviour
         // apply damage/healing to pieces
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
-            Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.piece, kvp.Value.piece, spell);
-            Tile tileWithNewPiece = board.tiles[(int)kvp.Key.y][(int)kvp.Key.x].Clone();
-            tileWithNewPiece.piece = piecePostSpell;
+            Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.Piece, kvp.Value.Piece, spell);
+            Tile tileWithNewPiece = board.tiles[(int)kvp.Key.y][(int)kvp.Key.x].Clone(piecePostSpell);
             board.tiles[(int)kvp.Key.y][(int)kvp.Key.x] = tileWithNewPiece;
             targetsPostDmg[kvp.Key] = tileWithNewPiece;
         };
@@ -311,11 +306,11 @@ public class GameLogic : MonoBehaviour
 
                 // and save positions to place environment pieces to send to graphics
                 Tile tileCopy = tile.Clone();
-                if (tileCopy.contents != TileContents.Piece && tileCopy.contents != TileContents.Environment)
+                if (tileCopy.Contents != TileContents.Piece && tileCopy.Contents != TileContents.Environment)
                 {
-                    nonPieceTilesInRange.Add(new Vector2(tile.x, tile.y));
-                    tileCopy.remainingTimeOnEnvironment = SpellEffects.list[spell.color].Duration;
-                    tileCopy.contents = TileContents.Environment;
+                    nonPieceTilesInRange.Add(new Vector2(tile.X, tile.Y));
+                    tileCopy = tileCopy.Clone(SpellEffects.list[spell.color].Duration);
+                    tileCopy = tileCopy.Clone(TileContents.Environment);
                 }
                 return tileCopy;
             });
@@ -333,27 +328,26 @@ public class GameLogic : MonoBehaviour
         Dictionary<Vector2, Tile> deadTargets = new Dictionary<Vector2, Tile>();
         board.tiles = BoardC.MapTiles(board.tiles, tile =>
         {
-            if (tile.contents != TileContents.Piece || tile.piece.health > 0) return tile;
+            if (tile.Contents != TileContents.Piece || tile.Piece.health > 0) return tile;
             // if found remove from board data and create list to 
             //send to graphics to be removed as well
-            deadTargets[new Vector2(tile.x, tile.y)] = tile;
-            return BoardC.RemovePiece(tile);
+            deadTargets[new Vector2(tile.X, tile.Y)] = tile;
+            return tile.CloneRemovePiece();
         });
 
         // upkeep environment effects
         List<Vector2> environmentsToRemove = new List<Vector2>();
         board.tiles = BoardC.MapTiles(board.tiles, tile =>
         {
-            if (tile.contents != TileContents.Environment) return tile;
-            Tile tileCopy = tile.Clone();
+            if (tile.Contents != TileContents.Environment) return tile;
             // reduce count on environmet effects
-            tileCopy.remainingTimeOnEnvironment -= 1;
+            Tile tileCopy = tile.Clone(tile.RemainingTimeOnEnvironment - 1);
 
             // remove expired environmet effects from the board
-            if (tileCopy.remainingTimeOnEnvironment == 0)
+            if (tileCopy.RemainingTimeOnEnvironment == 0)
             {
-                environmentsToRemove.Add(new Vector2(tileCopy.x, tileCopy.y));
-                tileCopy.contents = TileContents.Empty;
+                environmentsToRemove.Add(new Vector2(tileCopy.X, tileCopy.Y));
+                tileCopy = tileCopy.Clone(TileContents.Empty);
             }
 
             return tileCopy;
@@ -381,7 +375,7 @@ public class GameLogic : MonoBehaviour
 
         // wait for input
         if (currentPlayer != humanPlayer)
-            AIC.TakeTurn(board, this, 5); // difficulty is 1-5
+            AI.TakeTurn(board, this);
     }
 }
 
@@ -389,6 +383,7 @@ public class GameLogic : MonoBehaviour
 // TODO:
 // - opponent should have a move anim where they wave their hand which will be played before their piece moves
 // - opponent should have a talk animation and should have voice lines happen randomly after some events
+// - pieces landing on opposite color spell aren't being penalized
 // - improve AI (4h)
 // - implement minimax (4h)
 // --- 2/6/2022 ---

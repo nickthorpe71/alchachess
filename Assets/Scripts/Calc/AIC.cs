@@ -1,128 +1,79 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using Data;
 
 namespace Calc
 {
     public static class AIC
     {
-        public static void TakeTurn(Board board, GameLogic logic, int difficulty)
+        public static List<ScoredMove> GetScoredMoves(Board board, GameLogic logic, List<Tile> movablePieces)
         {
-            // RandomTurn(board, logic);
-            DamagingTurn(board, logic, difficulty);
-        }
-
-        private static void RandomTurn(Board board, GameLogic logic)
-        {
-            // get pieces owned by ai player
-            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer);
-
-            // pick a random piece (start)
-            Tile selectedPiece = GeneralC.RandomFromList(aiPieces);
-
-            // determine possible moves
-            List<Vector2> possibleMoves = BoardC.PossibleMoves(board.tiles, selectedPiece);
-
-            // select random space from possible moves (end)
-            Vector2 selectedMove = GeneralC.RandomFromList(possibleMoves);
-            Tile endTile = board.tiles[(int)selectedMove.y][(int)selectedMove.x];
-
-            // calculate spell from selected start and end of path
-            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(selectedPiece, endTile, board.tiles, logic.humanPlayer, logic.currentPlayer));
-
-            logic.ExecuteMove(selectedPiece, endTile, spell);
-        }
-
-        private static void DamagingTurn(Board board, GameLogic logic, int difficulty)
-        {
-            // get pieces owned by ai player
-            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
-
             List<ScoredMove> scoredMoves = new List<ScoredMove>();
 
             // for each piece calc possible moves and score them
-            foreach (Tile piece in aiPieces)
+            foreach (Tile piece in movablePieces)
             {
                 // calc possible moves for this piece
                 List<Vector2> possibleMoves = BoardC.PossibleMoves(board.tiles, piece);
 
-                // gather scores for each possible move
-                for (int i = 0; i < possibleMoves.Count; i++)
+                // gather score for each possible move
+                foreach (Vector2 move in possibleMoves)
                 {
-                    float score = 0;
-                    int numDeadPieces = 0;
-
                     Spell spell = SpellC.GetSpellByRecipe(
                         BoardC.GetRecipeByPath(
-                            piece,
-                            board.tiles[(int)possibleMoves[i].y][(int)possibleMoves[i].x],
-                            board.tiles,
-                            logic.humanPlayer,
-                            logic.currentPlayer
+                        piece,
+                        board.tiles[(int)move.y][(int)move.x],
+                        board.tiles,
+                        logic.humanPlayer,
+                        logic.currentPlayer
                         )
                     );
 
-                    Tile endTile = board.tiles[(int)possibleMoves[i].y][(int)possibleMoves[i].x];
-
-                    if (spell != null)
-                    {
-                        // check number of pieces this spell hits
-
-                        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, endTile, piece.piece.player);
-
-                        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(
-                            board.tiles,
-                            aoeRange
-                        );
-
-                        // calculate pieces health post damage
-                        foreach (Tile target in targetsPreDmg.Values)
-                        {
-
-                            Piece piecePostSpell = PieceC.ApplySpellToPiece(piece.piece, target.piece, spell);
-                            score += target.piece.health - piecePostSpell.health;
-
-                            // keep track of all pieces which have health <= 0
-                            if (piecePostSpell.health <= 0)
-                                numDeadPieces++;
-                        }
-
-                        score *= (1 + numDeadPieces * 0.25f);
-                    }
-
-                    ScoredMove move = new ScoredMove(piece, endTile, spell, score);
-
-                    scoredMoves.Add(move);
+                    scoredMoves.Add(GetScoreForMove(board, spell, piece, move));
                 }
             }
 
-            ScoredMove bestMove = scoredMoves.OrderByDescending(move => move.Score).ToArray()[0 + 5 - difficulty];
-            logic.ExecuteMove(bestMove.Start, bestMove.End, bestMove.Spell);
+            return scoredMoves;
         }
 
-        public class ScoredMove
+        private static ScoredMove GetScoreForMove(Board board, Spell spell, Tile startTile, Vector2 move)
         {
-            private readonly Tile _start;
-            private readonly Tile _end;
-            private readonly Spell _spell;
-            private readonly float _score;
+            float score = 0;
+            int numDeadPieces = 0;
+            Tile endTile = board.tiles[(int)move.y][(int)move.x].Clone();
 
-            public ScoredMove(Tile start, Tile end, Spell spell, float score)
+
+            if (spell == null) return new ScoredMove(startTile, endTile, spell, score);
+
+            // check number of pieces this spell hits
+            List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, endTile, startTile.Piece.player);
+            Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(
+                board.tiles,
+                aoeRange
+            );
+
+            // calculate score
+            foreach (Tile target in targetsPreDmg.Values)
             {
-                _start = start;
-                _end = end;
-                _spell = spell;
-                _score = score;
+                Piece targetPostSpell = PieceC.ApplySpellToPiece(startTile.Piece, target.Piece, spell);
+
+                // determine if target was enemy or ally
+                bool targetIsAlly = startTile.Piece.player == target.Piece.player;
+                // score is difference in health after spell effect
+                float scoreToAdd = target.Piece.health - targetPostSpell.health;
+                // scoreToAdd will be a negative if it is a heal, therefore we should
+                // add it to the score (lowering the score) if it affects an enemy
+                score += !targetIsAlly ? scoreToAdd : scoreToAdd * -1;
+
+                // keep track of all pieces which have health <= 0
+                if (targetPostSpell.health <= 0)
+                    numDeadPieces++;
             }
 
-            public Tile Start { get { return _start; } }
+            // add multiplier to score for dead pieces
+            score *= (1 + numDeadPieces * 0.25f);
 
-            public Tile End { get { return _end; } }
-
-            public Spell Spell { get { return _spell; } }
-
-            public float Score { get { return _score; } }
+            return new ScoredMove(startTile, endTile, spell, score);
         }
     }
 }

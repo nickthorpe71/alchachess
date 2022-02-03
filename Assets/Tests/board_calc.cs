@@ -26,27 +26,6 @@ public class board_calc
     }
 
     [Test]
-    public void MapTiles_can_change_all_tiles_to_red_element()
-    {
-        // arrange
-        Board board = new Board();
-        string expectedElement = "R";
-
-        // act
-        board.tiles = BoardC.MapTiles(board.tiles, tile =>
-        {
-            Tile copy = tile.Clone();
-            copy.element = expectedElement;
-            return copy;
-        });
-
-        // assert
-        for (int y = 0; y < board.tiles.Length; y++)
-            for (int x = 0; x < board.tiles[y].Length; x++)
-                Assert.AreEqual(expectedElement, board.tiles[y][x].element);
-    }
-
-    [Test]
     public void GetTile_returns_correct_tile()
     {
         // arrange
@@ -56,8 +35,8 @@ public class board_calc
         Tile result = BoardC.GetTile(board.tiles, 1, 0);
 
         // assert
-        Assert.AreEqual(PieceLabel.Esa, result.piece.label);
-        Assert.AreEqual(PlayerToken.P1, result.piece.player);
+        Assert.AreEqual(PieceLabel.Esa, result.Piece.label);
+        Assert.AreEqual(PlayerToken.P1, result.Piece.player);
     }
 
     [Test]
@@ -142,27 +121,6 @@ public class board_calc
     }
 
     [Test]
-    public void GetRecipeByPath_returns_a_valid_recipe()
-    {
-        // arrange
-        Board board = new Board();
-        board.tiles[0][1].isClicked = true;
-        board.tiles[1][1].isHighlighted = true;
-        board.tiles[2][1].isHighlighted = true;
-        board.tiles[3][1].isHighlighted = true;
-        board.tiles[3][1].isHovered = true;
-
-        Tile pathStart = board.tiles[0][1];
-        Tile pathEnd = board.tiles[3][1];
-
-        // act
-        string result = BoardC.GetRecipeByPath(pathStart, pathEnd, board.tiles, PlayerToken.P1, PlayerToken.P1);
-
-        // assert
-        Assert.AreEqual("GDR", result);
-    }
-
-    [Test]
     public void ChangeTilesState_changes_state_on_all_tiles()
     {
         // arrange
@@ -184,105 +142,14 @@ public class board_calc
         // assert
         BoardC.LoopTiles(board.tiles, tile =>
         {
-            Assert.AreEqual(true, tile.isClicked);
-            Assert.AreEqual(true, tile.isHovered);
-            Assert.AreEqual(true, tile.isHighlighted);
-            Assert.AreEqual(true, tile.isAOE);
+            Assert.AreEqual(true, tile.IsClicked);
+            Assert.AreEqual(true, tile.IsHovered);
+            Assert.AreEqual(true, tile.IsHighlighted);
+            Assert.AreEqual(true, tile.IsAOE);
         });
 
         // make sure all states are checked
         Assert.AreEqual(numStatesChecked, allStates.Length);
     }
 
-    [Test]
-    public void MapTilesBetween_moves_a_piece_up()
-    {
-        // arrange
-        Board resultBoard = new Board();
-        Piece piece = resultBoard.tiles[0][4].piece;
-        Vector2 start = new Vector2(4, 0);
-        Vector2 end = new Vector2(4, 2);
-
-        // act
-        resultBoard.tiles = BoardC.MapTilesBetween(resultBoard.tiles, start, end, (tile, x, y) =>
-        {
-            Vector2 pos = new Vector2(x, y);
-            if (pos == end)
-            {   // set end tile contents to piece and piece data to moved piece
-                tile.contents = TileContents.Piece;
-                tile.piece = piece;
-            }
-            else
-            {   // for all other tiles set contents to empty and piece to null
-                tile.contents = TileContents.Empty;
-                tile.piece = null;
-            }
-
-            return tile;
-        });
-
-        // assert
-        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[0][4].contents);
-        Assert.AreEqual(null, resultBoard.tiles[0][4].piece);
-        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[1][4].contents);
-        Assert.AreEqual(null, resultBoard.tiles[1][4].piece);
-        Assert.AreEqual(TileContents.Piece, resultBoard.tiles[2][4].contents);
-        Assert.AreEqual(piece, resultBoard.tiles[2][4].piece);
-    }
-
-    [Test]
-    public void MapTilesBetween_moves_a_piece_up_and_back()
-    {
-        // arrange
-        Board resultBoard = new Board();
-        Piece piece = resultBoard.tiles[0][4].piece;
-        Vector2 start = new Vector2(4, 0);
-        Vector2 end = new Vector2(4, 2);
-
-        // act
-        resultBoard.tiles = BoardC.MapTilesBetween(resultBoard.tiles, start, end, (tile, x, y) =>
-        {
-            Vector2 pos = new Vector2(x, y);
-            if (pos == end)
-            {   // set end tile contents to piece and piece data to moved piece
-                tile.contents = TileContents.Piece;
-                tile.piece = piece;
-            }
-            else
-            {   // for all other tiles set contents to empty and piece to null
-                tile.contents = TileContents.Empty;
-                tile.piece = null;
-            }
-
-            return tile;
-        });
-
-        start = new Vector2(4, 2);
-        end = new Vector2(4, 0);
-
-        resultBoard.tiles = BoardC.MapTilesBetween(resultBoard.tiles, start, end, (tile, x, y) =>
-        {
-            Vector2 pos = new Vector2(x, y);
-            if (pos == end)
-            {   // set end tile contents to piece and piece data to moved piece
-                tile.contents = TileContents.Piece;
-                tile.piece = piece;
-            }
-            else
-            {   // for all other tiles set contents to empty and piece to null
-                tile.contents = TileContents.Empty;
-                tile.piece = null;
-            }
-
-            return tile;
-        });
-
-        // assert
-        Assert.AreEqual(TileContents.Piece, resultBoard.tiles[0][4].contents);
-        Assert.AreEqual(piece, resultBoard.tiles[0][4].piece);
-        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[1][4].contents);
-        Assert.AreEqual(null, resultBoard.tiles[1][4].piece);
-        Assert.AreEqual(TileContents.Empty, resultBoard.tiles[2][4].contents);
-        Assert.AreEqual(null, resultBoard.tiles[2][4].piece);
-    }
 }

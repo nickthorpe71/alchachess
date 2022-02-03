@@ -57,7 +57,7 @@ namespace Calc
             List<Tile> result = new List<Tile>();
             LoopTiles(tiles, tile =>
             {
-                if (tile.contents == TileContents.Piece && tile.piece.player == player)
+                if (tile.Contents == TileContents.Piece && tile.Piece.player == player)
                     result.Add(tile);
             });
             return result;
@@ -67,16 +67,10 @@ namespace Calc
         {
             Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
 
-            for (int i = 0; i < toChange.Count; i++)
+            foreach (Vector2 pos in toChange)
             {
-                if (states.Contains(TileState.isClicked))
-                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isClicked = newState;
-                if (states.Contains(TileState.isHovered))
-                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isHovered = newState;
-                if (states.Contains(TileState.isHighlighted))
-                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isHighlighted = newState;
-                if (states.Contains(TileState.isAOE))
-                    tilesCopy[(int)toChange[i].y][(int)toChange[i].x].isAOE = newState;
+                Tile tileCopy = tilesCopy[(int)pos.y][(int)pos.x].Clone(newState, states);
+                tilesCopy[(int)pos.y][(int)pos.x] = tileCopy;
             }
 
             return tilesCopy;
@@ -85,17 +79,7 @@ namespace Calc
         public static Tile[][] ChangeTilesState(Tile[][] tiles, List<TileState> states, bool newState)
             => MapTiles(tiles, (tile) =>
                 {
-                    Tile tileCopy = tile.Clone();
-
-                    if (states.Contains(TileState.isClicked))
-                        tileCopy.isClicked = newState;
-                    if (states.Contains(TileState.isHovered))
-                        tileCopy.isHovered = newState;
-                    if (states.Contains(TileState.isHighlighted))
-                        tileCopy.isHighlighted = newState;
-                    if (states.Contains(TileState.isAOE))
-                        tileCopy.isAOE = newState;
-
+                    Tile tileCopy = tile.Clone(newState, states);
                     return tileCopy;
                 });
 
@@ -106,7 +90,7 @@ namespace Calc
 
             for (int i = 0; i < pattern.Count; i++)
             {
-                Vector2 toAdd = new Vector2((float)(tile.x + pattern[i].x * playerMod), (float)(tile.y + pattern[i].y * playerMod));
+                Vector2 toAdd = new Vector2((float)(tile.X + pattern[i].x * playerMod), (float)(tile.Y + pattern[i].y * playerMod));
                 if (InBounds(toAdd))
                     result.Add(toAdd);
             }
@@ -118,9 +102,9 @@ namespace Calc
         {
             List<Vector2> possibleMoves = new List<Vector2>();
 
-            int startX = selectedTile.x;
-            int startY = selectedTile.y;
-            int moveDistance = selectedTile.piece.moveDistance;
+            int startX = selectedTile.X;
+            int startY = selectedTile.Y;
+            int moveDistance = selectedTile.Piece.moveDistance;
 
             List<int> activeDirections = GeneralC.CreateList(0, 1, 2, 3, 4, 5, 6, 7);
 
@@ -155,9 +139,9 @@ namespace Calc
             if (!InBounds(location))
                 return false;
             Tile tile = GetTile(tiles, (int)location.x, (int)location.y);
-            if (tile.contents == TileContents.Piece)
+            if (tile.Contents == TileContents.Piece)
                 return false;
-            if (tile.contents == TileContents.Environment)
+            if (tile.Contents == TileContents.Environment)
                 return false;
 
             return true;
@@ -169,17 +153,17 @@ namespace Calc
 
         public static string GetRecipeByPath(Tile pathStart, Tile pathEnd, Tile[][] tiles, PlayerToken humanPlayer, PlayerToken currentPlayer)
         {
-            if (currentPlayer == humanPlayer && !pathEnd.isHighlighted)
+            if (currentPlayer == humanPlayer && !pathEnd.IsHighlighted)
                 return "";
 
             string result = "";
 
-            MapTilesBetween(tiles, new Vector2(pathStart.x, pathStart.y), new Vector2(pathEnd.x, pathEnd.y), (tile, x, y) =>
+            MapTilesBetween(tiles, new Vector2(pathStart.X, pathStart.Y), new Vector2(pathEnd.X, pathEnd.Y), (tile, x, y) =>
             {
-                if (currentPlayer == humanPlayer && !tile.isHighlighted) return tile;
+                if (currentPlayer == humanPlayer && !tile.IsHighlighted) return tile;
 
-                if (tile.element != "N" && tile.contents == TileContents.Element)
-                    result += tile.element;
+                if (tile.Element != "N" && tile.Contents == TileContents.Element)
+                    result += tile.Element;
                 return tile;
             });
 
@@ -191,14 +175,14 @@ namespace Calc
             Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
             LoopTiles(tiles, (tile) =>
             {
-                Vector2 tilePosition = new Vector2(tile.x, tile.y);
-                if (range.Contains(tilePosition) && tile.contents == TileContents.Piece)
+                Vector2 tilePosition = new Vector2(tile.X, tile.Y);
+                if (range.Contains(tilePosition) && tile.Contents == TileContents.Piece)
                     result[tilePosition] = tile;
             });
             return result;
         }
 
-        public static bool TileInRange(Tile tile, List<Vector2> range) => range.Contains(new Vector2(tile.x, tile.y));
+        public static bool TileInRange(Tile tile, List<Vector2> range) => range.Contains(new Vector2(tile.X, tile.Y));
 
         public static string GetBoardAsString(Board board)
         {
@@ -209,35 +193,24 @@ namespace Calc
                 for (int x = 0; x < board.tiles[y].Length; x++)
                 {
                     Tile tile = board.tiles[y][x];
-                    string piece = tile.piece != null ? tile.piece.label.ToString() : "no piece";
-                    result += "|" + tile.element + "," + tile.contents + "," + piece + "x:" + tile.x + "y:" + tile.y + "|";
+                    string piece = tile.Piece != null ? tile.Piece.label.ToString() : "no piece";
+                    result += "|" + tile.Element + "," + tile.Contents + "," + piece + "x:" + tile.X + "y:" + tile.Y + "|";
                 }
             }
 
             return result;
         }
 
-        public static Tile RemovePiece(Tile tile)
-        {
-            Tile tileWithPieceRemoved = tile.Clone();
-            // tileWithPieceRemoved.contents = tileWithPieceRemoved.element != "N" ? TileContents.Empty : TileContents.Element;
-            tileWithPieceRemoved.contents = TileContents.Empty;
-            tileWithPieceRemoved.piece = null;
-            return tileWithPieceRemoved;
-        }
-
         public static Tile[][] RepopulateElements(Tile[][] tiles, Dictionary<Vector2, string> toRepopulate)
             => BoardC.MapTiles(tiles, (tile) =>
             {
-                if (tile.contents == TileContents.Empty && tile.element != "N")
+                if (tile.Contents == TileContents.Empty && tile.Element != "N")
                 {
-                    Tile tileCopy = tile.Clone();
-
-                    // switch contents to hasElement
-                    tileCopy.contents = TileContents.Element;
+                    // switch contents to Element
+                    Tile tileCopy = tile.Clone(TileContents.Element);
 
                     // add element and position to dict for graphics
-                    toRepopulate[new Vector2(tileCopy.x, tileCopy.y)] = tile.element;
+                    toRepopulate[new Vector2(tileCopy.X, tileCopy.Y)] = tile.Element;
 
                     return tileCopy;
                 }

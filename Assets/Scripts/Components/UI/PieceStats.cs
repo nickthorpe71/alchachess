@@ -12,6 +12,7 @@ public class PieceStats : MonoBehaviour
     public Image healthGreen;
     public Image healthRed;
     public TextMeshProUGUI healthTxt;
+    public TextMeshProUGUI powerTxt;
 
     private float updateSpeed = 0.75f;
 
@@ -26,9 +27,7 @@ public class PieceStats : MonoBehaviour
         healthRed.fillAmount = piece.health / piece.maxHealth;
         healthTxt.text = $"{piece.health} / {piece.maxHealth}";
         characterName.text = piece.label.ToString();
-        // TODO:
-        // update power
-        // update movement
+        powerTxt.text = ((piece.power - 1) * 10).ToString();
     }
 
     public void UpdateHealthUI(Piece piece, float previousHealth)

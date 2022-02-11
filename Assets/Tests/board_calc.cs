@@ -32,7 +32,7 @@ public class board_calc
         Board board = new Board();
 
         // act
-        Tile result = BoardC.GetTile(board.tiles, 1, 0);
+        Tile result = BoardC.GetTile(board, new Vector2(1, 0));
 
         // assert
         Assert.AreEqual(PieceLabel.Esa, result.Piece.label);

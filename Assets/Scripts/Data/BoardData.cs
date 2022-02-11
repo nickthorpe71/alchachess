@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Data
 {
@@ -158,102 +158,6 @@ namespace Data
             _remainingTimeOnEnvironment = remainingTimeOnEnvironment;
         }
 
-        public Tile Clone()
-        {
-            return new Tile(
-                this._x,
-                this._y,
-                this._piece == null ? null : this._piece.Clone(),
-                this._element,
-                this._contents,
-                this._isClicked,
-                this._isHovered,
-                this._isHighlighted,
-                this._isAOE,
-                this._remainingTimeOnEnvironment
-            );
-        }
-
-        public Tile Clone(Piece newPiece)
-        {
-            return new Tile(
-                this._x,
-                this._y,
-                newPiece,
-                this._element,
-                TileContents.Piece,
-                this._isClicked,
-                this._isHovered,
-                this._isHighlighted,
-                this._isAOE,
-                this._remainingTimeOnEnvironment
-            );
-        }
-
-        public Tile Clone(bool newState, List<TileState> statesToChange)
-        {
-            return new Tile(
-                this._x,
-                this._y,
-                this._piece == null ? null : this._piece.Clone(),
-                this._element,
-                this._contents,
-                statesToChange.Contains(TileState.isClicked) ? newState : this._isClicked,
-                statesToChange.Contains(TileState.isHovered) ? newState : this._isHovered,
-                statesToChange.Contains(TileState.isHighlighted) ? newState : this._isHighlighted,
-                statesToChange.Contains(TileState.isAOE) ? newState : this._isAOE,
-                this._remainingTimeOnEnvironment
-            );
-        }
-
-        public Tile Clone(int newRemainingTimeOnEnv)
-        {
-            return new Tile(
-                this._x,
-                this._y,
-                this._piece == null ? null : this._piece.Clone(),
-                this._element,
-                this._contents,
-                this._isClicked,
-                this._isHovered,
-                this._isHighlighted,
-                this._isAOE,
-                newRemainingTimeOnEnv
-            );
-        }
-
-        public Tile Clone(TileContents newContents)
-        {
-            return new Tile(
-                this._x,
-                this._y,
-                this._piece == null ? null : this._piece.Clone(),
-                this._element,
-                newContents,
-                this._isClicked,
-                this._isHovered,
-                this._isHighlighted,
-                this._isAOE,
-                this._remainingTimeOnEnvironment
-            );
-        }
-
-        public Tile CloneRemovePiece()
-        {
-            return new Tile(
-                this._x,
-                this._y,
-                null,
-                this._element,
-                TileContents.Empty,
-                this._isClicked,
-                this._isHovered,
-                this._isHighlighted,
-                this._isAOE,
-                this._remainingTimeOnEnvironment
-            );
-        }
-
         public TileContents Contents { get { return _contents; } }
         public Piece Piece { get { return _piece; } }
         public string Element { get { return _element; } }
@@ -267,6 +171,45 @@ namespace Data
         public bool IsHighlighted { get { return _isHighlighted; } }
         public bool IsAOE { get { return _isAOE; } }
 
+    }
+
+    public class MoveData
+    {
+        private readonly PlayerToken _actingPlayer;
+        private readonly Piece _pieceMoved;
+        private readonly Vector2 _pieceStart;
+        private readonly Vector2 _pieceEnd;
+        private readonly Spell _spellCast;
+        private readonly Board _boardPreMove;
+        private readonly Board _boardPostMove;
+
+
+        public MoveData(
+            PlayerToken actingPlayer,
+            Piece pieceMoved,
+            Vector2 pieceStart,
+            Vector2 pieceEnd,
+            Board boardPreMove,
+            Board boardPostMove,
+            Spell spellCast
+        )
+        {
+            _actingPlayer = actingPlayer;
+            _pieceMoved = pieceMoved;
+            _pieceStart = pieceStart;
+            _pieceEnd = pieceEnd;
+            _boardPreMove = boardPreMove;
+            _boardPostMove = boardPostMove;
+            _spellCast = spellCast;
+        }
+
+        public PlayerToken ActingPlayer { get; }
+        public Piece PieceMoved { get; }
+        public Vector2 PieceStart { get; }
+        public Vector2 PieceEnd { get; }
+        public Board BoardPreMove { get; }
+        public Board BoardPostMove { get; }
+        public Spell SpellCast { get; }
     }
 
     public enum TileContents

@@ -13,6 +13,7 @@ namespace Actions
         {
             // RandomTurn(board, logic);
             DamagingTurn(board, logic);
+            // MiniMax(board, logic, 10);
         }
 
         private static void RandomTurn(Board board, GameLogic logic)
@@ -44,8 +45,16 @@ namespace Actions
             // score possible moves
             List<ScoredMove> scoredMoves = AIC.GetScoredMoves(board, logic, aiPieces);
 
-
             ScoredMove bestMove = scoredMoves.OrderByDescending(move => move.Score).ToArray()[0];
+            logic.ExecuteMove(bestMove.Start, bestMove.End, bestMove.Spell);
+        }
+
+        private static void MiniMax(Board board, GameLogic logic, int depth)
+        {
+            // get pieces owned by ai player
+            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
+
+            ScoredMove bestMove = AIC.MiniMaxEx(board, logic, aiPieces, depth);
             logic.ExecuteMove(bestMove.Start, bestMove.End, bestMove.Spell);
         }
     }

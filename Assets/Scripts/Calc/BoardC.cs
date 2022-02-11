@@ -13,7 +13,7 @@ namespace Calc
         {
             for (int y = 0; y < tiles.Length; y++)
                 for (int x = 0; x < tiles[y].Length; x++)
-                    f(tiles[y][x].Clone());
+                    f(TileC.Clone(tiles[y][x]));
         }
 
         public static Tile[][] MapTiles(Tile[][] tiles, Func<Tile, Tile> f)
@@ -24,7 +24,7 @@ namespace Calc
             {
                 tilesCopy[y] = new Tile[tiles[y].Length];
                 for (int x = 0; x < tiles[y].Length; x++)
-                    tilesCopy[y][x] = f(tiles[y][x].Clone());
+                    tilesCopy[y][x] = f(TileC.Clone(tiles[y][x]));
             }
 
             return tilesCopy;
@@ -32,7 +32,7 @@ namespace Calc
 
         public static Tile[][] MapTilesBetween(Tile[][] tiles, Vector2 start, Vector2 end, Func<Tile, int, int, Tile> f)
         {
-            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+            Tile[][] tilesCopy = MapTiles(tiles, (tile) => TileC.Clone(tile));
 
             Vector2 path = new Vector2(end.x, end.y) - new Vector2(start.x, start.y);
             int distance = Mathf.Max(Mathf.Abs((int)path.x), Mathf.Abs((int)path.y));
@@ -50,7 +50,7 @@ namespace Calc
             return tilesCopy;
         }
 
-        public static Tile GetTile(Tile[][] tiles, int x, int y) => tiles[y][x];
+        public static Tile GetTile(Board b, Vector2 v) => b.tiles[(int)v.y][(int)v.x];
 
         public static List<Tile> GetTilesWithPieceForPlayer(Tile[][] tiles, PlayerToken player)
         {
@@ -65,11 +65,11 @@ namespace Calc
 
         public static Tile[][] ChangeTilesState(Tile[][] tiles, List<TileState> states, bool newState, List<Vector2> toChange)
         {
-            Tile[][] tilesCopy = MapTiles(tiles, (tile) => tile.Clone());
+            Tile[][] tilesCopy = MapTiles(tiles, (tile) => TileC.Clone(tile));
 
             foreach (Vector2 pos in toChange)
             {
-                Tile tileCopy = tilesCopy[(int)pos.y][(int)pos.x].Clone(newState, states);
+                Tile tileCopy = TileC.UpdateStates(tilesCopy[(int)pos.y][(int)pos.x], newState, states);
                 tilesCopy[(int)pos.y][(int)pos.x] = tileCopy;
             }
 
@@ -79,7 +79,7 @@ namespace Calc
         public static Tile[][] ChangeTilesState(Tile[][] tiles, List<TileState> states, bool newState)
             => MapTiles(tiles, (tile) =>
                 {
-                    Tile tileCopy = tile.Clone(newState, states);
+                    Tile tileCopy = TileC.UpdateStates(tile, newState, states);
                     return tileCopy;
                 });
 
@@ -138,7 +138,7 @@ namespace Calc
         {
             if (!InBounds(location))
                 return false;
-            Tile tile = GetTile(tiles, (int)location.x, (int)location.y);
+            Tile tile = tiles[(int)location.y][(int)location.x];
             if (tile.Contents == TileContents.Piece)
                 return false;
             if (tile.Contents == TileContents.Environment)
@@ -150,18 +150,12 @@ namespace Calc
         public static bool InBounds(Vector2 location)
             => (location.x < Const.BOARD_WIDTH) && (location.x >= 0) && (location.y < Const.BOARD_HEIGHT) && (location.y >= 0);
 
-
-        public static string GetRecipeByPath(Tile pathStart, Tile pathEnd, Tile[][] tiles, PlayerToken humanPlayer, PlayerToken currentPlayer)
+        public static string GetRecipeByPath(Board board, Vector2 start, Vector2 end)
         {
-            if (currentPlayer == humanPlayer && !pathEnd.IsHighlighted)
-                return "";
-
             string result = "";
 
-            MapTilesBetween(tiles, new Vector2(pathStart.X, pathStart.Y), new Vector2(pathEnd.X, pathEnd.Y), (tile, x, y) =>
+            MapTilesBetween(board.tiles, start, end, (tile, x, y) =>
             {
-                if (currentPlayer == humanPlayer && !tile.IsHighlighted) return tile;
-
                 if (tile.Element != "N" && tile.Contents == TileContents.Element)
                     result += tile.Element;
                 return tile;
@@ -170,14 +164,14 @@ namespace Calc
             return result;
         }
 
-        public static Dictionary<Vector2, Tile> GetTilesWithPiecesInRange(Tile[][] tiles, List<Vector2> range)
+        public static List<Tile> GetTilesWithPiecesInRange(Board board, List<Vector2> range)
         {
-            Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
-            LoopTiles(tiles, (tile) =>
+            List<Tile> result = new List<Tile>();
+            LoopTiles(board.tiles, (tile) =>
             {
                 Vector2 tilePosition = new Vector2(tile.X, tile.Y);
                 if (range.Contains(tilePosition) && tile.Contents == TileContents.Piece)
-                    result[tilePosition] = tile;
+                    result.Add(tile);
             });
             return result;
         }
@@ -201,20 +195,125 @@ namespace Calc
             return result;
         }
 
-        public static Tile[][] RepopulateElements(Tile[][] tiles, Dictionary<Vector2, string> toRepopulate)
-            => BoardC.MapTiles(tiles, (tile) =>
+        public static Tile[][] RepopulateElements(Tile[][] tiles)
+            => BoardC.MapTiles(tiles, (tile)
+            => (tile.Contents == TileContents.Empty && tile.Element != "N")
+            ? TileC.UpdateContents(tile, TileContents.Element)
+            : tile);
+
+        public static Board CloneBoard(Board board)
+        {
+            Board boardCopy = new Board();
+            boardCopy.tiles = BoardC.MapTiles(board.tiles, tile => TileC.Clone(tile));
+            return boardCopy;
+        }
+
+
+        // ---- Board Turn Execution Events ----
+
+        public static MoveData ExecuteMove(Board board, PlayerToken currentPlayer, Vector2 start, Vector2 end)
+        {
+            Board boardPreMove = CloneBoard(board);
+            Board boardPostMove = CloneBoard(board);
+            boardPostMove = MovePiece(board, start, end);
+            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(boardPreMove, start, end));
+            if (spell != null)
+                boardPostMove = CastSpell(boardPostMove, end, spell);
+            boardPostMove = Upkeep(boardPostMove);
+
+            return new MoveData(
+                currentPlayer,
+                GetTile(board, start).Piece,
+                start,
+                end,
+                boardPreMove,
+                boardPostMove,
+                spell
+            );
+        }
+
+        private static Board MovePiece(Board board, Vector2 start, Vector2 end)
+        {
+            Piece movingPiece = GetTile(board, start).Piece.Clone();
+
+            // move start piece to end tile
+            board.tiles[(int)end.y][(int)end.x] = TileC.ReplacePiece(GetTile(board, end), movingPiece);
+
+            // remove elements the piece moves over
+            board.tiles = MapTilesBetween(board.tiles, start, end, (tile, x, y) =>
             {
-                if (tile.Contents == TileContents.Empty && tile.Element != "N")
-                {
-                    // switch contents to Element
-                    Tile tileCopy = tile.Clone(TileContents.Element);
-
-                    // add element and position to dict for graphics
-                    toRepopulate[new Vector2(tileCopy.X, tileCopy.Y)] = tile.Element;
-
-                    return tileCopy;
-                }
+                if (tile.Element != "N" && tile.Contents == TileContents.Element)
+                    return TileC.UpdateContents(tile, TileContents.Empty);
                 return tile;
             });
+
+            // remove start piece from start tile
+            board.tiles[(int)start.y][(int)start.x] = TileC.RemovePiece(GetTile(board, start));
+
+            return board;
+        }
+
+        private static Board CastSpell(Board board, Vector2 casterPos, Spell spell)
+        {
+            Tile caster = GetTile(board, casterPos);
+
+            // get aoe pattern
+            List<Vector2> aoeRange = CalculateAOEPatterns(spell.pattern, caster, caster.Piece.player);
+            // get tiles affected that don't have pieces
+            List<Vector2> nonPieceTilesInRange = new List<Vector2>();
+            // get tiles affected with pieces
+            List<Tile> targetsPreDmg = GetTilesWithPiecesInRange(board, aoeRange);
+
+            // apply damage/healing to pieces
+            foreach (Tile tile in targetsPreDmg)
+            {
+                Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.Piece, tile.Piece, spell);
+                board.tiles[(int)tile.Y][(int)tile.X] = TileC.ReplacePiece(board.tiles[(int)tile.Y][(int)tile.X], piecePostSpell);
+            };
+
+
+            // if this spell alters the environment 
+            if (SpellEffects.list[spell.color].AltersEnvironment)
+            {
+                // store tiles with no piece in range
+                board.tiles = BoardC.MapTiles(board.tiles, tile =>
+                {
+                    if (!BoardC.TileInRange(tile, aoeRange)) return tile;
+
+                    // and save positions to place environment pieces to send to graphics
+                    Tile tileCopy = TileC.Clone(tile);
+                    if (tileCopy.Contents != TileContents.Piece && tileCopy.Contents != TileContents.Environment)
+                    {
+                        nonPieceTilesInRange.Add(new Vector2(tile.X, tile.Y));
+                        tileCopy = TileC.UpdateRemainingEnvTime(tileCopy, SpellEffects.list[spell.color].Duration);
+                        tileCopy = TileC.UpdateContents(tileCopy, TileContents.Environment);
+                    }
+                    return tileCopy;
+                });
+            }
+
+            return board;
+        }
+
+        public static Board Upkeep(Board board)
+        {
+            // upkeep environment effects
+            board.tiles = BoardC.MapTiles(board.tiles, tile =>
+            {
+                if (tile.Contents != TileContents.Environment) return tile;
+                // reduce count on environmet effects
+                Tile tileCopy = TileC.UpdateRemainingEnvTime(tile, tile.RemainingTimeOnEnvironment - 1);
+
+                // remove expired environmet effects from the board
+                if (tileCopy.RemainingTimeOnEnvironment == 0)
+                    tileCopy = TileC.UpdateContents(tileCopy, TileContents.Empty);
+
+                return tileCopy;
+            });
+
+            // restore all elements to the field
+            board.tiles = BoardC.RepopulateElements(board.tiles);
+            return board;
+        }
     }
 }

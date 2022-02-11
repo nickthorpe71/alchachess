@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using Data;
 
 namespace Calc
@@ -40,8 +41,7 @@ namespace Calc
         {
             float score = 0;
             int numDeadPieces = 0;
-            Tile endTile = board.tiles[(int)move.y][(int)move.x].Clone();
-
+            Tile endTile = TileC.Clone(BoardC.GetTile(board, move));
 
             if (spell == null) return new ScoredMove(startTile, endTile, spell, score);
 
@@ -74,6 +74,27 @@ namespace Calc
             score *= (1 + numDeadPieces * 0.25f);
 
             return new ScoredMove(startTile, endTile, spell, score);
+        }
+
+        public static ScoredMove MiniMaxEx(Board board, GameLogic logic, List<Tile> movablePieces, int depth)
+        {
+            // copy board
+            Board dummyBoard = new Board();
+            dummyBoard.tiles = BoardC.MapTiles(board.tiles, tile => TileC.Clone(tile));
+
+            // to store final scores
+            List<ScoredMove> finalScoredMoves = new List<ScoredMove>();
+
+            // recurse 
+            List<ScoredMove> scoredMoves = GetScoredMoves(dummyBoard, logic, movablePieces);
+            ScoredMove bestMove = scoredMoves.OrderByDescending(move => move.Score).ToArray()[0];
+
+            // TODO: 
+            // make the best move on the board for this player
+            // increase or decrease score depelding on player
+
+            // return best move
+            return finalScoredMoves.OrderByDescending(move => move.Score).ToArray()[0];
         }
     }
 }

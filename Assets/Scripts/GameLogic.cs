@@ -53,7 +53,7 @@ public class GameLogic : MonoBehaviour
     public void TileClick(GameObject clicked)
     {
         // Get tile data for clicked tile
-        Tile newClickedTile = BoardC.GetTile(board.tiles, (int)clicked.transform.position.x, (int)clicked.transform.position.z);
+        Tile newClickedTile = BoardC.GetTile(board, new Vector2(clicked.transform.position.x, clicked.transform.position.z));
 
         // check if clicked tile has a piece owned by human player
         if (newClickedTile.Contents == TileContents.Piece && newClickedTile.Piece.player == humanPlayer)
@@ -144,7 +144,7 @@ public class GameLogic : MonoBehaviour
     {
         if (hovered == null) return;
 
-        Tile newHover = BoardC.GetTile(board.tiles, (int)hovered.transform.position.x, (int)hovered.transform.position.z);
+        Tile newHover = BoardC.GetTile(board, new Vector2(hovered.transform.position.x, hovered.transform.position.z));
 
 
         // if we are hovering on the same thing as before
@@ -241,24 +241,18 @@ public class GameLogic : MonoBehaviour
     private void MovePhase(Tile start, Tile end, Spell spell)
     {
         // --- Data ---
-        Tile startTile = start.Clone();
-        Tile endTile = end.Clone();
+        Tile startTile = TileC.Clone(start);
+        Tile endTile = TileC.Clone(end);
 
         Vector2 startPos = new Vector2(startTile.X, startTile.Y);
         Vector2 endPos = new Vector2(endTile.X, endTile.Y);
 
         // update piece data and contents state of start and end tiles
+
         board.tiles = BoardC.MapTilesBetween(board.tiles, startPos, endPos, (tile, x, y) =>
             (new Vector2(x, y) == endPos)
-            ? new Tile(
-                tile.X, tile.Y, startTile.Piece,
-                tile.Element, TileContents.Piece,
-                tile.IsClicked, tile.IsHovered,
-                tile.IsHighlighted, tile.IsAOE,
-                tile.RemainingTimeOnEnvironment
-            )
-            :
-            tile.CloneRemovePiece()
+            ? TileC.ReplacePiece(tile, startTile.Piece)
+            : TileC.RemovePiece(tile)
         );
 
         // --- Graphics ---
@@ -290,7 +284,7 @@ public class GameLogic : MonoBehaviour
         foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
         {
             Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.Piece, kvp.Value.Piece, spell);
-            Tile tileWithNewPiece = board.tiles[(int)kvp.Key.y][(int)kvp.Key.x].Clone(piecePostSpell);
+            Tile tileWithNewPiece = TileC.ReplacePiece(board.tiles[(int)kvp.Key.y][(int)kvp.Key.x], piecePostSpell);
             board.tiles[(int)kvp.Key.y][(int)kvp.Key.x] = tileWithNewPiece;
             targetsPostDmg[kvp.Key] = tileWithNewPiece;
         };
@@ -305,12 +299,12 @@ public class GameLogic : MonoBehaviour
                 if (!BoardC.TileInRange(tile, aoeRange)) return tile;
 
                 // and save positions to place environment pieces to send to graphics
-                Tile tileCopy = tile.Clone();
+                Tile tileCopy = TileC.Clone(tile);
                 if (tileCopy.Contents != TileContents.Piece && tileCopy.Contents != TileContents.Environment)
                 {
                     nonPieceTilesInRange.Add(new Vector2(tile.X, tile.Y));
-                    tileCopy = tileCopy.Clone(SpellEffects.list[spell.color].Duration);
-                    tileCopy = tileCopy.Clone(TileContents.Environment);
+                    tileCopy = TileC.UpdateRemainingEnvTime(tileCopy, SpellEffects.list[spell.color].Duration);
+                    tileCopy = TileC.UpdateContents(tileCopy, TileContents.Environment);
                 }
                 return tileCopy;
             });
@@ -332,7 +326,7 @@ public class GameLogic : MonoBehaviour
             // if found remove from board data and create list to 
             //send to graphics to be removed as well
             deadTargets[new Vector2(tile.X, tile.Y)] = tile;
-            return tile.CloneRemovePiece();
+            return TileC.RemovePiece(tile);
         });
 
         // upkeep environment effects
@@ -341,13 +335,13 @@ public class GameLogic : MonoBehaviour
         {
             if (tile.Contents != TileContents.Environment) return tile;
             // reduce count on environmet effects
-            Tile tileCopy = tile.Clone(tile.RemainingTimeOnEnvironment - 1);
+            Tile tileCopy = TileC.UpdateRemainingEnvTime(tile, tile.RemainingTimeOnEnvironment - 1);
 
             // remove expired environmet effects from the board
             if (tileCopy.RemainingTimeOnEnvironment == 0)
             {
                 environmentsToRemove.Add(new Vector2(tileCopy.X, tileCopy.Y));
-                tileCopy = tileCopy.Clone(TileContents.Empty);
+                tileCopy = TileC.UpdateContents(tileCopy, TileContents.Empty);
             }
 
             return tileCopy;
@@ -381,6 +375,7 @@ public class GameLogic : MonoBehaviour
 
 // 9h per week
 // TODO:
+// - collecting opposite elements removes them
 // - opponent should have a move anim where they wave their hand which will be played before their piece moves
 // - opponent should have a talk animation and should have voice lines happen randomly after some events
 // - pieces landing on opposite color spell aren't being penalized

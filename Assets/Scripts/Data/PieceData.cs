@@ -6,13 +6,13 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> data = new Dictionary<PieceLabel, Piece>()
         {
-            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, "G", 1250, 1.2f, 5),
-            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, "R", 850, 1.6f, 5),
-            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, "D", 1000, 1.4f, 5),
+            [PieceLabel.Esa] = new Piece(PieceLabel.Esa, PieceColor.None, "G", 2500, 1.3f, 5),
+            [PieceLabel.PhoenixKnight] = new Piece(PieceLabel.PhoenixKnight, PieceColor.None, "R", 1400, 2f, 5),
+            [PieceLabel.DarkOne] = new Piece(PieceLabel.DarkOne, PieceColor.None, "D", 1900, 1.6f, 5),
             [PieceLabel.Elder] = new Piece(PieceLabel.Elder, PieceColor.None, "N", 750, 2f, 6),
-            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, "W", 1000, 1.4f, 5),
-            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, "B", 850, 1.6f, 5),
-            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, "Y", 1250, 1.2f, 5)
+            [PieceLabel.AngelOfEden] = new Piece(PieceLabel.AngelOfEden, PieceColor.None, "W", 1900, 1.6f, 5),
+            [PieceLabel.AbyssLord] = new Piece(PieceLabel.AbyssLord, PieceColor.None, "B", 1400, 2f, 5),
+            [PieceLabel.Iron] = new Piece(PieceLabel.Iron, PieceColor.None, "Y", 2500, 1.3f, 5)
         };
     }
 

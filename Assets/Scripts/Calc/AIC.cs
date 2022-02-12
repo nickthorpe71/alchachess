@@ -22,11 +22,9 @@ namespace Calc
                 {
                     Spell spell = SpellC.GetSpellByRecipe(
                         BoardC.GetRecipeByPath(
-                        piece,
-                        board.tiles[(int)move.y][(int)move.x],
-                        board.tiles,
-                        logic.humanPlayer,
-                        logic.currentPlayer
+                            board,
+                            new Vector2(piece.X, piece.Y),
+                            move
                         )
                     );
 
@@ -47,13 +45,10 @@ namespace Calc
 
             // check number of pieces this spell hits
             List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, endTile, startTile.Piece.player);
-            Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(
-                board.tiles,
-                aoeRange
-            );
+            List<Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board, aoeRange);
 
             // calculate score
-            foreach (Tile target in targetsPreDmg.Values)
+            foreach (Tile target in targetsPreDmg)
             {
                 Piece targetPostSpell = PieceC.ApplySpellToPiece(startTile.Piece, target.Piece, spell);
 

@@ -183,7 +183,6 @@ namespace Data
         private readonly Board _boardPreMove;
         private readonly Board _boardPostMove;
 
-
         public MoveData(
             PlayerToken actingPlayer,
             Piece pieceMoved,
@@ -203,13 +202,13 @@ namespace Data
             _spellCast = spellCast;
         }
 
-        public PlayerToken ActingPlayer { get; }
-        public Piece PieceMoved { get; }
-        public Vector2 PieceStart { get; }
-        public Vector2 PieceEnd { get; }
-        public Board BoardPreMove { get; }
-        public Board BoardPostMove { get; }
-        public Spell SpellCast { get; }
+        public PlayerToken ActingPlayer { get { return _actingPlayer; } }
+        public Piece PieceMoved { get { return _pieceMoved; } }
+        public Vector2 PieceStart { get { return _pieceStart; } }
+        public Vector2 PieceEnd { get { return _pieceEnd; } }
+        public Board BoardPreMove { get { return _boardPreMove; } }
+        public Board BoardPostMove { get { return _boardPostMove; } }
+        public Spell SpellCast { get { return _spellCast; } }
     }
 
     public enum TileContents

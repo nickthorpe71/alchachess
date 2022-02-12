@@ -44,3 +44,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: PieceStats
+    uniqueID: 3148183721
+    locked: 0

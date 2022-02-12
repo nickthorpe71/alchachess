@@ -209,7 +209,7 @@ namespace Calc
         }
 
 
-        // ---- Board Turn Execution Events ----
+        // ---- Board Turn Events ----
 
         public static MoveData ExecuteMove(Board board, PlayerToken currentPlayer, Vector2 start, Vector2 end)
         {

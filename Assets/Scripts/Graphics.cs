@@ -29,8 +29,6 @@ public class Graphics : MonoBehaviour
     private GameObject targetPiece;
     private Vector3 newPosition;
     private float moveSpeed = 3;
-    private Action postMoveAction;
-
 
     // --- Init ---
     public void CollectTileGraphics()
@@ -149,20 +147,11 @@ public class Graphics : MonoBehaviour
         if (targetPiece.transform.position == newPosition)
         {
             pieceIsMoving = false;
-            postMoveAction();
             targetPiece = null;
-            postMoveAction = null;
         }
     }
 
     // --- Actions ---
-    public void MovePieceGraphic(Vector2 start, Vector2 end, Action postMove)
-    {
-        targetPiece = GraphicsC.GetPieceByPosition(activePieces, start);
-        newPosition = new Vector3(end.x, 0, end.y);
-        postMoveAction = postMove;
-        pieceIsMoving = true;
-    }
 
     public void TogglePieceStatsUI(Vector2 piecePos, bool isActive)
     {
@@ -184,6 +173,34 @@ public class Graphics : MonoBehaviour
         PieceStats statsUI = GraphicsC.GetPieceStatsUI(piecePos, activePieces);
         statsUI.UpdateUI(piece);
         statsUI.Toggle(true);
+    }
+
+    public void ExecuteMove(MoveData moveData, Action nextTurnPhase)
+    {
+        StartCoroutine(ExecuteMoveRoutine(moveData, nextTurnPhase));
+    }
+
+    IEnumerator ExecuteMoveRoutine(MoveData moveData, Action nextTurnPhase)
+    {
+        // move piece
+        MovePieceGraphic(moveData.PieceStart, moveData.PieceEnd);
+        yield return new WaitForSeconds((moveData.PieceStart - moveData.PieceEnd).magnitude * (moveSpeed / 10f));
+        Debug.Log("made it");
+        // show spell UI thats being cast
+        // cast spell
+        // damage pieces
+        // destroy dead pieces
+        // update piece stats UI to reduce health
+        // apply environmental effects
+        // respawn all elements
+        // nextTurnPhase();
+    }
+
+    public void MovePieceGraphic(Vector2 start, Vector2 end)
+    {
+        targetPiece = GraphicsC.GetPieceByPosition(activePieces, start);
+        newPosition = new Vector3(end.x, 0, end.y);
+        pieceIsMoving = true;
     }
 
     public void PlayCastAnims(

@@ -125,8 +125,6 @@ public class GameLogic : MonoBehaviour
             if (!humanCanInput)
                 return;
 
-            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
-
             // remove all state from all tiles
             board.tiles = BoardC.ChangeTilesState(
                 board.tiles,
@@ -134,7 +132,7 @@ public class GameLogic : MonoBehaviour
                 false
             );
 
-            ExecuteMove(currentClicked, currentHover, spell);
+            ExecuteMove(currentClicked, currentHover);
         }
 
         graphics.UpdateTileGraphics(board.tiles);
@@ -194,14 +192,14 @@ public class GameLogic : MonoBehaviour
         if (currentHover.Contents == TileContents.Piece)
         {
             ui.spellView.Toggle(false);
-            if (!graphics.pieceIsMoving)
-                graphics.ShowPieceStats(new Vector2(currentHover.X, currentHover.Y), currentHover.Piece);
+            // if (!graphics.pieceIsMoving)
+            //     graphics.ShowPieceStats(new Vector2(currentHover.X, currentHover.Y), currentHover.Piece);
         }
         else // if hoverint an element
         {
             if (currentClicked == null) return;
 
-            Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(currentClicked, currentHover, board.tiles, humanPlayer, currentPlayer));
+            Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(board, new Vector2(currentClicked.X, currentClicked.Y), new Vector2(currentHover.X, currentHover.Y)));
             graphics.TogglePieceStatsUI(new Vector2(currentClicked.X, currentClicked.Y), false);
 
             // if piece is clicked and there are elements in our path
@@ -229,132 +227,141 @@ public class GameLogic : MonoBehaviour
         graphics.UpdateTileGraphics(board.tiles);
     }
 
-    public void ExecuteMove(Tile start, Tile end, Spell spell)
+    public void ExecuteMove(Tile start, Tile end)
     {
         // take control away from human player
         humanCanInput = false;
         currentClicked = null;
         currentHover = null;
-        MovePhase(start, end, spell);
-    }
-
-    private void MovePhase(Tile start, Tile end, Spell spell)
-    {
-        // --- Data ---
-        Tile startTile = TileC.Clone(start);
-        Tile endTile = TileC.Clone(end);
-
-        Vector2 startPos = new Vector2(startTile.X, startTile.Y);
-        Vector2 endPos = new Vector2(endTile.X, endTile.Y);
-
-        // update piece data and contents state of start and end tiles
-
-        board.tiles = BoardC.MapTilesBetween(board.tiles, startPos, endPos, (tile, x, y) =>
-            (new Vector2(x, y) == endPos)
-            ? TileC.ReplacePiece(tile, startTile.Piece)
-            : TileC.RemovePiece(tile)
+        // calc data
+        MoveData moveData = BoardC.ExecuteMove(
+            board,
+            currentPlayer,
+            new Vector2(start.X, start.Y),
+            new Vector2(end.X, end.Y)
         );
-
-        // --- Graphics ---
-        graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(endTile, spell));
+        board = moveData.BoardPostMove;
+        // send data and next phase to graphics for execution
+        graphics.ExecuteMove(moveData, NextTurnPhase);
     }
 
-    private void CastPhase(Tile end, Spell spell)
-    {
-        // --- Data --- 
-        // if spell parameter is not null
-        if (spell == null)
-        {
-            UpkeepPhase(end);
-            return;
-        }
+    // private void MovePhase(Tile start, Tile end, Spell spell)
+    // {
+    //     // --- Data ---
+    //     Tile startTile = TileC.Clone(start);
+    //     Tile endTile = TileC.Clone(end);
 
-        // save caster
-        Tile caster = board.tiles[end.Y][end.X];
+    //     Vector2 startPos = new Vector2(startTile.X, startTile.Y);
+    //     Vector2 endPos = new Vector2(endTile.X, endTile.Y);
 
-        // get aoe pattern
-        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.Piece.player);
-        List<Vector2> nonPieceTilesInRange = new List<Vector2>();
+    //     // update piece data and contents state of start and end tiles
 
-        // apply damage to pieces in range
-        Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange);
-        Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
+    //     board.tiles = BoardC.MapTilesBetween(board.tiles, startPos, endPos, (tile, x, y) =>
+    //         (new Vector2(x, y) == endPos)
+    //         ? TileC.ReplacePiece(tile, startTile.Piece)
+    //         : TileC.RemovePiece(tile)
+    //     );
 
-        // apply damage/healing to pieces
-        foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
-        {
-            Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.Piece, kvp.Value.Piece, spell);
-            Tile tileWithNewPiece = TileC.ReplacePiece(board.tiles[(int)kvp.Key.y][(int)kvp.Key.x], piecePostSpell);
-            board.tiles[(int)kvp.Key.y][(int)kvp.Key.x] = tileWithNewPiece;
-            targetsPostDmg[kvp.Key] = tileWithNewPiece;
-        };
+    //     // --- Graphics ---
+    //     graphics.MovePieceGraphic(startPos, endPos, () => CastPhase(endTile, spell));
+    // }
+
+    // private void CastPhase(Tile end, Spell spell)
+    // {
+    //     // --- Data --- 
+    //     // if spell parameter is not null
+    //     if (spell == null)
+    //     {
+    //         UpkeepPhase(end);
+    //         return;
+    //     }
+
+    //     // save caster
+    //     Tile caster = board.tiles[end.Y][end.X];
+
+    //     // get aoe pattern
+    //     List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, caster, caster.Piece.player);
+    //     List<Vector2> nonPieceTilesInRange = new List<Vector2>();
+
+    //     // apply damage to pieces in range
+    //     Dictionary<Vector2, Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board.tiles, aoeRange);
+    //     Dictionary<Vector2, Tile> targetsPostDmg = new Dictionary<Vector2, Tile>();
+
+    //     // apply damage/healing to pieces
+    //     foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
+    //     {
+    //         Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.Piece, kvp.Value.Piece, spell);
+    //         Tile tileWithNewPiece = TileC.ReplacePiece(board.tiles[(int)kvp.Key.y][(int)kvp.Key.x], piecePostSpell);
+    //         board.tiles[(int)kvp.Key.y][(int)kvp.Key.x] = tileWithNewPiece;
+    //         targetsPostDmg[kvp.Key] = tileWithNewPiece;
+    //     };
 
 
-        // if this spell alters the environment 
-        if (SpellEffects.list[spell.color].AltersEnvironment)
-        {
-            // store tiles with no piece in range
-            board.tiles = BoardC.MapTiles(board.tiles, tile =>
-            {
-                if (!BoardC.TileInRange(tile, aoeRange)) return tile;
+    //     // if this spell alters the environment 
+    //     if (SpellEffects.list[spell.color].AltersEnvironment)
+    //     {
+    //         // store tiles with no piece in range
+    //         board.tiles = BoardC.MapTiles(board.tiles, tile =>
+    //         {
+    //             if (!BoardC.TileInRange(tile, aoeRange)) return tile;
 
-                // and save positions to place environment pieces to send to graphics
-                Tile tileCopy = TileC.Clone(tile);
-                if (tileCopy.Contents != TileContents.Piece && tileCopy.Contents != TileContents.Environment)
-                {
-                    nonPieceTilesInRange.Add(new Vector2(tile.X, tile.Y));
-                    tileCopy = TileC.UpdateRemainingEnvTime(tileCopy, SpellEffects.list[spell.color].Duration);
-                    tileCopy = TileC.UpdateContents(tileCopy, TileContents.Environment);
-                }
-                return tileCopy;
-            });
-        }
+    //             // and save positions to place environment pieces to send to graphics
+    //             Tile tileCopy = TileC.Clone(tile);
+    //             if (tileCopy.Contents != TileContents.Piece && tileCopy.Contents != TileContents.Environment)
+    //             {
+    //                 nonPieceTilesInRange.Add(new Vector2(tile.X, tile.Y));
+    //                 tileCopy = TileC.UpdateRemainingEnvTime(tileCopy, SpellEffects.list[spell.color].Duration);
+    //                 tileCopy = TileC.UpdateContents(tileCopy, TileContents.Environment);
+    //             }
+    //             return tileCopy;
+    //         });
+    //     }
 
-        // --- Graphics ---
-        // play spell animations
-        graphics.PlayCastAnims(spell, nonPieceTilesInRange, (caster) => UpkeepPhase(caster), caster, targetsPreDmg, targetsPostDmg);
-    }
+    //     // --- Graphics ---
+    //     // play spell animations
+    //     graphics.PlayCastAnims(spell, nonPieceTilesInRange, (caster) => UpkeepPhase(caster), caster, targetsPreDmg, targetsPostDmg);
+    // }
 
-    public void UpkeepPhase(Tile movedPiece)
-    {
-        // --- Data ---
-        // scan board for dead pieces
-        Dictionary<Vector2, Tile> deadTargets = new Dictionary<Vector2, Tile>();
-        board.tiles = BoardC.MapTiles(board.tiles, tile =>
-        {
-            if (tile.Contents != TileContents.Piece || tile.Piece.health > 0) return tile;
-            // if found remove from board data and create list to 
-            //send to graphics to be removed as well
-            deadTargets[new Vector2(tile.X, tile.Y)] = tile;
-            return TileC.RemovePiece(tile);
-        });
+    // public void UpkeepPhase(Tile movedPiece)
+    // {
+    //     // --- Data ---
+    //     // scan board for dead pieces
+    //     Dictionary<Vector2, Tile> deadTargets = new Dictionary<Vector2, Tile>();
+    //     board.tiles = BoardC.MapTiles(board.tiles, tile =>
+    //     {
+    //         if (tile.Contents != TileContents.Piece || tile.Piece.health > 0) return tile;
+    //         // if found remove from board data and create list to 
+    //         //send to graphics to be removed as well
+    //         deadTargets[new Vector2(tile.X, tile.Y)] = tile;
+    //         return TileC.RemovePiece(tile);
+    //     });
 
-        // upkeep environment effects
-        List<Vector2> environmentsToRemove = new List<Vector2>();
-        board.tiles = BoardC.MapTiles(board.tiles, tile =>
-        {
-            if (tile.Contents != TileContents.Environment) return tile;
-            // reduce count on environmet effects
-            Tile tileCopy = TileC.UpdateRemainingEnvTime(tile, tile.RemainingTimeOnEnvironment - 1);
+    //     // upkeep environment effects
+    //     List<Vector2> environmentsToRemove = new List<Vector2>();
+    //     board.tiles = BoardC.MapTiles(board.tiles, tile =>
+    //     {
+    //         if (tile.Contents != TileContents.Environment) return tile;
+    //         // reduce count on environmet effects
+    //         Tile tileCopy = TileC.UpdateRemainingEnvTime(tile, tile.RemainingTimeOnEnvironment - 1);
 
-            // remove expired environmet effects from the board
-            if (tileCopy.RemainingTimeOnEnvironment == 0)
-            {
-                environmentsToRemove.Add(new Vector2(tileCopy.X, tileCopy.Y));
-                tileCopy = TileC.UpdateContents(tileCopy, TileContents.Empty);
-            }
+    //         // remove expired environmet effects from the board
+    //         if (tileCopy.RemainingTimeOnEnvironment == 0)
+    //         {
+    //             environmentsToRemove.Add(new Vector2(tileCopy.X, tileCopy.Y));
+    //             tileCopy = TileC.UpdateContents(tileCopy, TileContents.Empty);
+    //         }
 
-            return tileCopy;
-        });
+    //         return tileCopy;
+    //     });
 
-        // restore all elements to the field
-        Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
-        board.tiles = BoardC.RepopulateElements(board.tiles, toRepopulate);
+    //     // restore all elements to the field
+    //     Dictionary<Vector2, string> toRepopulate = new Dictionary<Vector2, string>();
+    //     board.tiles = BoardC.RepopulateElements(board.tiles, toRepopulate);
 
-        // --- Graphics ---
-        // show effect animations and remove health and destroy newly dead targets
-        graphics.PlayUpkeepAnims(NextTurnPhase, movedPiece, deadTargets, toRepopulate, environmentsToRemove);
-    }
+    //     // --- Graphics ---
+    //     // show effect animations and remove health and destroy newly dead targets
+    //     graphics.PlayUpkeepAnims(NextTurnPhase, movedPiece, deadTargets, toRepopulate, environmentsToRemove);
+    // }
 
     public void NextTurnPhase()
     {

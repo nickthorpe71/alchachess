@@ -32,9 +32,9 @@ namespace Actions
             Tile endTile = board.tiles[(int)selectedMove.y][(int)selectedMove.x];
 
             // calculate spell from selected start and end of path
-            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(selectedPiece, endTile, board.tiles, logic.humanPlayer, logic.currentPlayer));
+            Spell spell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(board, new Vector2(selectedPiece.X, selectedPiece.Y), new Vector2(endTile.X, endTile.Y)));
 
-            logic.ExecuteMove(selectedPiece, endTile, spell);
+            logic.ExecuteMove(selectedPiece, endTile);
         }
 
         private static void DamagingTurn(Board board, GameLogic logic)
@@ -46,7 +46,7 @@ namespace Actions
             List<ScoredMove> scoredMoves = AIC.GetScoredMoves(board, logic, aiPieces);
 
             ScoredMove bestMove = scoredMoves.OrderByDescending(move => move.Score).ToArray()[0];
-            logic.ExecuteMove(bestMove.Start, bestMove.End, bestMove.Spell);
+            logic.ExecuteMove(bestMove.Start, bestMove.End);
         }
 
         private static void MiniMax(Board board, GameLogic logic, int depth)
@@ -55,7 +55,7 @@ namespace Actions
             List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
 
             ScoredMove bestMove = AIC.MiniMaxEx(board, logic, aiPieces, depth);
-            logic.ExecuteMove(bestMove.Start, bestMove.End, bestMove.Spell);
+            logic.ExecuteMove(bestMove.Start, bestMove.End);
         }
     }
 }

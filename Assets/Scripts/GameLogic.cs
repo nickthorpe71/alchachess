@@ -191,7 +191,7 @@ public class GameLogic : MonoBehaviour
         // if hovering a piece
         if (currentHover.Contents == TileContents.Piece)
         {
-            ui.spellView.Toggle(false);
+            ui.ToggleSpellUI(false);
             // if (!graphics.pieceIsMoving)
             //     graphics.ShowPieceStats(new Vector2(currentHover.X, currentHover.Y), currentHover.Piece);
         }
@@ -207,7 +207,7 @@ public class GameLogic : MonoBehaviour
             {
                 // show stats of potential spell
                 float colorMod = SpellC.ColorMod(currentClicked.Piece.element, "N", potentialSpell.color);
-                ui.spellView.UpdateView(potentialSpell, currentClicked.Piece, colorMod);
+                ui.UpdateSpellUI(potentialSpell, currentClicked.Piece, colorMod);
 
                 // show potential spell AOE
                 board.tiles = BoardC.ChangeTilesState(
@@ -219,7 +219,7 @@ public class GameLogic : MonoBehaviour
             }
             else
             {
-                ui.ToggleAllUI(false);
+                ui.ToggleSpellUI(false);
                 graphics.ToggleAllPieceStatsUI(false);
             }
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace Data
 {
@@ -18,6 +19,7 @@ namespace Data
 
     public class Piece
     {
+        public Guid guid = Guid.NewGuid();
         public PieceLabel label;
         public PieceColor color;
         public string element;
@@ -25,7 +27,7 @@ namespace Data
         public float maxHealth;
         public float power;
         public int moveDistance;
-
+        public string currentRecipe = "";
         public PlayerToken player;
 
         // this is an un-owned piece
@@ -53,7 +55,7 @@ namespace Data
             player = _player;
         }
 
-        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _power, int _moveDistance, PlayerToken _player)
+        public Piece(PieceLabel _label, PieceColor _color, string _element, float _health, float _maxHealth, float _power, int _moveDistance, PlayerToken _player, string _currentRecipe)
         {
             label = _label;
             color = _color;
@@ -67,7 +69,7 @@ namespace Data
 
         public Piece Clone()
         {
-            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.power, this.moveDistance, this.player);
+            return new Piece(this.label, this.color, this.element, this.health, this.maxHealth, this.power, this.moveDistance, this.player, this.currentRecipe);
         }
     }
 
@@ -80,6 +82,10 @@ namespace Data
         Esa,
         Iron,
         PhoenixKnight,
+        Demon,
+        Witch,
+        Gargoyle,
+        Knight,
         None
     }
 

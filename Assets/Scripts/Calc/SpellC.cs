@@ -52,7 +52,7 @@ namespace Calc
             return inPattern;
         }
 
-        private static string SpellNameFromRecipe(string recipe, string spellColor)
+        public static string SpellNameFromRecipe(string recipe, string spellColor)
         {
             string name = "";
             string inUseRecipe = recipe;

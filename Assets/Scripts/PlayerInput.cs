@@ -30,7 +30,6 @@ namespace Actions
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, tileLayerMask))
                 if (hit.transform.tag == "Tile")
                     logic.TileHover(hit.transform.gameObject);

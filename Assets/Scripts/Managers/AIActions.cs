@@ -8,7 +8,13 @@ namespace Actions
 {
     public static class AI
     {
-        // Actions
+        public static void ChoosePiece(GameLogic logic)
+        {
+            // pick randomly for now
+            int pick = Random.Range(0, 4);
+            logic.SelectPiece((PieceLabel)pick, logic.currentPlayer);
+        }
+
         public static void TakeTurn(Board board, GameLogic logic)
         {
             // RandomTurn(board, logic);
@@ -19,7 +25,7 @@ namespace Actions
         private static void RandomTurn(Board board, GameLogic logic)
         {
             // get pieces owned by ai player
-            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer);
+            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.remotePlayer.PlayerToken);
 
             // pick a random piece (start)
             Tile selectedPiece = GeneralC.RandomFromList(aiPieces);
@@ -40,7 +46,7 @@ namespace Actions
         private static void DamagingTurn(Board board, GameLogic logic)
         {
             // get pieces owned by ai player
-            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
+            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.remotePlayer.PlayerToken).ToList();
 
             // score possible moves
             List<ScoredMove> scoredMoves = AIC.GetScoredMoves(board, logic, aiPieces);
@@ -52,7 +58,7 @@ namespace Actions
         private static void MiniMax(Board board, GameLogic logic, int depth)
         {
             // get pieces owned by ai player
-            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.aiPlayer).ToList();
+            List<Tile> aiPieces = BoardC.GetTilesWithPieceForPlayer(board.tiles, logic.remotePlayer.PlayerToken).ToList();
 
             ScoredMove bestMove = AIC.MiniMaxEx(board, logic, aiPieces, depth);
             logic.ExecuteMove(bestMove.Start, bestMove.End);

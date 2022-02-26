@@ -5,43 +5,96 @@ namespace Calc
 {
     public static class PieceC
     {
-        public static string GetPathByLabel(PieceLabel label)
-            => String.Format("Pieces/{0}", Enum.GetName(typeof(PieceLabel), label));
+        public static string GetPathByLabel(PieceLabel label, PieceColor color)
+            => $"Pieces/{Enum.GetName(typeof(PieceColor), color)}/{Enum.GetName(typeof(PieceLabel), label)}";
 
         public static string PieceAsString(Piece piece)
         {
-            return $"|Label: {piece.label} |Color: {piece.color} |Health: {piece.health} |MaxHealth: {piece.maxHealth} |Power: {piece.power} |Move: {piece.moveDistance} " + $"|Player: {piece.player}| Element: " + piece.element.ToString();
+            return $"|Label: {piece.Label} |Color: {piece.Color} |Health: {piece.Health} |MaxHealth: {piece.MaxHealth} |Power: {piece.Power} |Move: {piece.MoveDistance} " + $"|Player: {piece.Player}";
         }
 
         public static Piece ApplySpellToPiece(Piece attacker, Piece defender, Spell spell)
         {
-            Piece tileCopy = defender.Clone();
-            float colorMod = SpellC.ColorMod(attacker.element, tileCopy.element, spell.color);
-            SpellEffect spellEffect = SpellEffects.list[spell.color];
-            bool isEnemy = attacker.player != defender.player;
+            Piece pieceCopy = PieceC.Clone(defender);
+            SpellEffect spellEffect = SpellEffects.list[spell.Color];
+            bool isEnemy = attacker.Player != defender.Player;
 
             if (isEnemy)
             {
                 if (spellEffect.DamagesEnemies)
-                    tileCopy.health -= SpellC.CalcDamage(spell.damage, attacker.power, colorMod);
+                    pieceCopy = PieceC.UpdateHealth(pieceCopy, pieceCopy.Health - SpellC.CalcDamage(spell.Damage, attacker.Power));
                 if (spellEffect.HealsEnemies)
-                    tileCopy.health += SpellC.CalcHeal(spell.damage, attacker.power, colorMod);
+                    pieceCopy = PieceC.UpdateHealth(pieceCopy, pieceCopy.Health + SpellC.CalcHeal(spell.Damage, attacker.Power));
             }
             else // it's an ally
             {
                 if (spellEffect.DamagesAllies)
-                    tileCopy.health -= SpellC.CalcDamage(spell.damage, attacker.power, colorMod);
+                    pieceCopy = PieceC.UpdateHealth(pieceCopy, pieceCopy.Health - SpellC.CalcDamage(spell.Damage, attacker.Power));
                 if (spellEffect.HealsAllies)
-                    tileCopy.health += SpellC.CalcHeal(spell.damage, attacker.power, colorMod);
+                    pieceCopy = PieceC.UpdateHealth(pieceCopy, pieceCopy.Health + SpellC.CalcHeal(spell.Damage, attacker.Power));
             }
 
-            if (tileCopy.health > tileCopy.maxHealth)
-                tileCopy.health = tileCopy.maxHealth;
+            if (pieceCopy.Health > pieceCopy.MaxHealth)
+                pieceCopy = PieceC.UpdateHealth(pieceCopy, SpellC.CalcDamage(spell.Damage, attacker.Power));
 
-            if (tileCopy.health < 0)
-                tileCopy.health = 0;
+            if (pieceCopy.Health < 0)
+                pieceCopy = PieceC.UpdateHealth(pieceCopy, 0);
 
-            return tileCopy;
+            return pieceCopy;
+        }
+
+        public static Piece Clone(Piece piece)
+        {
+            return new Piece(
+                piece.Guid,
+                piece.Label,
+                piece.Color,
+                piece.Player,
+                piece.CurrentRecipe,
+                piece.Health,
+                piece.MaxHealth,
+                piece.Power,
+                piece.MoveDistance,
+                piece.MovePattern,
+                piece.AttackDistance,
+                piece.AttackPattern
+            );
+        }
+
+        public static Piece UpdateHealth(Piece piece, float newHealth)
+        {
+            return new Piece(
+                piece.Guid,
+                piece.Label,
+                piece.Color,
+                piece.Player,
+                piece.CurrentRecipe,
+                newHealth,
+                piece.MaxHealth,
+                piece.Power,
+                piece.MoveDistance,
+                piece.MovePattern,
+                piece.AttackDistance,
+                piece.AttackPattern
+            );
+        }
+
+        public static Piece NewPieceFromTemplate(Piece template, PlayerData player)
+        {
+            return new Piece(
+                Guid.NewGuid(),
+                template.Label,
+                player.PieceColor,
+                player.PlayerToken,
+                "",
+                template.Health,
+                template.MaxHealth,
+                template.Power,
+                template.MoveDistance,
+                template.MovePattern,
+                template.AttackDistance,
+                template.AttackPattern
+            );
         }
     }
 }

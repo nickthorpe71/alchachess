@@ -8,10 +8,10 @@ public class piece_calc
     public void GetPathByLabel_gets_correct_path()
     {
         // arrange
-        string expected = "Pieces/Esa";
+        string expected = "Pieces/Black/Knight";
 
         // act
-        string result = PieceC.GetPathByLabel(PieceLabel.Esa);
+        string result = PieceC.GetPathByLabel(PieceLabel.Knight, PieceColor.Black);
 
         // assert
         Assert.AreEqual(expected, result);

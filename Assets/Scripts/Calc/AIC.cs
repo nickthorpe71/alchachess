@@ -44,7 +44,7 @@ namespace Calc
             if (spell == null) return new ScoredMove(startTile, endTile, spell, score);
 
             // check number of pieces this spell hits
-            List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.pattern, endTile, startTile.Piece.player);
+            List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(spell.Pattern, endTile, startTile.Piece.Player);
             List<Tile> targetsPreDmg = BoardC.GetTilesWithPiecesInRange(board, aoeRange);
 
             // calculate score
@@ -53,15 +53,15 @@ namespace Calc
                 Piece targetPostSpell = PieceC.ApplySpellToPiece(startTile.Piece, target.Piece, spell);
 
                 // determine if target was enemy or ally
-                bool targetIsAlly = startTile.Piece.player == target.Piece.player;
+                bool targetIsAlly = startTile.Piece.Player == target.Piece.Player;
                 // score is difference in health after spell effect
-                float scoreToAdd = target.Piece.health - targetPostSpell.health;
+                float scoreToAdd = target.Piece.Health - targetPostSpell.Health;
                 // scoreToAdd will be a negative if it is a heal, therefore we should
                 // add it to the score (lowering the score) if it affects an enemy
                 score += !targetIsAlly ? scoreToAdd : scoreToAdd * -1;
 
                 // keep track of all pieces which have health <= 0
-                if (targetPostSpell.health <= 0)
+                if (targetPostSpell.Health <= 0)
                     numDeadPieces++;
             }
 

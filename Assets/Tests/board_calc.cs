@@ -35,8 +35,8 @@ public class board_calc
         Tile result = BoardC.GetTile(board, new Vector2(1, 0));
 
         // assert
-        Assert.AreEqual(PieceLabel.Esa, result.Piece.label);
-        Assert.AreEqual(PlayerToken.P1, result.Piece.player);
+        Assert.AreEqual(PieceLabel.Knight, result.Piece.Label);
+        Assert.AreEqual(PlayerToken.P1, result.Piece.Player);
     }
 
     [Test]

@@ -1,6 +1,7 @@
-using UnityEngine;
-using System;
 using System.Collections.Generic;
+using System.Collections;
+using System;
+using UnityEngine;
 
 using Actions;
 using Calc;
@@ -9,16 +10,18 @@ using Data;
 public class GameLogic : MonoBehaviour
 {
     // Data
-    [SerializeField] public PlayerToken humanPlayer = PlayerToken.P1;
-    [SerializeField] public PlayerToken aiPlayer = PlayerToken.P2;
+    [SerializeField] public PlayerData localPlayer;
+    [SerializeField] public PlayerData remotePlayer;
 
     // GameState
-    [NonSerialized] public Board board;
-    [NonSerialized] public int turnCount = 1;
-    [NonSerialized] public PlayerToken currentPlayer = PlayerToken.P1;
+    [HideInInspector] public Board board;
+    [HideInInspector] public bool isPreGame;
+    [HideInInspector] public int turnCount = 1;
+    [HideInInspector] public PlayerToken currentPlayer;
+    [HideInInspector] public PlayerToken oddPlayer;
     private Tile currentHover = null;
     private Tile currentClicked = null;
-    [HideInInspector] public bool humanCanInput;
+    [HideInInspector] public bool localPlayerCanInput;
 
     // References
     private Graphics graphics;
@@ -27,15 +30,20 @@ public class GameLogic : MonoBehaviour
     // --- Lifecycle Methods ---
     private void Awake()
     {
-        board = new Board();
-
-        graphics = GetComponent<Graphics>();
-        graphics.InstantiateInitialBoard(board);
-
         ui = GetComponent<GameUI>();
+        graphics = GetComponent<Graphics>();
+        graphics.Init(ui);
+        board = new Board();
+        isPreGame = true;
+
+        // create players
+        localPlayer = new PlayerData(PlayerToken.P1, PieceColor.White, false, false, new List<Piece>());
+        remotePlayer = new PlayerData(PlayerToken.P2, PieceColor.Black, false, true, new List<Piece>());
 
         // currentPlayer = PlayerC.RandomizeFirstTurn();
-        humanCanInput = PlayerC.CanHumanInput(currentPlayer);
+        currentPlayer = localPlayer.PlayerToken;
+        oddPlayer = localPlayer.PlayerToken;
+        localPlayerCanInput = PlayerC.CanHumanInput(currentPlayer);
     }
 
     private void Start()
@@ -56,7 +64,7 @@ public class GameLogic : MonoBehaviour
         Tile newClickedTile = BoardC.GetTile(board, new Vector2(clicked.transform.position.x, clicked.transform.position.z));
 
         // check if clicked tile has a piece owned by human player
-        if (newClickedTile.Contents == TileContents.Piece && newClickedTile.Piece.player == humanPlayer)
+        if (newClickedTile.Contents == TileContents.Piece && newClickedTile.Piece.Player == localPlayer.PlayerToken)
         {
             // Reset temporary states
             board.tiles = BoardC.ChangeTilesState(board.tiles, new List<TileState> { TileState.isAOE, TileState.isHighlighted }, false);
@@ -122,7 +130,7 @@ public class GameLogic : MonoBehaviour
         // if we clicked an element or empty tile which is highlighted
         else if (currentClicked != null && currentHover.IsHighlighted)
         {
-            if (!humanCanInput)
+            if (!localPlayerCanInput)
                 return;
 
             // remove all state from all tiles
@@ -177,8 +185,6 @@ public class GameLogic : MonoBehaviour
             new List<Vector2> { new Vector2(currentHover.X, currentHover.Y) }
         );
 
-        graphics.ToggleAllPieceStatsUI(false);
-
         // Set new Hovered to hovered TileState
         board.tiles = BoardC.ChangeTilesState(
             board.tiles,
@@ -191,36 +197,28 @@ public class GameLogic : MonoBehaviour
         // if hovering a piece
         if (currentHover.Contents == TileContents.Piece)
         {
-            ui.ToggleSpellUI(false);
-            // if (!graphics.pieceIsMoving)
-            //     graphics.ShowPieceStats(new Vector2(currentHover.X, currentHover.Y), currentHover.Piece);
+            if (localPlayerCanInput)
+                ui.ToggleSpellUI(false);
         }
         else // if hoverint an element
         {
             if (currentClicked == null) return;
 
             Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(board, new Vector2(currentClicked.X, currentClicked.Y), new Vector2(currentHover.X, currentHover.Y)));
-            graphics.TogglePieceStatsUI(new Vector2(currentClicked.X, currentClicked.Y), false);
 
             // if piece is clicked and there are elements in our path
-            if (currentClicked != null && potentialSpell != null)
+            if (currentClicked != null && potentialSpell != null && currentHover.IsHighlighted)
             {
                 // show stats of potential spell
-                float colorMod = SpellC.ColorMod(currentClicked.Piece.element, "N", potentialSpell.color);
-                ui.UpdateSpellUI(potentialSpell, currentClicked.Piece, colorMod);
+                ui.UpdateSpellUI(potentialSpell, currentClicked.Piece);
 
                 // show potential spell AOE
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isAOE },
                     true,
-                    BoardC.CalculateAOEPatterns(potentialSpell.pattern, currentHover, currentClicked.Piece.player)
+                    BoardC.CalculateAOEPatterns(potentialSpell.Pattern, currentHover, currentClicked.Piece.Player)
                 );
-            }
-            else
-            {
-                ui.ToggleSpellUI(false);
-                graphics.ToggleAllPieceStatsUI(false);
             }
         }
 
@@ -230,7 +228,7 @@ public class GameLogic : MonoBehaviour
     public void ExecuteMove(Tile start, Tile end)
     {
         // take control away from human player
-        humanCanInput = false;
+        localPlayerCanInput = false;
         currentClicked = null;
         currentHover = null;
         // calc data
@@ -242,7 +240,7 @@ public class GameLogic : MonoBehaviour
         );
         board = moveData.BoardPostMove;
         // send data and next phase to graphics for execution
-        graphics.ExecuteMove(moveData, NextTurnPhase);
+        graphics.ExecuteMove(moveData, NextTurn);
     }
 
     // private void MovePhase(Tile start, Tile end, Spell spell)
@@ -258,7 +256,7 @@ public class GameLogic : MonoBehaviour
 
     //     board.tiles = BoardC.MapTilesBetween(board.tiles, startPos, endPos, (tile, x, y) =>
     //         (new Vector2(x, y) == endPos)
-    //         ? TileC.ReplacePiece(tile, startTile.Piece)
+    //         ? TileC.UpdatePiece(tile, startTile.Piece)
     //         : TileC.RemovePiece(tile)
     //     );
 
@@ -291,7 +289,7 @@ public class GameLogic : MonoBehaviour
     //     foreach (KeyValuePair<Vector2, Tile> kvp in targetsPreDmg)
     //     {
     //         Piece piecePostSpell = PieceC.ApplySpellToPiece(caster.Piece, kvp.Value.Piece, spell);
-    //         Tile tileWithNewPiece = TileC.ReplacePiece(board.tiles[(int)kvp.Key.y][(int)kvp.Key.x], piecePostSpell);
+    //         Tile tileWithNewPiece = TileC.UpdatePiece(board.tiles[(int)kvp.Key.y][(int)kvp.Key.x], piecePostSpell);
     //         board.tiles[(int)kvp.Key.y][(int)kvp.Key.x] = tileWithNewPiece;
     //         targetsPostDmg[kvp.Key] = tileWithNewPiece;
     //     };
@@ -363,45 +361,91 @@ public class GameLogic : MonoBehaviour
     //     graphics.PlayUpkeepAnims(NextTurnPhase, movedPiece, deadTargets, toRepopulate, environmentsToRemove);
     // }
 
-    public void NextTurnPhase()
+    public void NextTurn()
     {
-        // increment turn counter
-        turnCount++;
-
         // switch current player token
         currentPlayer = PlayerC.GetOppositePlayer(currentPlayer);
 
         // give control to the correct player
-        humanCanInput = PlayerC.CanHumanInput(currentPlayer);
+        localPlayerCanInput = PlayerC.CanHumanInput(currentPlayer);
 
-        // wait for input
-        if (currentPlayer != humanPlayer)
-            AI.TakeTurn(board, this);
+        turnCount++;
+
+        // TODO: change delay back to 1f
+        if (currentPlayer != localPlayer.PlayerToken)
+            if (isPreGame) StartCoroutine(DelayActionWithLogic(0f, (gameLogic) => AI.ChoosePiece(gameLogic)));
+            else AI.TakeTurn(board, this);
+    }
+
+    private void StartGame()
+    {
+        turnCount = 1;
+        isPreGame = false;
+        board = BoardC.RandomizeBoardElements(board);
+        graphics.WipePieces();
+        graphics.InstantiateInitialBoard(board);
+        NextTurn();
+    }
+
+    public void SelectPiece(PieceLabel pieceLabel, PlayerToken player)
+    {
+        // generate a new piece
+        Piece newPiece = PieceC.NewPieceFromTemplate(
+            PieceTemplates.list[pieceLabel],
+            PlayerC.GetPlayerDataByToken(
+                player,
+                localPlayer,
+                remotePlayer
+            )
+        );
+
+        // get current index and side of board
+        int currentPieceIndex = player == oddPlayer ? (int)Mathf.Floor(turnCount / 2) : (turnCount / 2) - 1;
+        int boardSide = player == localPlayer.PlayerToken ? 0 : 7;
+
+        // add piece to row in UI (UI)
+        ui.GetPieceUIByPlayer(player)[currentPieceIndex].Init(newPiece);
+
+        if (player == localPlayer.PlayerToken)
+        {
+            // add piece to player data (data)
+            localPlayer = PlayerC.AddPiece(localPlayer, newPiece);
+            // turn off UI for piece select
+            ui.TogglePieceSelect(false);
+        }
+        else
+        {
+            // add piece to player data (data)
+            remotePlayer = PlayerC.AddPiece(remotePlayer, newPiece);
+            // turn on UI for piece select
+            if (turnCount != Const.BOARD_WIDTH * 2)
+                ui.TogglePieceSelect(true);
+        }
+
+        // spawn piece on board (graphics)
+        graphics.InstantiatePiece(newPiece, currentPieceIndex, boardSide);
+
+        // add to board data
+        board.tiles[boardSide][currentPieceIndex] = TileC.UpdatePiece(board.tiles[boardSide][currentPieceIndex], newPiece);
+
+        // TODO: change delay back to 2.5f
+        // check if all pieces have been picked
+        if (turnCount == Const.BOARD_WIDTH * 2)
+            StartCoroutine(DelayAction(0f, StartGame));
+        else // pass to other player to pick
+            NextTurn();
+    }
+
+    // TODO: move to some generic tools monobehavior
+    IEnumerator DelayActionWithLogic(float delay, Action<GameLogic> action)
+    {
+        yield return new WaitForSeconds(delay);
+        action(this);
+    }
+
+    IEnumerator DelayAction(float delay, Action action)
+    {
+        yield return new WaitForSeconds(delay);
+        action();
     }
 }
-
-// 9h per week
-// TODO:
-// - collecting opposite elements removes them
-// - opponent should have a move anim where they wave their hand which will be played before their piece moves
-// - opponent should have a talk animation and should have voice lines happen randomly after some events
-// - pieces landing on opposite color spell aren't being penalized
-// - improve AI (4h)
-// - implement minimax (4h)
-// --- 2/6/2022 ---
-// --- Week away so only 5 hours  ---
-// - improve VFX (3h)
-// - add sound (2h)
-// --- 2/13/2022 ---
-// - improve UI (make sure player easily knows what's going on) (3h)
-// - create mechanic to walk around then sit at table (3h)
-// - write simple story (3h)
-// --- 2/20/2022 ---
-// - create environment for story (4h)
-// - do multiplayer course (5h)
-// --- 2/27/2022 ---
-// - add multiplayer (4h)
-// - polish (5h)
-// --- 3/5/2022 ---
-// - deploy (9h)
-// --- 3/12/2022 ---

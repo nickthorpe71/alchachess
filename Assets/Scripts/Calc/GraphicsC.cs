@@ -21,16 +21,10 @@ namespace Calc
             return (result.Count > 0) ? result[0] : null;
         }
 
-        public static string GetSpellAnimPrefabPath(Spell spell) => "SpellAnims/" + spell.color + "SpellAnim";
+        public static string GetSpellAnimPrefabPath(Spell spell) => "SpellAnims/" + spell.Color + "SpellAnim";
 
-        public static string GetCastAnimPrefabPath(Spell spell) => "SpellAnims/CastAnims/" + spell.color + "CastAnim";
+        public static string GetCastAnimPrefabPath(Spell spell) => "SpellAnims/CastAnims/" + spell.Color + "CastAnim";
 
-        public static string GetEnvironmentPrefabPath(Spell spell) => "EnvironmentEffects/" + spell.color;
-
-        public static PieceStats GetPieceStatsUI(Vector2 piecePos, List<GameObject> activePieces)
-        {
-            GameObject pieceGraphic = GraphicsC.GetPieceByPosition(activePieces, piecePos);
-            return pieceGraphic.GetComponentInChildren<PieceStats>();
-        }
+        public static string GetEnvironmentPrefabPath(Spell spell) => "EnvironmentEffects/" + spell.Color;
     }
 }

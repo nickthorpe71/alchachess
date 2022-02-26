@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,10 +9,11 @@ using Calc;
 public class PieceStatsUI : MonoBehaviour
 {
     [Header("References")]
-    private Piece piece;
+    [HideInInspector] public Guid guid;
     public Image smallAvatar;
     public Image largeAvatar;
-    public Image avatarBorder;
+    public Image smallAvatarBorder;
+    public Image largeAvatarBorder;
     public Image[] elementsSmall;
     public Image[] elementsLarge;
     public Image healthFrontSmall;
@@ -25,35 +27,44 @@ public class PieceStatsUI : MonoBehaviour
     public GameObject largeStatsPane;
 
     private float updateSpeed = 0.75f;
-    private Image emptySlotImage;
+    private Sprite emptySlotImage;
+    private Sprite whiteBorder;
+    private Sprite blackBorder;
+    private Sprite deadAvatar;
 
-    private void Start()
+    private void Awake()
     {
-        emptySlotImage = Resources.Load($"ElementImages/EmptySlot") as Image;
-    }
-
-    private void SetBorder(Piece startPiece)
-    {
-        avatarBorder = startPiece.color == PieceColor.White
-            ? Resources.Load($"Avatars/WhiteBorder") as Image
-            : Resources.Load($"Avatars/BlackBorder") as Image;
+        emptySlotImage = Resources.Load<Sprite>($"UI/ElementImages/EmptySlot");
+        whiteBorder = Resources.Load<Sprite>($"UI/PieceAvatars/BorderWhite");
+        blackBorder = Resources.Load<Sprite>($"UI/PieceAvatars/BorderBlack");
+        deadAvatar = Resources.Load<Sprite>($"UI/PieceAvatars/DeadAvatar");
     }
 
     public void Init(Piece startPiece)
     {
-        UpdateAvatar(startPiece.label);
-        UpdatePower(startPiece.power);
-        SetBorder(startPiece);
+        gameObject.SetActive(true);
+        UpdateAvatar(startPiece.Label);
+        UpdatePower(startPiece.Power);
+        SetBorder(startPiece.Color);
         UpdateUI(startPiece);
+        UpdateHealthBar(startPiece.Health, startPiece.Health, startPiece.MaxHealth);
+    }
+
+    private void SetBorder(PieceColor color)
+    {
+        Sprite avatarBorder = color == PieceColor.White ? whiteBorder : blackBorder;
+        largeAvatarBorder.sprite = avatarBorder;
+        smallAvatarBorder.sprite = avatarBorder;
     }
 
     public void UpdateUI(Piece pieceUpdate)
     {
-        UpdatePiece(pieceUpdate);
-        // TODO: spell name will need to be pulled from spell name 
-        // map once it's created
-        UpdateSpellName(SpellC.GetSpellByRecipe(pieceUpdate.currentRecipe).name);
-        PopulateElementSlots(pieceUpdate.currentRecipe);
+        UpdateGuid(pieceUpdate.Guid);
+        // TODO: spell name will need to be pulled from spell name map once it's created
+        Spell spell = SpellC.GetSpellByRecipe(pieceUpdate.CurrentRecipe);
+        if (spell != null)
+            UpdateSpellName(spell.Name);
+        PopulateElementSlots(pieceUpdate.CurrentRecipe);
     }
 
     public void PopulateElementSlots(string recipe)
@@ -62,16 +73,16 @@ public class PieceStatsUI : MonoBehaviour
         {
             if (recipe.Length == 0)
             {
-                elementsSmall[i] = emptySlotImage;
-                elementsLarge[i] = emptySlotImage;
+                elementsSmall[i].sprite = emptySlotImage;
+                elementsLarge[i].sprite = emptySlotImage;
                 continue;
             }
 
             string nextLetter = recipe.Substring(0, 1);
             recipe = recipe.Substring(1, recipe.Length);
-            Image elementImage = Resources.Load($"ElementImages/{nextLetter}Image") as Image;
-            elementsSmall[i] = elementImage;
-            elementsLarge[i] = elementImage;
+            Sprite elementImage = Resources.Load<Sprite>($"UI/ElementImages/{nextLetter}Image");
+            elementsSmall[i].sprite = elementImage;
+            elementsLarge[i].sprite = elementImage;
         }
     }
 
@@ -82,9 +93,15 @@ public class PieceStatsUI : MonoBehaviour
 
     public void UpdateAvatar(PieceLabel label)
     {
-        Image newAvatar = Resources.Load($"ElementImages/{nameof(label)}Image") as Image;
-        smallAvatar = newAvatar;
-        largeAvatar = newAvatar;
+        Sprite newAvatar = Resources.Load<Sprite>($"UI/PieceAvatars/{label.ToString()}Avatar");
+        smallAvatar.sprite = newAvatar;
+        largeAvatar.sprite = newAvatar;
+    }
+
+    public void DeadAvatar()
+    {
+        smallAvatar.sprite = deadAvatar;
+        largeAvatar.sprite = deadAvatar;
     }
 
     public void UpdatePower(float power)
@@ -92,9 +109,9 @@ public class PieceStatsUI : MonoBehaviour
         powerText.text = power.ToString();
     }
 
-    public void UpdatePiece(Piece newPiece)
+    public void UpdateGuid(Guid newGuid)
     {
-        piece = newPiece;
+        guid = newGuid;
     }
 
     public void ToggleGlow()
@@ -117,10 +134,10 @@ public class PieceStatsUI : MonoBehaviour
         largeStatsPane.SetActive(isActive);
     }
 
-    public void UpdateHealth(Piece piece, float previousHealth)
+    public void UpdateHealthBar(float currentHealth, float previousHealth, float maxHealth)
     {
-        float preDamageHealthPercent = previousHealth / piece.maxHealth;
-        float postDamageHealthPercent = piece.health / piece.maxHealth;
+        float preDamageHealthPercent = previousHealth / maxHealth;
+        float postDamageHealthPercent = currentHealth / maxHealth;
 
         // if damaged
         if (preDamageHealthPercent > postDamageHealthPercent)
@@ -129,6 +146,7 @@ public class PieceStatsUI : MonoBehaviour
             healthBackSmall.fillAmount = preDamageHealthPercent;
             healthFrontLarge.fillAmount = postDamageHealthPercent;
             healthBackLarge.fillAmount = preDamageHealthPercent;
+
             StartCoroutine(UpdateBar(healthBackSmall, preDamageHealthPercent, postDamageHealthPercent));
             StartCoroutine(UpdateBar(healthBackLarge, preDamageHealthPercent, postDamageHealthPercent));
 
@@ -144,15 +162,13 @@ public class PieceStatsUI : MonoBehaviour
             StartCoroutine(UpdateBar(healthFrontLarge, preDamageHealthPercent, postDamageHealthPercent));
         }
 
-        healthText.text = $"{piece.health} / {piece.maxHealth}";
+        healthText.text = $"{currentHealth} / {maxHealth}";
     }
 
     IEnumerator UpdateBar(Image targetBar, float startPercent, float endPercent)
     {
         float preChangePercent = startPercent;
         float elapsed = 0f;
-
-        yield return new WaitForSeconds(1);
 
         while (elapsed < updateSpeed)
         {

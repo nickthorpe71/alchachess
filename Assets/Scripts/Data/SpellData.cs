@@ -58,6 +58,11 @@ namespace Data
         }
     }
 
+    public static class NameLibrary
+    {
+        public static Dictionary<string, string> list = new Dictionary<string, string>();
+    }
+
     public static class NamePatterns
     {
         public static Dictionary<int, List<List<string>>> list = new Dictionary<int, List<List<string>>>
@@ -265,21 +270,28 @@ namespace Data
 
     public class Spell
     {
-        public string recipe;
-        public string color;
-        public string name;
-        public int totalCost;
-        public List<Vector2> pattern;
-        public int damage;
+        private readonly string _recipe;
+        private readonly string _color;
+        private readonly string _name;
+        private readonly int _totalCost;
+        private readonly List<Vector2> _pattern;
+        private readonly int _damage;
 
-        public Spell(string _recipe, string _color, string _name, int _totalCost, List<Vector2> _pattern, int _damage)
+        public Spell(string recipe, string color, string name, int totalCost, List<Vector2> pattern, int damage)
         {
-            recipe = _recipe;
-            color = _color;
-            name = _name;
-            totalCost = _totalCost;
-            pattern = _pattern;
-            damage = _damage;
+            _recipe = recipe;
+            _color = color;
+            _name = name;
+            _totalCost = totalCost;
+            _pattern = pattern;
+            _damage = damage;
         }
+
+        public string Recipe { get { return _recipe; } }
+        public string Color { get { return _color; } }
+        public string Name { get { return _name; } }
+        public int TotalCost { get { return _totalCost; } }
+        public List<Vector2> Pattern { get { return _pattern; } }
+        public int Damage { get { return _damage; } }
     }
 }

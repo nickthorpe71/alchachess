@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Graphics : MonoBehaviour
 {
+    [InspectorName("References")]
     public Material blackMat;
     public Material whiteMat;
     public TileGraphic[][] tileGraphics;
@@ -24,6 +25,8 @@ public class Graphics : MonoBehaviour
     public Dictionary<Vector2, GameObject> activeEnvironments = new Dictionary<Vector2, GameObject>();
     public Dictionary<Vector2, GameObject> elementGraphics = new Dictionary<Vector2, GameObject>();
 
+    private GameUI ui;
+
     // Piece Movement
     [HideInInspector] public bool pieceIsMoving = false;
     private GameObject targetPiece;
@@ -31,6 +34,11 @@ public class Graphics : MonoBehaviour
     private float moveSpeed = 3;
 
     // --- Init ---
+    public void Init(GameUI _ui)
+    {
+        ui = _ui;
+    }
+
     public void CollectTileGraphics()
     {
         tileGraphics = SortTileGraphics(GameObject.FindGameObjectsWithTag("Tile"));
@@ -67,20 +75,18 @@ public class Graphics : MonoBehaviour
             InstantiateElement(tile.Element, tile.X, tile.Y);
     }
 
-    private void InstantiatePiece(Piece piece, int x, int y)
+    public void InstantiatePiece(Piece piece, int x, int y)
     {
-        string path = PieceC.GetPathByLabel(piece.label);
+        string path = PieceC.GetPathByLabel(piece.Label, piece.Color);
         Vector3 pos = new Vector3(x, 0, y);
-        int rotationY = piece.color == PieceColor.White ? 180 : 0;
+        int rotationY = piece.Color == PieceColor.White ? 0 : 180;
         Vector3 rotation = new Vector3(0, rotationY, 0);
 
         GameObject newPiece = Instantiate(Resources.Load(path) as GameObject);
         newPiece.transform.position = pos;
         newPiece.transform.eulerAngles = rotation;
 
-        newPiece.GetComponent<SetBaseColor>().SetColor(piece.color == PieceColor.White ? whiteMat : blackMat);
-        newPiece.GetComponent<PieceStats>().UpdateUI(piece);
-
+        newPiece.GetComponent<SetBaseColor>().SetColor(piece.Color == PieceColor.White ? whiteMat : blackMat);
         activePieces.Add(newPiece);
     }
 
@@ -97,10 +103,22 @@ public class Graphics : MonoBehaviour
         elementGraphics[new Vector2(x, y)] = newElement;
     }
 
-    public void RepopulateElements(Dictionary<Vector2, string> toRepopulate)
+    private void InstantiateEnvironmentEffect(string path, Vector2 pos)
     {
-        foreach (KeyValuePair<Vector2, string> kvp in toRepopulate)
-            elementGraphics[kvp.Key].GetComponent<ElementGraphic>().Activate();
+        GameObject environmentEffect = Instantiate(Resources.Load(path) as GameObject);
+        environmentEffect.transform.position = new Vector3(pos.x, 0, pos.y);
+        environmentEffect.GetComponent<EnvironmentEffect>().Raise();
+        activeEnvironments[pos] = environmentEffect;
+        if (elementGraphics.Keys.Contains(pos))
+            elementGraphics[pos].GetComponent<ElementGraphic>().Deactivate();
+    }
+
+    public void RepopulateElements(Board board)
+    {
+        foreach (KeyValuePair<Vector2, GameObject> kvp in elementGraphics)
+            if (!kvp.Value.activeSelf && BoardC.GetTile(board, kvp.Key).Contents == TileContents.Element)
+                kvp.Value.GetComponent<ElementGraphic>().Activate();
+
     }
 
     // --- Update ---
@@ -153,155 +171,80 @@ public class Graphics : MonoBehaviour
 
     // --- Actions ---
 
-    public void TogglePieceStatsUI(Vector2 piecePos, bool isActive)
-    {
-        PieceStats statsUI = GraphicsC.GetPieceStatsUI(piecePos, activePieces);
-        statsUI.Toggle(isActive);
-    }
-
-    public void ToggleAllPieceStatsUI(bool isActive)
-    {
-        foreach (GameObject obj in activePieces)
-        {
-            PieceStats statsUI = GraphicsC.GetPieceStatsUI(new Vector2(obj.transform.position.x, obj.transform.position.z), activePieces);
-            statsUI.Toggle(isActive);
-        }
-    }
-
-    public void ShowPieceStats(Vector2 piecePos, Piece piece)
-    {
-        PieceStats statsUI = GraphicsC.GetPieceStatsUI(piecePos, activePieces);
-        statsUI.UpdateUI(piece);
-        statsUI.Toggle(true);
-    }
-
     public void ExecuteMove(MoveData moveData, Action nextTurnPhase)
     {
         StartCoroutine(ExecuteMoveRoutine(moveData, nextTurnPhase));
     }
 
+    public void WipePieces()
+    {
+        activePieces.ForEach(piece => Destroy(piece));
+        activePieces.Clear();
+    }
+
     IEnumerator ExecuteMoveRoutine(MoveData moveData, Action nextTurnPhase)
     {
-        // move piece
+        // --- Move Phase --- \\
         MovePieceGraphic(moveData.PieceStart, moveData.PieceEnd);
         yield return new WaitForSeconds((moveData.PieceStart - moveData.PieceEnd).magnitude * (moveSpeed / 10f));
-        Debug.Log("made it");
+
+        // --- Cast Phase --- \\
+
         // show spell UI thats being cast
-        // cast spell
-        // damage pieces
-        // destroy dead pieces
-        // update piece stats UI to reduce health
-        // apply environmental effects
-        // respawn all elements
-        // nextTurnPhase();
-    }
+        ui.UpdateSpellUI(moveData.SpellCast, moveData.PieceMoved);
 
-    public void MovePieceGraphic(Vector2 start, Vector2 end)
-    {
-        targetPiece = GraphicsC.GetPieceByPosition(activePieces, start);
-        newPosition = new Vector3(end.x, 0, end.y);
-        pieceIsMoving = true;
-    }
+        // get aoe pattern
+        List<Vector2> aoeRange = BoardC.CalculateAOEPatterns(
+            moveData.SpellCast.Pattern,
+            BoardC.GetTile(moveData.BoardPostMove, moveData.PieceEnd),
+            moveData.ActingPlayer
+        );
 
-    public void PlayCastAnims(
-        Spell spell,
-        List<Vector2> nonPieceTilesInRange,
-        Action<Tile> upkeepPhase,
-        Tile caster,
-        Dictionary<Vector2, Tile> targetsPreDmg,
-        Dictionary<Vector2, Tile> targetsPostDmg)
-    {
-        string spellAnimPath = GraphicsC.GetSpellAnimPrefabPath(spell);
-        string castAnimPath = GraphicsC.GetCastAnimPrefabPath(spell);
-        string environmentPrefabPath = nonPieceTilesInRange.Count > 0 ? GraphicsC.GetEnvironmentPrefabPath(spell) : null;
+        // get targets
+        List<Tile> targets = BoardC.GetTilesWithPiecesInRange(moveData.BoardPostMove, aoeRange);
 
-        StartCoroutine(CastAnims(castAnimPath, spellAnimPath, environmentPrefabPath, nonPieceTilesInRange, upkeepPhase, caster, targetsPreDmg, targetsPostDmg));
-    }
-
-    IEnumerator CastAnims(
-        string castAnimPath,
-        string spellAnimPath,
-        string environmentPrefabPath,
-        List<Vector2> nonPieceTilesInRange,
-        Action<Tile> upkeepPhase,
-        Tile caster,
-        Dictionary<Vector2, Tile> targetsPreDmg,
-        Dictionary<Vector2, Tile> targetsPostDmg)
-    {
         // play cast animation
-        GameObject castAnim = Instantiate(Resources.Load(castAnimPath) as GameObject);
-        castAnim.transform.position = new Vector3(caster.X, 0.35f, caster.Y);
-        Destroy(castAnim, 2);
+        PlayAnim((int)moveData.PieceEnd.x, (int)moveData.PieceEnd.y, 0.35f, GraphicsC.GetCastAnimPrefabPath(moveData.SpellCast));
         yield return new WaitForSeconds(1f);
 
         // play spell animation on each target
-        foreach (Vector2 pos in targetsPreDmg.Keys)
+        foreach (Tile target in targets)
         {
-            GameObject spellAnim = Instantiate(Resources.Load(spellAnimPath) as GameObject);
-            spellAnim.transform.position = new Vector3(pos.x, 0.7f, pos.y);
+            PlayAnim(target.X, target.Y, 0.7f, GraphicsC.GetSpellAnimPrefabPath(moveData.SpellCast));
             yield return new WaitForSeconds(0.1f);
-            Destroy(spellAnim, 2);
         }
 
-        // if this spell affects the environment
-        if (environmentPrefabPath != null)
-            // create environment effect on all non piece tiles
-            foreach (Vector2 pos in nonPieceTilesInRange)
-            {
+        // get non piece tiles in range
+        List<Vector2> newEnvironments = BoardC.GetNewlyAddedEnvironments(moveData.BoardPreMove, moveData.BoardPostMove);
 
-                GameObject environmentEffect = Instantiate(Resources.Load(environmentPrefabPath) as GameObject);
-                environmentEffect.transform.position = new Vector3(pos.x, 0, pos.y);
-                environmentEffect.GetComponent<EnvironmentEffect>().Raise();
-                activeEnvironments[pos] = environmentEffect;
-                if (elementGraphics.Keys.Contains(pos))
-                    elementGraphics[pos].GetComponent<ElementGraphic>().Deactivate();
+        // if there are non piece tiles in range
+        if (newEnvironments.Count > 0)
+            foreach (Vector2 pos in newEnvironments)
+            {
+                InstantiateEnvironmentEffect(GraphicsC.GetEnvironmentPrefabPath(moveData.SpellCast), pos);
                 yield return new WaitForSeconds(0.1f);
             }
 
         yield return new WaitForSeconds(0.25f);
 
         // display health reduction and effect application to correct pieces
-        ReduceHealth(targetsPreDmg, targetsPostDmg);
-        yield return new WaitForSeconds(0.5f);
+        ui.UpdatePieceHealthBars(moveData.BoardPreMove, moveData.BoardPostMove);
+        yield return new WaitForSeconds(1.5f);
 
-        upkeepPhase(caster);
-    }
+        // turn off spell UI
+        ui.ToggleSpellUI(false);
 
-    public void ReduceHealth(Dictionary<Vector2, Tile> targetsPreDmg, Dictionary<Vector2, Tile> targetsPostDmg)
-    {
-        foreach (KeyValuePair<Vector2, Tile> target in targetsPostDmg)
-        {
-            PieceStats pieceStatsUI = GraphicsC.GetPieceStatsUI(target.Key, activePieces);
-            float previousHealth = targetsPreDmg[target.Key].Piece.health;
-            pieceStatsUI.UpdateHealthUI(target.Value.Piece, previousHealth);
-        }
-    }
 
-    public void PlayUpkeepAnims(
-        Action nextTurnPhase,
-        Tile caster,
-        Dictionary<Vector2, Tile> deadTargets,
-        Dictionary<Vector2, string> toRepopulate,
-        List<Vector2> environmentsToRemove
-        )
-    {
-        StartCoroutine(UpkeepAnims(nextTurnPhase, caster, deadTargets, toRepopulate, environmentsToRemove));
-    }
+        // --- Upkeep --- \\
 
-    IEnumerator UpkeepAnims(
-        Action nextTurnPhase,
-        Tile caster,
-        Dictionary<Vector2, Tile> deadTargets,
-        Dictionary<Vector2, string> toRepopulate,
-        List<Vector2> environmentsToRemove
-        )
-    {
+        // destroy graphics for dead pieces
+        List<Vector2> deadTargets = BoardC.GetDeadPiecesByComparison(moveData.BoardPreMove, moveData.BoardPostMove);
         if (deadTargets.Count > 0)
         {
-            foreach (KeyValuePair<Vector2, Tile> kvp in deadTargets)
+            foreach (Vector2 pos in deadTargets)
             {
                 // play death animations
-                Vector3 positionIn3D = new Vector3(kvp.Key.x, 0, kvp.Key.y);
+                Vector3 positionIn3D = new Vector3(pos.x, 0, pos.y);
                 GameObject deathAnim = Instantiate(Resources.Load("SpellAnims/DeathAnims/GenericDeathAnim") as GameObject);
                 deathAnim.transform.position = positionIn3D;
                 Destroy(deathAnim, 3);
@@ -310,10 +253,7 @@ public class Graphics : MonoBehaviour
                 activePieces = activePieces.Where(piece =>
                 {
                     if (piece.transform.position != positionIn3D)
-                    {
                         return true;
-                    }
-                    // destroy piece
                     Destroy(piece.gameObject);
                     return false;
                 }).ToList();
@@ -321,6 +261,7 @@ public class Graphics : MonoBehaviour
         }
 
         // remove environments
+        List<Vector2> environmentsToRemove = BoardC.GetRemovedContents(moveData.BoardPreMove, moveData.BoardPostMove, TileContents.Environment);
         if (environmentsToRemove.Count > 0)
         {
             float duration = 1.05f;
@@ -335,7 +276,22 @@ public class Graphics : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1);
-        RepopulateElements(toRepopulate);
+        RepopulateElements(moveData.BoardPostMove);
+
         nextTurnPhase();
+    }
+
+    public void MovePieceGraphic(Vector2 start, Vector2 end)
+    {
+        targetPiece = GraphicsC.GetPieceByPosition(activePieces, start);
+        newPosition = new Vector3(end.x, 0, end.y);
+        pieceIsMoving = true;
+    }
+
+    private void PlayAnim(int x, int y, float height, string path)
+    {
+        GameObject anim = Instantiate(Resources.Load(path) as GameObject);
+        anim.transform.position = new Vector3(x, 0.35f, y);
+        Destroy(anim, 3);
     }
 }

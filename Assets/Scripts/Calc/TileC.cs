@@ -10,7 +10,7 @@ namespace Calc
             return new Tile(
                 tile.X,
                 tile.Y,
-                tile.Piece == null ? null : tile.Piece.Clone(),
+                tile.Piece == null ? null : PieceC.Clone(tile.Piece),
                 tile.Element,
                 tile.Contents,
                 tile.IsClicked,
@@ -37,7 +37,7 @@ namespace Calc
             );
         }
 
-        public static Tile ReplacePiece(Tile tile, Piece newPiece)
+        public static Tile UpdatePiece(Tile tile, Piece newPiece)
         {
             return new Tile(
                 tile.X,
@@ -58,7 +58,7 @@ namespace Calc
             return new Tile(
                 tile.X,
                 tile.Y,
-                tile.Piece == null ? null : tile.Piece.Clone(),
+                tile.Piece == null ? null : PieceC.Clone(tile.Piece),
                 tile.Element,
                 tile.Contents,
                 statesToChange.Contains(TileState.isClicked) ? newState : tile.IsClicked,
@@ -74,7 +74,7 @@ namespace Calc
             return new Tile(
                tile.X,
                tile.Y,
-               tile.Piece == null ? null : tile.Piece.Clone(),
+               tile.Piece == null ? null : PieceC.Clone(tile.Piece),
                tile.Element,
                tile.Contents,
                tile.IsClicked,
@@ -90,9 +90,25 @@ namespace Calc
             return new Tile(
                 tile.X,
                 tile.Y,
-                tile.Piece == null ? null : tile.Piece.Clone(),
+                tile.Piece == null ? null : PieceC.Clone(tile.Piece),
                 tile.Element,
                 newContents,
+                tile.IsClicked,
+                tile.IsHovered,
+                tile.IsHighlighted,
+                tile.IsAOE,
+                tile.RemainingTimeOnEnvironment
+            );
+        }
+
+        public static Tile UpdateElement(Tile tile, string element)
+        {
+            return new Tile(
+                tile.X,
+                tile.Y,
+                tile.Piece == null ? null : PieceC.Clone(tile.Piece),
+                element,
+                tile.Contents,
                 tile.IsClicked,
                 tile.IsHovered,
                 tile.IsHighlighted,

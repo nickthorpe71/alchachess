@@ -27,7 +27,7 @@ namespace Calc
                 // stack pattern on existing pattern
                 List<Vector2> amplifiedPattern = component.Pattern.Select(v2 =>
                 {
-                    while (IsInPattern(newSpell.pattern, v2))
+                    while (IsInPattern(newSpell.Pattern, v2))
                     {
                         v2.x += (v2.x < 0) ? -1 : (v2.x > 0) ? 1 : 0;
                         v2.y += (v2.y < 0) ? -1 : (v2.y > 0) ? 1 : 0;
@@ -36,11 +36,23 @@ namespace Calc
                 }).ToList();
 
                 // add pattern and damage of component to spell
-                newSpell.pattern.AddRange(amplifiedPattern);
-                newSpell.damage += component.Damage;
+                newSpell.Pattern.AddRange(amplifiedPattern);
+                newSpell = AddDamage(newSpell, component.Damage);
             }
 
             return newSpell;
+        }
+
+        public static Spell AddDamage(Spell spell, int dmgToAdd)
+        {
+            return new Spell(
+                spell.Recipe,
+                spell.Color,
+                spell.Name,
+                spell.TotalCost,
+                spell.Pattern,
+                spell.Damage + dmgToAdd
+            );
         }
 
         private static bool IsInPattern(List<Vector2> pattern, Vector2 v2)
@@ -54,6 +66,9 @@ namespace Calc
 
         public static string SpellNameFromRecipe(string recipe, string spellColor)
         {
+            if (NameLibrary.list.ContainsKey(recipe))
+                return NameLibrary.list[recipe];
+
             string name = "";
             string inUseRecipe = recipe;
             int nameLength = Random.Range(2, Mathf.Min(recipe.Length + 1, 5));
@@ -77,26 +92,27 @@ namespace Calc
                 name += " " + GeneralC.CapitalizeFirstLetter(nextWord);
             }
 
+            NameLibrary.list[recipe] = name.Trim();
             return name.Trim();
         }
 
-        public static string SpellEffectString(Spell spell, float power, float colorMod)
+        public static string SpellEffectString(Spell spell, float power)
         {
             string txt = "";
-            SpellEffect effect = SpellEffects.list[spell.color];
+            SpellEffect effect = SpellEffects.list[spell.Color];
 
-            txt += $"A {SpellLetterToWord(spell.color)} spell that:\n";
+            txt += $"A {SpellLetterToWord(spell.Color)} spell that:\n";
 
             if (effect.DamagesAllies)
-                txt += $"- damages allies for {CalcDamage(spell.damage, power, colorMod)}\n";
+                txt += $"- damages allies for {CalcDamage(spell.Damage, power)}\n";
             if (effect.DamagesEnemies)
-                txt += $"- damages enemies for {CalcDamage(spell.damage, power, colorMod)}\n";
+                txt += $"- damages enemies for {CalcDamage(spell.Damage, power)}\n";
             if (effect.HealsAllies)
-                txt += $"- heals allies for {CalcHeal(spell.damage, power, colorMod)}\n";
+                txt += $"- heals allies for {CalcHeal(spell.Damage, power)}\n";
             if (effect.HealsEnemies)
-                txt += $"- heals enemies for {CalcHeal(spell.damage, power, colorMod)}\n";
+                txt += $"- heals enemies for {CalcHeal(spell.Damage, power)}\n";
             if (effect.AltersEnvironment)
-                txt += $"- creates {GetEnvironmentEffectAsStr(spell.color)}";
+                txt += $"- creates {GetEnvironmentEffectAsStr(spell.Color)}";
 
             return txt;
         }
@@ -155,9 +171,9 @@ namespace Calc
             return res;
         }
 
-        public static float CalcDamage(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod);
+        public static float CalcDamage(float baseDmg, float power) => Mathf.Floor(baseDmg * power);
 
-        public static float CalcHeal(float baseDmg, float power, float colorMod) => Mathf.Floor(baseDmg * power * colorMod) * 2.5f;
+        public static float CalcHeal(float baseDmg, float power) => Mathf.Floor(baseDmg * power) * 2.5f;
 
         public static string ColorToString(string color)
         {
@@ -179,9 +195,6 @@ namespace Calc
                     return "";
             }
         }
-
-        public static float ColorMod(string attackerColor, string defenderColor, string spellColor)
-            => (spellColor == attackerColor) ? 1.5f : (spellColor == ElementOpposites.list[defenderColor]) ? 0.5f : 1;
     }
 }
 

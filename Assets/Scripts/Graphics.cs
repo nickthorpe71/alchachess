@@ -85,8 +85,6 @@ public class Graphics : MonoBehaviour
         GameObject newPiece = Instantiate(Resources.Load(path) as GameObject);
         newPiece.transform.position = pos;
         newPiece.transform.eulerAngles = rotation;
-
-        newPiece.GetComponent<SetBaseColor>().SetColor(piece.Color == PieceColor.White ? whiteMat : blackMat);
         activePieces.Add(newPiece);
     }
 
@@ -255,6 +253,7 @@ public class Graphics : MonoBehaviour
                     if (piece.transform.position != positionIn3D)
                         return true;
                     Destroy(piece.gameObject);
+                    ui.UpdatePieceUIDeath(BoardC.GetTile(moveData.BoardPreMove, pos).Piece.Guid);
                     return false;
                 }).ToList();
             }

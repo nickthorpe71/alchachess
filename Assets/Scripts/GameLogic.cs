@@ -97,6 +97,7 @@ public class GameLogic : MonoBehaviour
             // if clicked the thing that is currently clicked
             else if (new Vector3(newClickedTile.X, 0, newClickedTile.Y) == new Vector3(currentClicked.X, 0, currentClicked.Y))
             {
+                ui.CloseCurrentPieceDetails();
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isClicked },
@@ -160,7 +161,6 @@ public class GameLogic : MonoBehaviour
 
         Tile newHover = BoardC.GetTile(board, new Vector2(hovered.transform.position.x, hovered.transform.position.z));
 
-
         // if we are hovering on the same thing as before
         if (currentHover != null && new Vector3(newHover.X, 0, newHover.Y) == new Vector3(currentHover.X, 0, currentHover.Y))
             return;
@@ -203,11 +203,13 @@ public class GameLogic : MonoBehaviour
         currentHover = board.tiles[newHover.Y][newHover.X];
 
         // if hovering a piece
-        if (currentHover.Contents == TileContents.Piece && localPlayerCanInput)
+        if (currentHover.Contents == TileContents.Piece)
         {
             ui.TurnOffCurrentGlow();
-            ui.ToggleSpellUI(false);
             ui.TogglePieceUIGlow(currentHover.Piece.Guid);
+
+            if (localPlayerCanInput)
+                ui.ToggleSpellUI(false);
         }
         else // if hovering an element
         {
@@ -238,10 +240,14 @@ public class GameLogic : MonoBehaviour
 
     public void ExecuteMove(Tile start, Tile end)
     {
+        // close piece details UI
+        ui.CloseCurrentPieceDetails();
+
         // take control away from human player
         localPlayerCanInput = false;
         currentClicked = null;
         currentHover = null;
+
         // calc data
         MoveData moveData = BoardC.ExecuteMove(
             board,
@@ -250,6 +256,7 @@ public class GameLogic : MonoBehaviour
             new Vector2(end.X, end.Y)
         );
         board = moveData.BoardPostMove;
+
         // send data and next phase to graphics for execution
         graphics.ExecuteMove(moveData, NextTurn);
     }
@@ -335,7 +342,6 @@ public class GameLogic : MonoBehaviour
         yield return new WaitForSeconds(delay);
         action(this);
     }
-
     IEnumerator DelayAction(float delay, Action action)
     {
         yield return new WaitForSeconds(delay);

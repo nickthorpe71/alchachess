@@ -13,18 +13,19 @@ public class GameUI : MonoBehaviour
     [SerializeField] private List<PieceStatsUI> p1PieceStatUIs;
     [SerializeField] private List<PieceStatsUI> p2PieceStatUIs;
     private GameLogic logic;
+    private Guid startGuid = Guid.NewGuid();
+    private Guid currentOpenPieceDetails;
+    private Guid currentGlow;
 
     private void Start()
     {
         logic = GetComponent<GameLogic>();
+        currentOpenPieceDetails = startGuid;
+        currentGlow = startGuid;
     }
 
     // --- SpellUI --- \\
 
-    public void ToggleSpellUI()
-    {
-        spellView.Toggle();
-    }
     public void ToggleSpellUI(bool isDisplayed)
     {
         spellView.Toggle(isDisplayed);
@@ -48,21 +49,25 @@ public class GameUI : MonoBehaviour
 
     public void TogglePieceUIPane(PlayerToken player, Guid pieceGuid)
     {
-        GetPieceUIByGuid(player, pieceGuid).ToggleLargeStatsPane();
-
+        GetPieceUIByGuid(player, pieceGuid).ToggleLargeStatsPane(true);
+        currentOpenPieceDetails = pieceGuid;
     }
-    public void TogglePieceUIPane(PlayerToken player, Guid pieceGuid, bool isOpen)
+    public void CloseCurrentPieceDetails(PlayerToken player)
     {
-        GetPieceUIByGuid(player, pieceGuid).ToggleLargeStatsPane(isOpen);
+        if (currentOpenPieceDetails != startGuid)
+            GetPieceUIByGuid(player, currentOpenPieceDetails).ToggleLargeStatsPane(false);
     }
 
     public void TogglePieceUIGlow(PlayerToken player, Guid pieceGuid)
     {
         GetPieceUIByGuid(player, pieceGuid).ToggleGlow();
+        currentGlow = pieceGuid;
     }
-    public void TogglePieceUIGlow(PlayerToken player, Guid pieceGuid, bool isOpen)
+
+    public void TurnOffCurrentGlow(PlayerToken player)
     {
-        GetPieceUIByGuid(player, pieceGuid).ToggleGlow(isOpen);
+        if (currentGlow != startGuid)
+            GetPieceUIByGuid(player, currentGlow).ToggleGlow(false);
     }
 
     public void UpdatePieceHealthBars(Board preBoard, Board postBoard)
@@ -113,10 +118,10 @@ public class GameUI : MonoBehaviour
     }
 
     // Calc (need to move to own script)
-    public List<PieceStatsUI> GetPieceUIByPlayer(PlayerToken player) => player == PlayerToken.P1 ? p1PieceStatUIs : p2PieceStatUIs;
+    public List<PieceStatsUI> GetPieceUIsByPlayer(PlayerToken player) => player == PlayerToken.P1 ? p1PieceStatUIs : p2PieceStatUIs;
     public PieceStatsUI GetPieceUIByGuid(PlayerToken player, Guid guid)
     {
-        List<PieceStatsUI> uis = GetPieceUIByPlayer(player);
+        List<PieceStatsUI> uis = GetPieceUIsByPlayer(player);
         return uis.Where(ui => ui.guid == guid).First();
     }
 }

@@ -64,16 +64,19 @@ public class GameLogic : MonoBehaviour
         Tile newClickedTile = BoardC.GetTile(board, new Vector2(clicked.transform.position.x, clicked.transform.position.z));
 
         // check if clicked tile has a piece owned by human player
-        if (newClickedTile.Contents == TileContents.Piece && newClickedTile.Piece.Player == localPlayer.PlayerToken)
+        if (newClickedTile.Contents == TileContents.Piece)
         {
-            ui.CloseCurrentPieceDetails(currentPlayer);
-            ui.TogglePieceUIPane(currentPlayer, newClickedTile.Piece.Guid);
+            ui.CloseCurrentPieceDetails();
+            ui.TogglePieceUIPane(newClickedTile.Piece.Guid);
             // Reset temporary states
             board.tiles = BoardC.ChangeTilesState(board.tiles, new List<TileState> { TileState.isAOE, TileState.isHighlighted }, false);
+
+            // if (newClickedTile.Piece.Player == localPlayer.PlayerToken)
 
             // if nothing currently clicked
             if (currentClicked == null)
             {
+                // update isClicked state
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isClicked },
@@ -82,12 +85,14 @@ public class GameLogic : MonoBehaviour
                 );
                 currentClicked = board.tiles[newClickedTile.Y][newClickedTile.X];
 
-                board.tiles = BoardC.ChangeTilesState(
-                    board.tiles,
-                    new List<TileState> { TileState.isHighlighted },
-                    true,
-                    BoardC.PossibleMoves(board.tiles, currentClicked)
-                );
+                // update highlight state
+                if (newClickedTile.Piece.Player == localPlayer.PlayerToken)
+                    board.tiles = BoardC.ChangeTilesState(
+                        board.tiles,
+                        new List<TileState> { TileState.isHighlighted },
+                        true,
+                        BoardC.PossibleMoves(board.tiles, currentClicked)
+                    );
             }
             // if clicked the thing that is currently clicked
             else if (new Vector3(newClickedTile.X, 0, newClickedTile.Y) == new Vector3(currentClicked.X, 0, currentClicked.Y))
@@ -121,12 +126,13 @@ public class GameLogic : MonoBehaviour
                 currentClicked = board.tiles[newClickedTile.Y][newClickedTile.X];
 
                 // update highlight data
-                board.tiles = BoardC.ChangeTilesState(
-                    board.tiles,
-                    new List<TileState> { TileState.isHighlighted },
-                    true,
-                    BoardC.PossibleMoves(board.tiles, currentClicked)
-                );
+                if (newClickedTile.Piece.Player == localPlayer.PlayerToken)
+                    board.tiles = BoardC.ChangeTilesState(
+                        board.tiles,
+                        new List<TileState> { TileState.isHighlighted },
+                        true,
+                        BoardC.PossibleMoves(board.tiles, currentClicked)
+                    );
             }
         }
         // if we clicked an element or empty tile which is highlighted
@@ -199,30 +205,31 @@ public class GameLogic : MonoBehaviour
         // if hovering a piece
         if (currentHover.Contents == TileContents.Piece && localPlayerCanInput)
         {
-            ui.TurnOffCurrentGlow(currentPlayer);
+            ui.TurnOffCurrentGlow();
             ui.ToggleSpellUI(false);
-            ui.TogglePieceUIGlow(currentPlayer, currentHover.Piece.Guid);
+            ui.TogglePieceUIGlow(currentHover.Piece.Guid);
         }
-        else // if hoverint an element
+        else // if hovering an element
         {
-            ui.TurnOffCurrentGlow(currentPlayer);
-            if (currentClicked == null) return;
-
-            Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(board, new Vector2(currentClicked.X, currentClicked.Y), new Vector2(currentHover.X, currentHover.Y)));
+            ui.TurnOffCurrentGlow();
 
             // if piece is clicked and there are elements in our path
-            if (currentClicked != null && potentialSpell != null && currentHover.IsHighlighted)
+            if (currentClicked != null && currentHover.IsHighlighted)
             {
-                // show stats of potential spell
-                ui.UpdateSpellUI(potentialSpell, currentClicked.Piece);
+                Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(board, new Vector2(currentClicked.X, currentClicked.Y), new Vector2(currentHover.X, currentHover.Y)));
+                if (potentialSpell != null)
+                {
+                    // show stats of potential spell
+                    ui.UpdateSpellUI(potentialSpell, currentClicked.Piece);
 
-                // show potential spell AOE
-                board.tiles = BoardC.ChangeTilesState(
-                    board.tiles,
-                    new List<TileState> { TileState.isAOE },
-                    true,
-                    BoardC.CalculateAOEPatterns(potentialSpell.Pattern, currentHover, currentClicked.Piece.Player)
-                );
+                    // show potential spell AOE
+                    board.tiles = BoardC.ChangeTilesState(
+                        board.tiles,
+                        new List<TileState> { TileState.isAOE },
+                        true,
+                        BoardC.CalculateAOEPatterns(potentialSpell.Pattern, currentHover, currentClicked.Piece.Player)
+                    );
+                }
             }
         }
 

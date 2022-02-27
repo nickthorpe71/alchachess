@@ -47,27 +47,27 @@ public class GameUI : MonoBehaviour
         }
     }
 
-    public void TogglePieceUIPane(PlayerToken player, Guid pieceGuid)
+    public void TogglePieceUIPane(Guid pieceGuid)
     {
-        GetPieceUIByGuid(player, pieceGuid).ToggleLargeStatsPane(true);
+        GetPieceUIByGuid(pieceGuid).ToggleLargeStatsPane(true);
         currentOpenPieceDetails = pieceGuid;
     }
-    public void CloseCurrentPieceDetails(PlayerToken player)
+    public void CloseCurrentPieceDetails()
     {
         if (currentOpenPieceDetails != startGuid)
-            GetPieceUIByGuid(player, currentOpenPieceDetails).ToggleLargeStatsPane(false);
+            GetPieceUIByGuid(currentOpenPieceDetails).ToggleLargeStatsPane(false);
     }
 
-    public void TogglePieceUIGlow(PlayerToken player, Guid pieceGuid)
+    public void TogglePieceUIGlow(Guid pieceGuid)
     {
-        GetPieceUIByGuid(player, pieceGuid).ToggleGlow();
+        GetPieceUIByGuid(pieceGuid).ToggleGlow();
         currentGlow = pieceGuid;
     }
 
-    public void TurnOffCurrentGlow(PlayerToken player)
+    public void TurnOffCurrentGlow()
     {
         if (currentGlow != startGuid)
-            GetPieceUIByGuid(player, currentGlow).ToggleGlow(false);
+            GetPieceUIByGuid(currentGlow).ToggleGlow(false);
     }
 
     public void UpdatePieceHealthBars(Board preBoard, Board postBoard)
@@ -100,7 +100,7 @@ public class GameUI : MonoBehaviour
 
             // update health UI for each piece
             if (prePiece.Health != postPiece.Health)
-                GetPieceUIByGuid(prePiece.Player, kvp.Key).UpdateHealthBar(postPiece.Health, prePiece.Health, postPiece.MaxHealth);
+                GetPieceUIByGuid(kvp.Key).UpdateHealthBar(postPiece.Health, prePiece.Health, postPiece.MaxHealth);
         }
     }
 
@@ -119,9 +119,5 @@ public class GameUI : MonoBehaviour
 
     // Calc (need to move to own script)
     public List<PieceStatsUI> GetPieceUIsByPlayer(PlayerToken player) => player == PlayerToken.P1 ? p1PieceStatUIs : p2PieceStatUIs;
-    public PieceStatsUI GetPieceUIByGuid(PlayerToken player, Guid guid)
-    {
-        List<PieceStatsUI> uis = GetPieceUIsByPlayer(player);
-        return uis.Where(ui => ui.guid == guid).First();
-    }
+    public PieceStatsUI GetPieceUIByGuid(Guid guid) => p1PieceStatUIs.Concat(p2PieceStatUIs).Where(ui => ui.guid == guid).First();
 }

@@ -174,12 +174,6 @@ public class Graphics : MonoBehaviour
         StartCoroutine(ExecuteMoveRoutine(moveData, nextTurnPhase));
     }
 
-    public void WipePieces()
-    {
-        activePieces.ForEach(piece => Destroy(piece));
-        activePieces.Clear();
-    }
-
     IEnumerator ExecuteMoveRoutine(MoveData moveData, Action nextTurnPhase)
     {
         // --- Move Phase --- \\
@@ -209,7 +203,7 @@ public class Graphics : MonoBehaviour
         foreach (Tile target in targets)
         {
             PlayAnim(target.X, target.Y, 0.7f, GraphicsC.GetSpellAnimPrefabPath(moveData.SpellCast));
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
         }
 
         // get non piece tiles in range
@@ -220,10 +214,8 @@ public class Graphics : MonoBehaviour
             foreach (Vector2 pos in newEnvironments)
             {
                 InstantiateEnvironmentEffect(GraphicsC.GetEnvironmentPrefabPath(moveData.SpellCast), pos);
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
             }
-
-        yield return new WaitForSeconds(0.25f);
 
         // display health reduction and effect application to correct pieces
         ui.UpdatePieceHealthBars(moveData.BoardPreMove, moveData.BoardPostMove);
@@ -274,7 +266,7 @@ public class Graphics : MonoBehaviour
             yield return new WaitForSeconds(duration);
         }
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.25f);
         RepopulateElements(moveData.BoardPostMove);
 
         nextTurnPhase();
@@ -285,6 +277,12 @@ public class Graphics : MonoBehaviour
         targetPiece = GraphicsC.GetPieceByPosition(activePieces, start);
         newPosition = new Vector3(end.x, 0, end.y);
         pieceIsMoving = true;
+    }
+
+    public void WipePieces()
+    {
+        activePieces.ForEach(piece => Destroy(piece));
+        activePieces.Clear();
     }
 
     private void PlayAnim(int x, int y, float height, string path)

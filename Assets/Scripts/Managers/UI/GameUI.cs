@@ -38,15 +38,6 @@ public class GameUI : MonoBehaviour
 
     // --- PieceStatsUI --- \\
 
-    // public void InitPieceStatsUI(List<Piece> p1Pieces, List<Piece> p2Pieces)
-    // {
-    //     for (int i = 0; i < p1PieceStatUIs.Count; i++)
-    //     {
-    //         p1PieceStatUIs[i].Init(p1Pieces[i]);
-    //         p2PieceStatUIs[i].Init(p2Pieces[i]);
-    //     }
-    // }
-
     public void TogglePieceUIPane(Guid pieceGuid)
     {
         GetPieceUIByGuid(pieceGuid).ToggleLargeStatsPane(true);

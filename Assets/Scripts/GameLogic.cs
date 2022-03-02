@@ -301,7 +301,7 @@ public class GameLogic : MonoBehaviour
 
         // get current index and side of board
         int currentPieceIndex = player == oddPlayer ? (int)Mathf.Floor(turnCount / 2) : (turnCount / 2) - 1;
-        int boardSide = player == localPlayer.PlayerToken ? 0 : 7;
+        int boardSide = player == localPlayer.PlayerToken ? 0 : Const.BOARD_HEIGHT - 1;
 
         // add piece to row in UI (UI)
         ui.GetPieceUIsByPlayer(player)[currentPieceIndex].Init(newPiece);

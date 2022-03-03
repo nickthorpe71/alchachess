@@ -9,18 +9,7 @@ using UnityEngine;
 public class Graphics : MonoBehaviour
 {
     [InspectorName("References")]
-    public Material blackMat;
-    public Material whiteMat;
     public TileGraphic[][] tileGraphics;
-    private Dictionary<string, string> elementResourceMap = new Dictionary<string, string>()
-    {
-        ["G"] = "Elements/Green",
-        ["R"] = "Elements/Red",
-        ["D"] = "Elements/Dark",
-        ["W"] = "Elements/White",
-        ["B"] = "Elements/Blue",
-        ["Y"] = "Elements/Yellow"
-    };
     public List<GameObject> activePieces = new List<GameObject>();
     public Dictionary<Vector2, GameObject> activeEnvironments = new Dictionary<Vector2, GameObject>();
     public Dictionary<Vector2, GameObject> elementGraphics = new Dictionary<Vector2, GameObject>();

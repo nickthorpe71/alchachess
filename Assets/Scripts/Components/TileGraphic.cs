@@ -2,46 +2,71 @@ using UnityEngine;
 
 public class TileGraphic : MonoBehaviour
 {
-    private Material neutral;
-    public Material hovered;
-    public Material clicked;
-    public Material aoe;
-    public Material highlighted;
-    private MeshRenderer mesh;
+    private GameObject hovered;
+    private GameObject clicked;
+    private GameObject aoe;
+    private GameObject highlighted;
 
-    private void Start()
+    public bool isBlackTile;
+
+    private void Awake()
     {
-        mesh = GetComponent<MeshRenderer>();
-        neutral = mesh.material;
+        // instantiate all effects on top of tile
+        hovered = InstantiateEffect("Hovered");
+        clicked = InstantiateEffect("Clicked");
+        aoe = InstantiateEffect("AoE");
+        highlighted = InstantiateEffect("Highlighted");
+
+        DeactivateAllEffects();
+    }
+
+    private GameObject InstantiateEffect(string effectName)
+    {
+        GameObject newEffect = Instantiate(Resources.Load($"TileEffects/{effectName}") as GameObject);
+        newEffect.transform.position = new Vector3(gameObject.transform.position.x, 0.27f, gameObject.transform.position.z);
+
+        if (isBlackTile)
+        {
+            //TODO: loop through children and reduce alpha by 40%
+        }
+
+        return newEffect;
+    }
+
+    private void DeactivateAllEffects()
+    {
+        hovered.SetActive(false);
+        clicked.SetActive(false);
+        aoe.SetActive(false);
+        highlighted.SetActive(false);
     }
 
     public void Reset()
     {
-        SetMat(neutral);
+        DeactivateAllEffects();
     }
 
     public void Hover()
     {
-        SetMat(hovered);
+        DeactivateAllEffects();
+        hovered.SetActive(true);
     }
 
     public void Click()
     {
-        SetMat(clicked);
+        DeactivateAllEffects();
+        clicked.SetActive(true);
     }
 
     public void Highlight()
     {
-        SetMat(highlighted);
+        DeactivateAllEffects();
+        highlighted.SetActive(true);
     }
 
     public void AOE()
     {
-        SetMat(aoe);
-    }
-
-    private void SetMat(Material mat)
-    {
-        mesh.material = mat;
+        DeactivateAllEffects();
+        aoe.SetActive(true);
     }
 }

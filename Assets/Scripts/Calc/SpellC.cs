@@ -173,7 +173,7 @@ namespace Calc
 
         public static float CalcDamage(float baseDmg, float power) => Mathf.Floor(baseDmg * power);
 
-        public static float CalcHeal(float baseDmg, float power) => Mathf.Floor(baseDmg * power) * 2.5f;
+        public static float CalcHeal(float baseDmg, float power) => Mathf.Floor(baseDmg * power) * 2f;
 
         public static string ColorToString(string color)
         {

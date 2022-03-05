@@ -55,10 +55,10 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> list = new Dictionary<PieceLabel, Piece>()
         {
-            {PieceLabel.Knight, new Piece(Guid.NewGuid(), PieceLabel.Knight, PieceColor.None, PlayerToken.NA, "", 3000, 3000, 1.175f, 3, new Vector2[4]{new Vector2(0,1), new Vector2(1,0), new Vector2(0, -1), new Vector2(-1, 0)}, 2, new Vector2[2]{new Vector2(1,0), new Vector2(-1,0)})},
-            {PieceLabel.Witch, new Piece(Guid.NewGuid(), PieceLabel.Witch, PieceColor.None, PlayerToken.NA, "", 1450, 1450, 2.5f, 3, new Vector2[4]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)}, 3, new Vector2[4]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)})},
-            {PieceLabel.Gargoyle, new Piece(Guid.NewGuid(), PieceLabel.Gargoyle, PieceColor.None, PlayerToken.NA, "", 1900, 1900, 1.5f, 5, new Vector2[8]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)}, 3, new Vector2[8]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)})},
-            {PieceLabel.Demon, new Piece(Guid.NewGuid(), PieceLabel.Demon, PieceColor.None, PlayerToken.NA, "", 2000, 2000, 2f, 4, new Vector2[4]{new Vector2(0,1), new Vector2(1,0), new Vector2(0, -1), new Vector2(-1, 0)}, 2, new Vector2[4]{new Vector2(0,1), new Vector2(1,0), new Vector2(0, -1), new Vector2(-1, 0)})},
+            {PieceLabel.Knight, new Piece(Guid.NewGuid(), PieceLabel.Knight, PieceColor.None, PlayerToken.NA, "", 30, 30, 1, 3, new Vector2[4]{new Vector2(0,1), new Vector2(1,0), new Vector2(0, -1), new Vector2(-1, 0)}, 4, new Vector2[2]{new Vector2(1,0), new Vector2(-1,0)})},
+            {PieceLabel.Witch, new Piece(Guid.NewGuid(), PieceLabel.Witch, PieceColor.None, PlayerToken.NA, "", 14, 14, 3, 4, new Vector2[4]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)}, 5, new Vector2[4]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)})},
+            {PieceLabel.Gargoyle, new Piece(Guid.NewGuid(), PieceLabel.Gargoyle, PieceColor.None, PlayerToken.NA, "", 19, 19, 1, 5, new Vector2[8]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)}, 1, new Vector2[8]{new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1,1), new Vector2(1,-1), new Vector2(-1, -1), new Vector2(-1, 1)})},
+            {PieceLabel.Demon, new Piece(Guid.NewGuid(), PieceLabel.Demon, PieceColor.None, PlayerToken.NA, "", 22, 22, 2, 4, new Vector2[4]{new Vector2(0,1), new Vector2(1,0), new Vector2(0, -1), new Vector2(-1, 0)}, 2, new Vector2[4]{new Vector2(0,1), new Vector2(1,0), new Vector2(0, -1), new Vector2(-1, 0)})},
         };
     }
 

@@ -66,8 +66,8 @@ public class GameLogic : MonoBehaviour
         // check if clicked tile has a piece owned by human player
         if (newClickedTile.Contents == TileContents.Piece)
         {
-            ui.CloseCurrentPieceDetails();
-            ui.TogglePieceUIPane(newClickedTile.Piece.Guid);
+            // ui.CloseCurrentPieceDetails();
+            // ui.TogglePieceUIPane(newClickedTile.Piece.Guid);
             // Reset temporary states
             board.tiles = BoardC.ChangeTilesState(board.tiles, new List<TileState> { TileState.isAOE, TileState.isHighlighted }, false);
 
@@ -97,7 +97,7 @@ public class GameLogic : MonoBehaviour
             // if clicked the thing that is currently clicked
             else if (new Vector3(newClickedTile.X, 0, newClickedTile.Y) == new Vector3(currentClicked.X, 0, currentClicked.Y))
             {
-                ui.CloseCurrentPieceDetails();
+                // ui.CloseCurrentPieceDetails();
                 board.tiles = BoardC.ChangeTilesState(
                     board.tiles,
                     new List<TileState> { TileState.isClicked },

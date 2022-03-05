@@ -22,8 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: WhiteTile
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ShaderKeywords: _EMISSION _SPECULAR_SETUP
-  m_LightmapFlags: 2
+  m_ShaderKeywords: _NORMALMAP
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
@@ -38,7 +38,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 0f0fc15beee7b54408e1cc9cc486cbc5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap2:
@@ -74,7 +74,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: ee30fe3688a569e4099862b20fc9464e, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap2:
@@ -205,7 +205,7 @@ Material:
     - _Glossiness2: 1
     - _GlossyReflections: 1
     - _MainShown: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _Metallic2: 1
     - _MinPulseBrightness: 0
     - _Mode: 0
@@ -248,7 +248,7 @@ Material:
     - _ShadowCull: 2
     - _ShadowMIPbias: 0
     - _ShadowStrength: 1
-    - _Smoothness: 0.447
+    - _Smoothness: 0.34
     - _SmoothnessTextureChannel: 0
     - _Snow: 0
     - _SnowBumpMacro: 0.1
@@ -315,7 +315,7 @@ Material:
     - _WetnessNormalInfluence: 0.5
     - _WetnessShown: 1
     - _WetnessUVMult: 1
-    - _WorkflowMode: 0
+    - _WorkflowMode: 1
     - _ZWrite: 1
     - maxDist: 10
     - minDist: 1

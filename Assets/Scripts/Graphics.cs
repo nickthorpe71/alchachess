@@ -51,7 +51,7 @@ public class Graphics : MonoBehaviour
     }
 
     // --- Instantiation ---
-    public void InstantiateInitialBoard(Data.Board board)
+    public void InstantiateInitialBoard(Board board)
     {
         BoardC.LoopTiles(board.tiles, InitTileOccupant);
     }
@@ -59,9 +59,12 @@ public class Graphics : MonoBehaviour
     private void InitTileOccupant(Tile tile)
     {
         if (tile.Contents == TileContents.Piece)
+        {
             InstantiatePiece(tile.Piece, tile.X, tile.Y);
+            InstantiateElement(tile.Element, tile.X, tile.Y, false);
+        }
         else if (tile.Contents == TileContents.Element)
-            InstantiateElement(tile.Element, tile.X, tile.Y);
+            InstantiateElement(tile.Element, tile.X, tile.Y, true);
     }
 
     public void InstantiatePiece(Piece piece, int x, int y)
@@ -77,7 +80,7 @@ public class Graphics : MonoBehaviour
         activePieces.Add(newPiece);
     }
 
-    private void InstantiateElement(string element, int x, int y)
+    private void InstantiateElement(string element, int x, int y, bool startActive)
     {
         string path = "Elements/" + element;
         Vector3 pos = new Vector3(x, 0.5f, y);
@@ -88,6 +91,7 @@ public class Graphics : MonoBehaviour
         graphicComponent.destroyAnimPrefab = elementDestroyAnim;
         graphicComponent.graphics = this;
         elementGraphics[new Vector2(x, y)] = newElement;
+        newElement.SetActive(startActive);
     }
 
     private void InstantiateEnvironmentEffect(string path, Vector2 pos)

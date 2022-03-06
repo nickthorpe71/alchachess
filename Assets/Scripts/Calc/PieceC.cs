@@ -48,6 +48,7 @@ namespace Calc
             return new Piece(
                 piece.Guid,
                 piece.Label,
+                piece.GodType,
                 piece.Color,
                 piece.Player,
                 piece.CurrentRecipe,
@@ -66,6 +67,7 @@ namespace Calc
             return new Piece(
                 piece.Guid,
                 piece.Label,
+                piece.GodType,
                 piece.Color,
                 piece.Player,
                 piece.CurrentRecipe,
@@ -84,6 +86,7 @@ namespace Calc
             return new Piece(
                 Guid.NewGuid(),
                 template.Label,
+                template.GodType,
                 player.PieceColor,
                 player.PlayerToken,
                 "",

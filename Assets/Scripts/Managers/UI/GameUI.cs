@@ -101,6 +101,15 @@ public class GameUI : MonoBehaviour
     }
 
     // --- PieceSelectUI --- \\
+
+    public void PopulatePieceSelections(List<PieceLabel> pieces)
+    {
+        // Populate PieceSelectItems to List in PieceSelectUI
+        // use pieces list to determine which should be populated
+
+        // going to need to be able to wipe that list as well
+    }
+
     public void SelectPiece(string pieceLabel)
     {
         PieceLabel label = (PieceLabel)Enum.Parse(typeof(PieceLabel), pieceLabel);

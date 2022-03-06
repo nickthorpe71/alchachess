@@ -7,8 +7,6 @@ public class TileGraphic : MonoBehaviour
     private GameObject aoe;
     private GameObject highlighted;
 
-    public bool isBlackTile;
-
     private void Awake()
     {
         // instantiate all effects on top of tile
@@ -24,21 +22,19 @@ public class TileGraphic : MonoBehaviour
     {
         GameObject newEffect = Instantiate(Resources.Load($"TileEffects/{effectName}") as GameObject);
         newEffect.transform.position = new Vector3(gameObject.transform.position.x, 0.27f, gameObject.transform.position.z);
-
-        if (isBlackTile)
-        {
-            //TODO: loop through children and reduce alpha by 40%
-        }
-
         return newEffect;
     }
 
-    private void DeactivateAllEffects()
+    private void DeactivateAllEffects(GameObject excluded = null)
     {
-        hovered.SetActive(false);
-        clicked.SetActive(false);
-        aoe.SetActive(false);
-        highlighted.SetActive(false);
+        if (excluded != hovered)
+            ControlledDeactivate(hovered);
+        if (excluded != clicked)
+            ControlledDeactivate(clicked);
+        if (excluded != aoe)
+            ControlledDeactivate(aoe);
+        if (excluded != highlighted)
+            ControlledDeactivate(highlighted);
     }
 
     public void Reset()
@@ -48,25 +44,35 @@ public class TileGraphic : MonoBehaviour
 
     public void Hover()
     {
-        DeactivateAllEffects();
-        hovered.SetActive(true);
+        ControlledActivate(hovered);
     }
 
     public void Click()
     {
-        DeactivateAllEffects();
-        clicked.SetActive(true);
+        ControlledActivate(clicked);
     }
 
     public void Highlight()
     {
-        DeactivateAllEffects();
-        highlighted.SetActive(true);
+        ControlledActivate(highlighted);
     }
 
     public void AOE()
     {
-        DeactivateAllEffects();
-        aoe.SetActive(true);
+        ControlledActivate(aoe);
+    }
+
+    private void ControlledActivate(GameObject toActivate)
+    {
+        DeactivateAllEffects(toActivate);
+
+        if (!toActivate.activeSelf)
+            toActivate.SetActive(true);
+    }
+
+    private void ControlledDeactivate(GameObject toDeactivate)
+    {
+        if (toDeactivate.activeSelf)
+            toDeactivate.SetActive(false);
     }
 }

@@ -108,6 +108,8 @@ public class GameUI : MonoBehaviour
         // use pieces list to determine which should be populated
 
         // going to need to be able to wipe that list as well
+
+
     }
 
     public void SelectPiece(string pieceLabel)

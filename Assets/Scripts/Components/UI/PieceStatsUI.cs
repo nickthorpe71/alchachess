@@ -124,11 +124,6 @@ public class PieceStatsUI : MonoBehaviour
         glow.SetActive(isActive);
     }
 
-    // public void ToggleLargeStatsPane()
-    // {
-    //     largeStatsPane.SetActive(!largeStatsPane.activeSelf);
-    // }
-
     public void ToggleLargeStatsPane(bool isActive)
     {
         largeStatsPane.SetActive(isActive);

@@ -19,10 +19,7 @@ namespace Calc
             return result;
         }
 
-        public static List<T> CreateList<T>(params T[] values)
-        {
-            return new List<T>(values);
-        }
+        public static List<T> CreateList<T>(params T[] values) => new List<T>(values);
 
         public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
         {

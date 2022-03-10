@@ -16,12 +16,12 @@ namespace Data
         private readonly float _maxHealth;
         private readonly float _power;
         private readonly int _moveDistance;
-        private readonly Vector2[] _movePattern;
+        private readonly List<Direction> _movePattern;
         private readonly int _attackDistance;
         private readonly Vector2[] _attackPattern;
 
 
-        public Piece(Guid guid, PieceLabel label, GodType godType, PieceColor color, PlayerToken player, string currentRecipe, float health, float maxHealth, float power, int moveDistance, Vector2[] movePattern, int attackDistance, Vector2[] attackPattern)
+        public Piece(Guid guid, PieceLabel label, GodType godType, PieceColor color, PlayerToken player, string currentRecipe, float health, float maxHealth, float power, int moveDistance, List<Direction> movePattern, int attackDistance, Vector2[] attackPattern)
         {
             _guid = guid;
             _label = label;
@@ -49,7 +49,7 @@ namespace Data
         public float MaxHealth { get { return _maxHealth; } }
         public float Power { get { return _power; } }
         public int MoveDistance { get { return _moveDistance; } }
-        public Vector2[] MovePattern { get { return _movePattern; } }
+        public List<Direction> MovePattern { get { return _movePattern; } }
         public int AttackDistance { get { return _attackDistance; } }
         public Vector2[] AttackPattern { get { return _attackPattern; } }
     }
@@ -69,7 +69,7 @@ namespace Data
                 maxHealth: 30,
                 power: 1,
                 moveDistance: 3,
-                movePattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) },
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
                 attackDistance: 4,
                 attackPattern: new Vector2[2] { new Vector2(1, 0), new Vector2(-1, 0) }
             ),
@@ -84,7 +84,7 @@ namespace Data
                 maxHealth: 14,
                 power: 3,
                 moveDistance: 4,
-                movePattern: new Vector2[4] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) },
+                movePattern: new List<Direction> { Direction.NE, Direction.SE, Direction.SW, Direction.NW },
                 attackDistance: 5,
                 attackPattern: new Vector2[4] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
             ),
@@ -99,7 +99,7 @@ namespace Data
                 maxHealth: 19,
                 power: 1,
                 moveDistance: 5,
-                movePattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) },
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW },
                 attackDistance: 1,
                 attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
             ),
@@ -114,7 +114,7 @@ namespace Data
                 maxHealth: 22,
                 power: 2,
                 moveDistance: 4,
-                movePattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) },
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
                 attackDistance: 2,
                 attackPattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) }
             ),
@@ -129,7 +129,7 @@ namespace Data
                 maxHealth: 35,
                 power: 2,
                 moveDistance: 5,
-                movePattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) },
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW },
                 attackDistance: 1,
                 attackPattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) }
             ),
@@ -144,7 +144,7 @@ namespace Data
                 maxHealth: 32,
                 power: 2,
                 moveDistance: 3,
-                movePattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) },
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
                 attackDistance: 5,
                 attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
             ),
@@ -159,7 +159,7 @@ namespace Data
                 maxHealth: 30,
                 power: 3,
                 moveDistance: 3,
-                movePattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) },
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
                 attackDistance: 3,
                 attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
             ),
@@ -173,8 +173,8 @@ namespace Data
                 health: 50,
                 maxHealth: 50,
                 power: 1,
-                moveDistance: 2,
-                movePattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) },
+                moveDistance: 1,
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW },
                 attackDistance: 1,
                 attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
             ),
@@ -206,5 +206,17 @@ namespace Data
         Black,
         White,
         None
+    }
+
+    public enum Direction
+    {
+        N,
+        NE,
+        E,
+        SE,
+        S,
+        SW,
+        W,
+        NW
     }
 }

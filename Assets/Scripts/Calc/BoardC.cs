@@ -148,7 +148,7 @@ namespace Calc
             int startY = selectedTile.Y;
             int moveDistance = selectedTile.Piece.MoveDistance;
 
-            List<int> activeDirections = GeneralC.CreateList(0, 1, 2, 3, 4, 5, 6, 7);
+            List<int> activeDirections = selectedTile.Piece.MovePattern.Select(direction => (int)direction).ToList();
 
             for (int layer = 1; layer <= moveDistance; layer++)
             {

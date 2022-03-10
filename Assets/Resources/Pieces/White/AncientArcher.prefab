@@ -6695,9 +6695,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6170919178616517156}
+  - component: {fileID: 3838869984782115835}
   m_Layer: 0
   m_Name: AncientArcher
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6718,6 +6719,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3838869984782115835
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6170919178616517159}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6146765, y: 2.327378, z: 0.68338346}
+  m_Center: {x: 0.0025038826, y: 1.6886017, z: 0.08757959}
 --- !u!1 &6171977615513312822
 GameObject:
   m_ObjectHideFlags: 0

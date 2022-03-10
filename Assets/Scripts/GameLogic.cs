@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using System.Linq;
 using UnityEngine;
 
 using Actions;
@@ -22,6 +23,7 @@ public class GameLogic : MonoBehaviour
     private Tile currentHover = null;
     private Tile currentClicked = null;
     [HideInInspector] public bool localPlayerCanInput;
+    [HideInInspector] public GodType pieceChoicePhase;
 
     // References
     private Graphics graphics;
@@ -49,6 +51,7 @@ public class GameLogic : MonoBehaviour
     private void Start()
     {
         graphics.CollectTileGraphics();
+        pieceChoicePhase = GodType.Demi;
     }
 
     void Update()
@@ -273,7 +276,21 @@ public class GameLogic : MonoBehaviour
 
         // TODO: change delay back to 1f
         if (currentPlayer != localPlayer.PlayerToken)
-            if (isPreGame) StartCoroutine(DelayActionWithLogic(0f, (gameLogic) => AI.ChoosePiece(gameLogic)));
+            if (isPreGame)
+                StartCoroutine(
+                    DelayActionWithLogic(
+                        0f,
+                        (gameLogic) => AI.ChoosePiece(
+                            gameLogic,
+                            PieceC.GetByGodType(
+                                pieceChoicePhase,
+                                PieceTemplates.list.Values.ToList()
+                            )
+                            .Select(piece => piece.Label)
+                            .ToList()
+                        )
+                    )
+                );
             else AI.TakeTurn(board, this);
     }
 
@@ -305,6 +322,50 @@ public class GameLogic : MonoBehaviour
 
         // add piece to row in UI (UI)
         ui.GetPieceUIsByPlayer(player)[currentPieceIndex].Init(newPiece);
+
+        // switch available pieces to gods of death
+        if (currentPieceIndex == Const.BOARD_WIDTH / 2 - 2 && player != oddPlayer)
+        {
+            pieceChoicePhase = GodType.Death;
+            ui.PopulatePieceSelections(
+                PieceC.GetByGodType(
+                    GodType.Death,
+                    PieceTemplates.list.Values.ToList()
+                )
+            );
+        }
+        else if (currentPieceIndex == Const.BOARD_WIDTH / 2 && player == oddPlayer)
+        {
+            pieceChoicePhase = GodType.Death;
+            ui.PopulatePieceSelections(
+                PieceC.GetByGodType(
+                    GodType.Death,
+                    PieceTemplates.list.Values.ToList()
+                )
+            );
+        }
+
+        // switch available pieces to gods of life
+        else if (currentPieceIndex == Const.BOARD_WIDTH / 2 - 1)
+        {
+            pieceChoicePhase = GodType.Life;
+            ui.PopulatePieceSelections(
+                PieceC.GetByGodType(
+                    GodType.Life,
+                    PieceTemplates.list.Values.ToList()
+                )
+            );
+        }
+        else
+        {
+            pieceChoicePhase = GodType.Demi;
+            ui.PopulatePieceSelections(
+                PieceC.GetByGodType(
+                    GodType.Demi,
+                    PieceTemplates.list.Values.ToList()
+                )
+            );
+        }
 
         if (player == localPlayer.PlayerToken)
         {

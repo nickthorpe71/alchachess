@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using Data;
 
 namespace Calc
@@ -99,5 +101,7 @@ namespace Calc
                 template.AttackPattern
             );
         }
+
+        public static List<Piece> GetByGodType(GodType godType, List<Piece> pieceList) => pieceList.Where(piece => piece.GodType == godType).ToList();
     }
 }

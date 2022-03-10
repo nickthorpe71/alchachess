@@ -12,16 +12,32 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject pieceSelectUI;
     [SerializeField] private List<PieceStatsUI> p1PieceStatUIs;
     [SerializeField] private List<PieceStatsUI> p2PieceStatUIs;
+    [SerializeField] private GameObject pieceSelectList;
     private GameLogic logic;
     private Guid startGuid = Guid.NewGuid();
     private Guid currentOpenPieceDetails;
     private Guid currentGlow;
+
+    private GameObject pieceSelectPrefab;
+
+    private void Awake()
+    {
+        pieceSelectPrefab = Resources.Load<GameObject>("UI/PieceSelectItem");
+    }
 
     private void Start()
     {
         logic = GetComponent<GameLogic>();
         currentOpenPieceDetails = startGuid;
         currentGlow = startGuid;
+
+        // populate piece select list with demi gods
+        PopulatePieceSelections(
+            PieceC.GetByGodType(
+                GodType.Demi,
+                PieceTemplates.list.Values.ToList()
+            )
+        );
     }
 
     // --- SpellUI --- \\
@@ -38,11 +54,11 @@ public class GameUI : MonoBehaviour
 
     // --- PieceStatsUI --- \\
 
-    public void TogglePieceUIPane(Guid pieceGuid)
-    {
-        GetPieceUIByGuid(pieceGuid).ToggleLargeStatsPane(true);
-        currentOpenPieceDetails = pieceGuid;
-    }
+    // public void TogglePieceUIPane(Guid pieceGuid)
+    // {
+    //     GetPieceUIByGuid(pieceGuid).ToggleLargeStatsPane(true);
+    //     currentOpenPieceDetails = pieceGuid;
+    // }
     public void CloseCurrentPieceDetails()
     {
         if (currentOpenPieceDetails != startGuid)
@@ -102,14 +118,19 @@ public class GameUI : MonoBehaviour
 
     // --- PieceSelectUI --- \\
 
-    public void PopulatePieceSelections(List<PieceLabel> pieces)
+    public void PopulatePieceSelections(List<Piece> pieces)
     {
+        // Wipe any existing piece select buttons
+        foreach (Transform child in pieceSelectList.transform)
+            Destroy(child.gameObject);
+
         // Populate PieceSelectItems to List in PieceSelectUI
-        // use pieces list to determine which should be populated
-
-        // going to need to be able to wipe that list as well
-
-
+        GameObject g;
+        pieces.ForEach(piece =>
+        {
+            g = Instantiate(pieceSelectPrefab, pieceSelectList.transform);
+            g.GetComponent<PieceSelectItem>().Init(piece, SelectPiece);
+        });
     }
 
     public void SelectPiece(string pieceLabel)

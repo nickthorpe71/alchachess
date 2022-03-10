@@ -8,11 +8,11 @@ namespace Actions
 {
     public static class AI
     {
-        public static void ChoosePiece(GameLogic logic)
+        public static void ChoosePiece(GameLogic logic, List<PieceLabel> choices)
         {
             // pick randomly for now
-            int pick = Random.Range(0, 4);
-            logic.SelectPiece((PieceLabel)pick, logic.currentPlayer);
+            int pick = Random.Range(0, choices.Count);
+            logic.SelectPiece(choices[pick], logic.currentPlayer);
         }
 
         public static void TakeTurn(Board board, GameLogic logic)

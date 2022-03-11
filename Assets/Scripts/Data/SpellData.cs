@@ -20,11 +20,11 @@ namespace Data
     public static class ElementalComponents
     {
         public static Dictionary<string, ElementalComponent> list = new Dictionary<string, ElementalComponent>{
-            {"D", new ElementalComponent("D", new List<Vector2>{new Vector2(1, -1), new Vector2(-1, -1)}, 2)},
-            {"W", new ElementalComponent("W", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1), new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 2)},
-            {"R", new ElementalComponent("R", new List<Vector2>{new Vector2(0, 1),new Vector2(0, 2)}, 1)},
-            {"B", new ElementalComponent("B", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0)}, 1)},
-            {"Y", new ElementalComponent("Y", new List<Vector2>{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1)}, 1)},
+            {"D", new ElementalComponent("D", new List<Vector2>{new Vector2(0, -1)}, 3)},
+            {"W", new ElementalComponent("W", new List<Vector2>{new Vector2(0, 1)}, 3)},
+            {"R", new ElementalComponent("R", new List<Vector2>{new Vector2(0, 1),new Vector2(0, 2) ,new Vector2(0, -1)}, 2)},
+            {"B", new ElementalComponent("B", new List<Vector2>{new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) , new Vector2(1, -1) , new Vector2(0, -1), new Vector2(-1, -1), new Vector2(-1, 0), new Vector2(-1, 1)}, 1)},
+            {"Y", new ElementalComponent("Y", new List<Vector2>{new Vector2(1, 0), new Vector2(2, 0), new Vector2(-1, 0), new Vector2(-2, 0)}, 1)},
             {"G", new ElementalComponent("G", new List<Vector2>{new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, -1), new Vector2(-1, -1)}, 1)}
         };
     }
@@ -227,7 +227,7 @@ namespace Data
         public static Dictionary<string, SpellEffect> list = new Dictionary<string, SpellEffect>{
             {"D", new SpellEffect(false, true, false, true, false, 0)},
             {"W", new SpellEffect(false, false, true, false, true, 0)},
-            {"R", new SpellEffect(false, true, false, false, false, 0)},
+            {"R", new SpellEffect(false, true, false, true, false, 0)},
             {"B", new SpellEffect(false, true, false, false, true, 0)},
             {"Y", new SpellEffect(true, true, false, false, false, 2)},
             {"G", new SpellEffect(true, false, false, false, true, 2)},

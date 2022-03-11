@@ -1,4 +1,3 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -17,11 +16,9 @@ namespace Data
         private readonly float _power;
         private readonly int _moveDistance;
         private readonly List<Direction> _movePattern;
-        private readonly int _attackDistance;
-        private readonly Vector2[] _attackPattern;
 
 
-        public Piece(Guid guid, PieceLabel label, GodType godType, PieceColor color, PlayerToken player, string currentRecipe, float health, float maxHealth, float power, int moveDistance, List<Direction> movePattern, int attackDistance, Vector2[] attackPattern)
+        public Piece(Guid guid, PieceLabel label, GodType godType, PieceColor color, PlayerToken player, string currentRecipe, float health, float maxHealth, float power, int moveDistance, List<Direction> movePattern)
         {
             _guid = guid;
             _label = label;
@@ -34,8 +31,6 @@ namespace Data
             _power = power;
             _moveDistance = moveDistance;
             _movePattern = movePattern;
-            _attackDistance = attackDistance;
-            _attackPattern = attackPattern;
 
         }
 
@@ -50,8 +45,6 @@ namespace Data
         public float Power { get { return _power; } }
         public int MoveDistance { get { return _moveDistance; } }
         public List<Direction> MovePattern { get { return _movePattern; } }
-        public int AttackDistance { get { return _attackDistance; } }
-        public Vector2[] AttackPattern { get { return _attackPattern; } }
     }
 
     public static class PieceTemplates
@@ -67,11 +60,9 @@ namespace Data
                 currentRecipe: "",
                 health: 30,
                 maxHealth: 30,
-                power: 1,
+                power: 2,
                 moveDistance: 3,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
-                attackDistance: 4,
-                attackPattern: new Vector2[2] { new Vector2(1, 0), new Vector2(-1, 0) }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
             ),
             [PieceLabel.Witch] = new Piece(
                 guid: Guid.NewGuid(),
@@ -82,11 +73,9 @@ namespace Data
                 currentRecipe: "",
                 health: 14,
                 maxHealth: 14,
-                power: 3,
-                moveDistance: 4,
-                movePattern: new List<Direction> { Direction.NE, Direction.SE, Direction.SW, Direction.NW },
-                attackDistance: 5,
-                attackPattern: new Vector2[4] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
+                power: 4,
+                moveDistance: 3,
+                movePattern: new List<Direction> { Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Gargoyle] = new Piece(
                 guid: Guid.NewGuid(),
@@ -95,13 +84,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 19,
-                maxHealth: 19,
+                health: 17,
+                maxHealth: 17,
                 power: 1,
                 moveDistance: 5,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW },
-                attackDistance: 1,
-                attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Demon] = new Piece(
                 guid: Guid.NewGuid(),
@@ -110,13 +97,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 22,
-                maxHealth: 22,
+                health: 21,
+                maxHealth: 21,
                 power: 2,
                 moveDistance: 4,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
-                attackDistance: 2,
-                attackPattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
             ),
             [PieceLabel.Jester] = new Piece(
                 guid: Guid.NewGuid(),
@@ -127,11 +112,9 @@ namespace Data
                 currentRecipe: "",
                 health: 35,
                 maxHealth: 35,
-                power: 2,
+                power: 3,
                 moveDistance: 5,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW },
-                attackDistance: 1,
-                attackPattern: new Vector2[4] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.AncientArcher] = new Piece(
                 guid: Guid.NewGuid(),
@@ -140,13 +123,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 32,
-                maxHealth: 32,
-                power: 2,
+                health: 40,
+                maxHealth: 40,
+                power: 6,
                 moveDistance: 3,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
-                attackDistance: 5,
-                attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
             ),
             [PieceLabel.Wraith] = new Piece(
                 guid: Guid.NewGuid(),
@@ -155,13 +136,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 30,
-                maxHealth: 30,
-                power: 3,
+                health: 45,
+                maxHealth: 45,
+                power: 5,
                 moveDistance: 3,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W },
-                attackDistance: 3,
-                attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
             ),
             [PieceLabel.GodOfLife] = new Piece(
                 guid: Guid.NewGuid(),
@@ -172,12 +151,10 @@ namespace Data
                 currentRecipe: "",
                 health: 50,
                 maxHealth: 50,
-                power: 1,
+                power: 5,
                 moveDistance: 1,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW },
-                attackDistance: 1,
-                attackPattern: new Vector2[8] { new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1), new Vector2(-1, 1) }
-            ),
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
+            )
         };
     }
 

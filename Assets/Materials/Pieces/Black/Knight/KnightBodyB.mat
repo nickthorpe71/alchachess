@@ -368,7 +368,7 @@ Material:
     - Vector1_7F95706: 1
     - Vector1_857D9C5E: 0
     - Vector1_AD123FE6: 0
-    - Vector1_BD6B229C: 0.05
+    - Vector1_BD6B229C: 0.2
     - _AORemapMax: 1
     - _AORemapMax0: 1
     - _AORemapMax1: 1
@@ -379,7 +379,7 @@ Material:
     - _AORemapMin1: 0
     - _AORemapMin2: 0
     - _AORemapMin3: 0
-    - _AO_Intensity: -1
+    - _AO_Intensity: 0
     - _ATDistance: 1
     - _AlbedoAffectEmissive: 0
     - _AlphaCutoff: 0.5

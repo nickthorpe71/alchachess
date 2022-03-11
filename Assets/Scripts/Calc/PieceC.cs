@@ -58,9 +58,7 @@ namespace Calc
                 piece.MaxHealth,
                 piece.Power,
                 piece.MoveDistance,
-                piece.MovePattern,
-                piece.AttackDistance,
-                piece.AttackPattern
+                piece.MovePattern
             );
         }
 
@@ -77,9 +75,7 @@ namespace Calc
                 piece.MaxHealth,
                 piece.Power,
                 piece.MoveDistance,
-                piece.MovePattern,
-                piece.AttackDistance,
-                piece.AttackPattern
+                piece.MovePattern
             );
         }
 
@@ -96,9 +92,7 @@ namespace Calc
                 template.MaxHealth,
                 template.Power,
                 template.MoveDistance,
-                template.MovePattern,
-                template.AttackDistance,
-                template.AttackPattern
+                template.MovePattern
             );
         }
 

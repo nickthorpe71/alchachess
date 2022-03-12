@@ -11,6 +11,11 @@ public class MainMenuUI : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     public void OpenMenu(int indexToOpen)
     {
         CloseMenus();

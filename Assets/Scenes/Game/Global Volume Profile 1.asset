@@ -119,43 +119,6 @@ MonoBehaviour:
   rounded:
     m_OverrideState: 1
     m_Value: 1
---- !u!114 &-2345410005215698019
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
-  m_Name: LensDistortion
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  intensity:
-    m_OverrideState: 1
-    m_Value: -0.24
-    min: -1
-    max: 1
-  xMultiplier:
-    m_OverrideState: 1
-    m_Value: 0.645
-    min: 0
-    max: 1
-  yMultiplier:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 0
-    max: 1
-  center:
-    m_OverrideState: 1
-    m_Value: {x: 0.5, y: 0.5}
-  scale:
-    m_OverrideState: 1
-    m_Value: 1.05
-    min: 0.01
-    max: 5
 --- !u!114 &-1386186781879167040
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -191,8 +154,6 @@ MonoBehaviour:
   - {fileID: -4217331216679856292}
   - {fileID: -2696380407727949069}
   - {fileID: 1517317226852660227}
-  - {fileID: 7545733055469042130}
-  - {fileID: -2345410005215698019}
   - {fileID: 1481058507260956012}
   - {fileID: -8719396548757670005}
 --- !u!114 &266257804026308922
@@ -288,7 +249,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   gaussianStart:
     m_OverrideState: 1
     m_Value: 20.9
@@ -334,33 +295,3 @@ MonoBehaviour:
     m_Value: 22
     min: -180
     max: 180
---- !u!114 &7545733055469042130
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
-  m_Name: FilmGrain
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  type:
-    m_OverrideState: 1
-    m_Value: 8
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0.524
-    min: 0
-    max: 1
-  response:
-    m_OverrideState: 1
-    m_Value: 0.851
-    min: 0
-    max: 1
-  texture:
-    m_OverrideState: 1
-    m_Value: {fileID: 0}

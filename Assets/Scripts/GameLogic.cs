@@ -298,7 +298,8 @@ public class GameLogic : MonoBehaviour
     {
         turnCount = 1;
         isPreGame = false;
-        board = BoardC.RandomizeBoardElements(board);
+        // board = BoardC.RandomizeBoardElements(board);
+        board = BoardC.BalanceElementLayout(board);
         graphics.WipePieces();
         graphics.InstantiateInitialBoard(board);
         NextTurn();

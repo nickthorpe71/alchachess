@@ -94,6 +94,22 @@ namespace Calc
             return boardCopy;
         }
 
+        public static Board BalanceElementLayout(Board board)
+        {
+            Board boardCopy = Clone(board);
+            string[][] pattern = new BalancedElementLayout().pattern;
+
+            for (int y = 0; y < Const.BOARD_HEIGHT; y++)
+                for (int x = 0; x < Const.BOARD_WIDTH; x++)
+                {
+                    boardCopy.tiles[y][x] = TileC.UpdateElement(boardCopy.tiles[y][x], pattern[y][x]);
+                    if (boardCopy.tiles[y][x].Contents != TileContents.Piece)
+                        boardCopy.tiles[y][x] = TileC.UpdateContents(boardCopy.tiles[y][x], TileContents.Element);
+                }
+
+            return boardCopy;
+        }
+
         public static List<Tile> GetTilesWithPieceForPlayer(Tile[][] tiles, PlayerToken player)
         {
             List<Tile> result = new List<Tile>();
@@ -194,16 +210,17 @@ namespace Calc
 
         public static string GetRecipeByPath(Board board, Vector2 start, Vector2 end)
         {
-            string result = "";
+            return board.tiles[(int)end.y][(int)end.x].Element;
+            // string result = "";
 
-            MapTilesBetween(board.tiles, start, end, (tile, x, y) =>
-            {
-                if (tile.Element != "N" && tile.Contents == TileContents.Element)
-                    result += tile.Element;
-                return tile;
-            });
+            // MapTilesBetween(board.tiles, start, end, (tile, x, y) =>
+            // {
+            //     if (tile.Element != "N" && tile.Contents == TileContents.Element)
+            //         result += tile.Element;
+            //     return tile;
+            // });
 
-            return result;
+            // return result;
         }
 
         public static List<Tile> GetTilesWithPiecesInRange(Board board, List<Vector2> range)

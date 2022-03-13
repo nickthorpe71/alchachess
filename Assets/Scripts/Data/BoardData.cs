@@ -134,4 +134,16 @@ namespace Data
         isHighlighted,
         isAOE
     }
+
+    public class BalancedElementLayout
+    {
+        public string[][] pattern = new string[][] {
+            new string[] {"R","B","W","W","B","R"},
+            new string[] {"G","Y","W","G","Y","D"},
+            new string[] {"D","B","Y","D","G","R"},
+            new string[] {"R","G","D","Y","B","D"},
+            new string[] {"D","Y","G","W","Y","G"},
+            new string[] {"R","B","W","W","B","R"},
+        };
+    }
 }

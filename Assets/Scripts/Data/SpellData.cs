@@ -19,13 +19,77 @@ namespace Data
 
     public static class ElementalComponents
     {
-        public static Dictionary<string, ElementalComponent> list = new Dictionary<string, ElementalComponent>{
-            {"D", new ElementalComponent("D", new List<Vector2>{new Vector2(0, 1), new Vector2(0, -1)}, 12)},
-            {"W", new ElementalComponent("W", new List<Vector2>{new Vector2(0, 1)}, 10)},
-            {"R", new ElementalComponent("R", new List<Vector2>{new Vector2(0, 1),new Vector2(0, 2) ,new Vector2(0, -1)}, 8)},
-            {"B", new ElementalComponent("B", new List<Vector2>{new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) , new Vector2(1, -1) , new Vector2(0, -1), new Vector2(-1, -1), new Vector2(-1, 0), new Vector2(-1, 1)}, 6)},
-            {"Y", new ElementalComponent("Y", new List<Vector2>{new Vector2(0, 1), new Vector2(1, 1), new Vector2(-1, 1), new Vector2(1, 0), new Vector2(2, 0), new Vector2(-1, 0), new Vector2(-2, 0)}, 8)},
-            {"G", new ElementalComponent("G", new List<Vector2>{new Vector2(0, 1), new Vector2(0, 2), new Vector2(0, -1), new Vector2(0, -2)}, 8)}
+        public static Dictionary<string, ElementalComponent> list = new Dictionary<string, ElementalComponent>
+        {
+            ["D"] = new ElementalComponent(
+                element: "D",
+                pattern: new List<Vector2>{
+                    new Vector2(1, 1),
+                    new Vector2(1, -1),
+                    new Vector2(-1, -1),
+                    new Vector2(-1, 1)
+                },
+                damage: 10
+            ),
+            ["W"] = new ElementalComponent(
+                element: "W",
+                pattern: new List<Vector2>{
+                    new Vector2(0, 0),
+                    new Vector2(0, 1),
+                    new Vector2(0, -1),
+                    new Vector2(1, 0),
+                    new Vector2(-1, 0),
+                },
+                damage: 10
+            ),
+            ["R"] = new ElementalComponent(
+                element: "R",
+                pattern: new List<Vector2>{
+                    new Vector2(0, 0),
+                    new Vector2(0, 1),
+                    new Vector2(0, 2),
+                    new Vector2(0, 3),
+                    new Vector2(0, -1)
+                },
+                damage: 12
+            ),
+            ["B"] = new ElementalComponent(
+                element: "B",
+                pattern: new List<Vector2>{
+                    new Vector2(0, 0),
+                    new Vector2(0, 1),
+                    new Vector2(1, 1),
+                    new Vector2(1, 0),
+                    new Vector2(1, -1),
+                    new Vector2(0, -1),
+                    new Vector2(-1, -1),
+                    new Vector2(-1, 0),
+                    new Vector2(-1, 1)
+                },
+                damage: 6
+            ),
+            ["Y"] = new ElementalComponent(
+                element: "Y",
+                pattern: new List<Vector2>{
+                    new Vector2(0, 1),
+                    new Vector2(1, 1),
+                    new Vector2(-1, 1),
+                    new Vector2(1, 0),
+                    new Vector2(-1, 0),
+                },
+                damage: 8
+            ),
+            ["G"] = new ElementalComponent(
+                element: "G",
+                pattern: new List<Vector2>{
+                    new Vector2(0, 0),
+                    new Vector2(0, 1),
+                    new Vector2(0, 2),
+                    new Vector2(0, -1),
+                    new Vector2(0, -2)
+            },
+                damage: 6
+            )
         };
     }
 
@@ -224,13 +288,56 @@ namespace Data
 
     public static class SpellEffects
     {
-        public static Dictionary<string, SpellEffect> list = new Dictionary<string, SpellEffect>{
-            {"D", new SpellEffect(false, true, false, true, false, 0)},
-            {"W", new SpellEffect(false, false, true, false, true, 0)},
-            {"R", new SpellEffect(false, true, false, true, false, 0)},
-            {"B", new SpellEffect(false, true, false, false, true, 0)},
-            {"Y", new SpellEffect(true, true, false, false, false, 2)},
-            {"G", new SpellEffect(true, true, false, false, true, 2)},
+        public static Dictionary<string, SpellEffect> list = new Dictionary<string, SpellEffect>
+        {
+            ["D"] = new SpellEffect(
+                altersEnvironment: false,
+                damagesEnemies: true,
+                healsEnemies: false,
+                damagesAllies: true,
+                healsAllies: false,
+                duration: 0
+            ),
+            ["W"] = new SpellEffect(
+                altersEnvironment: false,
+                damagesEnemies: false,
+                healsEnemies: true,
+                damagesAllies: false,
+                healsAllies: true,
+                duration: 0
+            ),
+            ["R"] = new SpellEffect(
+                altersEnvironment: false,
+                damagesEnemies: true,
+                healsEnemies: false,
+                damagesAllies: true,
+                healsAllies: false,
+                duration: 0
+            ),
+            ["B"] = new SpellEffect(
+                altersEnvironment: false,
+                damagesEnemies: true,
+                healsEnemies: false,
+                damagesAllies: false,
+                healsAllies: true,
+                duration: 0
+            ),
+            ["Y"] = new SpellEffect(
+                altersEnvironment: true,
+                damagesEnemies: true,
+                healsEnemies: false,
+                damagesAllies: false,
+                healsAllies: false,
+                duration: 2
+            ),
+            ["G"] = new SpellEffect(
+                altersEnvironment: true,
+                damagesEnemies: true,
+                healsEnemies: false,
+                damagesAllies: false,
+                healsAllies: true,
+                duration: 2
+            ),
         };
     }
 

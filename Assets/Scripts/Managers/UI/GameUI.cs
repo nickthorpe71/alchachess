@@ -52,13 +52,6 @@ public class GameUI : MonoBehaviour
         spellView.UpdateView(spell, piece);
     }
 
-    // --- PieceStatsUI --- \\
-
-    // public void TogglePieceUIPane(Guid pieceGuid)
-    // {
-    //     GetPieceUIByGuid(pieceGuid).ToggleLargeStatsPane(true);
-    //     currentOpenPieceDetails = pieceGuid;
-    // }
     public void CloseCurrentPieceDetails()
     {
         if (currentOpenPieceDetails != startGuid)

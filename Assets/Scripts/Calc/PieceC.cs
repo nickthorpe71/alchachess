@@ -21,8 +21,11 @@ namespace Calc
             SpellEffect spellEffect = SpellEffects.list[spell.Color];
             bool isEnemy = attacker.Player != defender.Player;
 
+            UnityEngine.Debug.Log(isEnemy);
+
             if (isEnemy)
             {
+
                 if (spellEffect.DamagesEnemies)
                     pieceCopy = PieceC.UpdateHealth(pieceCopy, pieceCopy.Health - SpellC.CalcDamage(spell.Damage, attacker.Power));
                 if (spellEffect.HealsEnemies)
@@ -37,7 +40,7 @@ namespace Calc
             }
 
             if (pieceCopy.Health > pieceCopy.MaxHealth)
-                pieceCopy = PieceC.UpdateHealth(pieceCopy, SpellC.CalcDamage(spell.Damage, attacker.Power));
+                pieceCopy = PieceC.UpdateHealth(pieceCopy, pieceCopy.MaxHealth);
 
             if (pieceCopy.Health < 0)
                 pieceCopy = PieceC.UpdateHealth(pieceCopy, 0);

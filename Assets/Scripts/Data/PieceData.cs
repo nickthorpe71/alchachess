@@ -51,19 +51,6 @@ namespace Data
     {
         public static Dictionary<PieceLabel, Piece> list = new Dictionary<PieceLabel, Piece>()
         {
-            [PieceLabel.Knight] = new Piece(
-                guid: Guid.NewGuid(),
-                label: PieceLabel.Knight,
-                godType: GodType.Demi,
-                color: PieceColor.None,
-                player: PlayerToken.NA,
-                currentRecipe: "",
-                health: 30,
-                maxHealth: 30,
-                power: 2,
-                moveDistance: 3,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
-            ),
             [PieceLabel.Witch] = new Piece(
                 guid: Guid.NewGuid(),
                 label: PieceLabel.Witch,
@@ -73,9 +60,22 @@ namespace Data
                 currentRecipe: "",
                 health: 14,
                 maxHealth: 14,
-                power: 4,
-                moveDistance: 3,
+                power: 8,
+                moveDistance: 2,
                 movePattern: new List<Direction> { Direction.NE, Direction.SE, Direction.SW, Direction.NW }
+            ),
+            [PieceLabel.Knight] = new Piece(
+                guid: Guid.NewGuid(),
+                label: PieceLabel.Knight,
+                godType: GodType.Demi,
+                color: PieceColor.None,
+                player: PlayerToken.NA,
+                currentRecipe: "",
+                health: 35,
+                maxHealth: 35,
+                power: 6,
+                moveDistance: 3,
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
             ),
             [PieceLabel.Gargoyle] = new Piece(
                 guid: Guid.NewGuid(),
@@ -84,10 +84,10 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 17,
-                maxHealth: 17,
+                health: 25,
+                maxHealth: 25,
                 power: 1,
-                moveDistance: 5,
+                moveDistance: 1,
                 movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Demon] = new Piece(
@@ -97,11 +97,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 21,
-                maxHealth: 21,
-                power: 2,
+                health: 20,
+                maxHealth: 20,
+                power: 4,
                 moveDistance: 4,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Jester] = new Piece(
                 guid: Guid.NewGuid(),
@@ -110,10 +110,10 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 35,
-                maxHealth: 35,
-                power: 3,
-                moveDistance: 5,
+                health: 45,
+                maxHealth: 45,
+                power: 10,
+                moveDistance: 4,
                 movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.AncientArcher] = new Piece(
@@ -123,11 +123,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 40,
-                maxHealth: 40,
-                power: 6,
-                moveDistance: 3,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
+                health: 30,
+                maxHealth: 30,
+                power: 20,
+                moveDistance: 2,
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Wraith] = new Piece(
                 guid: Guid.NewGuid(),
@@ -136,11 +136,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 45,
-                maxHealth: 45,
-                power: 5,
+                health: 90,
+                maxHealth: 90,
+                power: 10,
                 moveDistance: 3,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.GodOfLife] = new Piece(
                 guid: Guid.NewGuid(),
@@ -151,7 +151,7 @@ namespace Data
                 currentRecipe: "",
                 health: 50,
                 maxHealth: 50,
-                power: 5,
+                power: 10,
                 moveDistance: 1,
                 movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             )
@@ -162,8 +162,8 @@ namespace Data
     {
         Demon,
         Witch,
-        Gargoyle,
         Knight,
+        Gargoyle,
         Jester,
         AncientArcher,
         Wraith,

@@ -10,6 +10,16 @@ namespace Actions
     {
         public static void ChoosePiece(GameLogic logic, List<PieceLabel> choices)
         {
+            // temp to test only selecting death god
+            if (logic.turnCount != 6 && logic.turnCount != 8)
+            {
+                int pickDemi = (int)Mathf.Floor(logic.turnCount / 2) - 1;
+                if (logic.turnCount > 8)
+                    pickDemi -= 2;
+                logic.SelectPiece((PieceLabel)pickDemi, logic.currentPlayer);
+                return;
+            }
+
             // pick randomly for now
             int pick = Random.Range(0, choices.Count);
             logic.SelectPiece(choices[pick], logic.currentPlayer);

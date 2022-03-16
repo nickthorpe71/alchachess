@@ -53,6 +53,23 @@ namespace Calc
             );
         }
 
+        // TODO: Delete this after testing
+        public static Tile UpdatePieceNew(Tile tile, Piece newPiece)
+        {
+            return new Tile(
+                tile.X,
+                tile.Y,
+                newPiece,
+                "N",
+                TileContents.Piece,
+                false,
+                false,
+                false,
+                false,
+                0
+            );
+        }
+
         public static Tile UpdateStates(Tile tile, bool newState, List<TileState> statesToChange)
         {
             return new Tile(

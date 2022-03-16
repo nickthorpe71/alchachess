@@ -28,6 +28,7 @@ public class SpellView : MonoBehaviour, IToggle
 
         Toggle(true);
         spellName.text = spell.Name;
-        effect.text = SpellC.SpellEffectString(spell, selectedPiece.Power);
+        if (selectedPiece != null)
+            effect.text = SpellC.SpellEffectString(spell, selectedPiece.Power);
     }
 }

@@ -58,10 +58,10 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 14,
-                maxHealth: 14,
+                health: 20,
+                maxHealth: 20,
                 power: 8,
-                moveDistance: 2,
+                moveDistance: 3,
                 movePattern: new List<Direction> { Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Knight] = new Piece(
@@ -84,11 +84,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 25,
-                maxHealth: 25,
+                health: 15,
+                maxHealth: 15,
                 power: 1,
                 moveDistance: 1,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
+                movePattern: new List<Direction> { Direction.N, Direction.S }
             ),
             [PieceLabel.Demon] = new Piece(
                 guid: Guid.NewGuid(),
@@ -97,11 +97,11 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 20,
-                maxHealth: 20,
-                power: 4,
-                moveDistance: 4,
-                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
+                health: 35,
+                maxHealth: 35,
+                power: 8,
+                moveDistance: 5,
+                movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W }
             ),
             [PieceLabel.Jester] = new Piece(
                 guid: Guid.NewGuid(),
@@ -136,10 +136,10 @@ namespace Data
                 color: PieceColor.None,
                 player: PlayerToken.NA,
                 currentRecipe: "",
-                health: 90,
-                maxHealth: 90,
-                power: 10,
-                moveDistance: 3,
+                health: 55,
+                maxHealth: 55,
+                power: 12,
+                moveDistance: 5,
                 movePattern: new List<Direction> { Direction.N, Direction.E, Direction.S, Direction.W, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.GodOfLife] = new Piece(

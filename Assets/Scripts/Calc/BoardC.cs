@@ -331,6 +331,104 @@ namespace Calc
             return removed;
         }
 
+        // TODO: Delete after testing
+        public static Tile[][] PlacePieces(GameLogic logic, Board board, GameUI ui)
+        {
+            Tile[][] tiles = Clone(board).tiles;
+            for (int y = 0; y < Const.BOARD_HEIGHT; y++)
+            {
+                for (int x = 0; x < Const.BOARD_WIDTH; x++)
+                {
+                    PieceLabel label = PieceLabel.None;
+                    PieceColor color = PieceColor.None;
+                    PlayerToken targetPlayer = PlayerToken.NA;
+                    TileContents contents = TileContents.Element;
+                    int pieceIndexRaiser = 0;
+                    if (y == 0)
+                    {
+                        contents = TileContents.Piece;
+                        color = PieceColor.White;
+                        targetPlayer = PlayerToken.P1;
+                        label = x switch
+                        {
+                            0 => PieceLabel.Demon,
+                            1 => PieceLabel.Witch,
+                            2 => PieceLabel.Wraith,
+                            3 => PieceLabel.GodOfLife,
+                            4 => PieceLabel.Witch,
+                            5 => PieceLabel.Demon,
+                        };
+                    }
+                    if (y == 1)
+                    {
+                        pieceIndexRaiser = 6;
+                        contents = TileContents.Piece;
+                        color = PieceColor.White;
+                        targetPlayer = PlayerToken.P1;
+                        label = x switch
+                        {
+                            0 => PieceLabel.Gargoyle,
+                            1 => PieceLabel.Gargoyle,
+                            2 => PieceLabel.Gargoyle,
+                            3 => PieceLabel.Gargoyle,
+                            4 => PieceLabel.Gargoyle,
+                            5 => PieceLabel.Gargoyle,
+                        };
+                    }
+
+                    if (y == 4)
+                    {
+                        pieceIndexRaiser = 6;
+                        contents = TileContents.Piece;
+                        color = PieceColor.Black;
+                        targetPlayer = PlayerToken.P2;
+                        label = x switch
+                        {
+                            0 => PieceLabel.Gargoyle,
+                            1 => PieceLabel.Gargoyle,
+                            2 => PieceLabel.Gargoyle,
+                            3 => PieceLabel.Gargoyle,
+                            4 => PieceLabel.Gargoyle,
+                            5 => PieceLabel.Gargoyle,
+                        };
+                    }
+                    if (y == 5)
+                    {
+                        contents = TileContents.Piece;
+                        color = PieceColor.Black;
+                        targetPlayer = PlayerToken.P2;
+                        label = x switch
+                        {
+                            0 => PieceLabel.Demon,
+                            1 => PieceLabel.Witch,
+                            2 => PieceLabel.GodOfLife,
+                            3 => PieceLabel.Wraith,
+                            4 => PieceLabel.Witch,
+                            5 => PieceLabel.Demon,
+                        };
+                    }
+
+                    if (label != PieceLabel.None)
+                    {
+                        Piece newPiece = PieceC.NewPieceFromTemplate(
+                            PieceTemplates.list[label],
+                            PlayerC.GetPlayerDataByToken(
+                                targetPlayer,
+                                logic.localPlayer,
+                                logic.remotePlayer
+                            ));
+
+                        Piece pieceWithColor = PieceC.UpdateColor(newPiece, color);
+                        tiles[y][x] = TileC.UpdatePieceNew(tiles[y][x], pieceWithColor);
+                        ui.GetPieceUIsByPlayer(targetPlayer)[x + pieceIndexRaiser].Init(pieceWithColor);
+                    }
+
+                    tiles[y][x] = TileC.UpdateContents(tiles[y][x], contents);
+                }
+            }
+            return tiles;
+        }
+
         // ---- Board Turn Events ----
 
         public static MoveData ExecuteMove(Board board, PlayerToken currentPlayer, Vector2 start, Vector2 end)

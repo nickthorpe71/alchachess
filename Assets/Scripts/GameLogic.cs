@@ -36,16 +36,23 @@ public class GameLogic : MonoBehaviour
         graphics = GetComponent<Graphics>();
         graphics.Init(ui);
         board = new Board();
-        isPreGame = true;
+        isPreGame = false;
 
         // create players
         localPlayer = new PlayerData(PlayerToken.P1, PieceColor.White, false, false, new List<Piece>());
         remotePlayer = new PlayerData(PlayerToken.P2, PieceColor.Black, false, true, new List<Piece>());
 
+        board.tiles = BoardC.PlacePieces(this, board, ui);
+
         // currentPlayer = PlayerC.RandomizeFirstTurn();
         currentPlayer = localPlayer.PlayerToken;
         oddPlayer = localPlayer.PlayerToken;
         localPlayerCanInput = PlayerC.CanHumanInput(currentPlayer);
+
+        // TODO: delete post testing
+        turnCount = 1;
+        board = BoardC.BalanceElementLayout(board);
+        graphics.InstantiateInitialBoard(board);
     }
 
     private void Start()

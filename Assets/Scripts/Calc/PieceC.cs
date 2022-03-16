@@ -21,8 +21,6 @@ namespace Calc
             SpellEffect spellEffect = SpellEffects.list[spell.Color];
             bool isEnemy = attacker.Player != defender.Player;
 
-            UnityEngine.Debug.Log(isEnemy);
-
             if (isEnemy)
             {
 
@@ -75,6 +73,23 @@ namespace Calc
                 piece.Player,
                 piece.CurrentRecipe,
                 newHealth,
+                piece.MaxHealth,
+                piece.Power,
+                piece.MoveDistance,
+                piece.MovePattern
+            );
+        }
+
+        public static Piece UpdateColor(Piece piece, PieceColor newColor)
+        {
+            return new Piece(
+                piece.Guid,
+                piece.Label,
+                piece.GodType,
+                newColor,
+                piece.Player,
+                piece.CurrentRecipe,
+                piece.Health,
                 piece.MaxHealth,
                 piece.Power,
                 piece.MoveDistance,

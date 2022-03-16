@@ -49,7 +49,11 @@ namespace Data
                     new Vector2(0, 1),
                     new Vector2(0, 2),
                     new Vector2(0, 3),
-                    new Vector2(0, -1)
+                    new Vector2(0, -1),
+                    new Vector2(1, 0),
+                    new Vector2(2, 0),
+                    new Vector2(-1, 0),
+                    new Vector2(-2, 0),
                 },
                 damage: 12
             ),
@@ -315,12 +319,12 @@ namespace Data
                 duration: 0
             ),
             ["B"] = new SpellEffect(
-                altersEnvironment: false,
+                altersEnvironment: true,
                 damagesEnemies: true,
                 healsEnemies: false,
                 damagesAllies: false,
                 healsAllies: true,
-                duration: 0
+                duration: 2
             ),
             ["Y"] = new SpellEffect(
                 altersEnvironment: true,

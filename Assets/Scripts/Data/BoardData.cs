@@ -139,10 +139,10 @@ namespace Data
     {
         public string[][] pattern = new string[][] {
             new string[] {"B","D","R","W","Y","G"},
-            new string[] {"Y","R","W","G","B","D"},
+            new string[] {"Y","W","G","R","B","D"},
             new string[] {"G","B","Y","D","W","R"},
             new string[] {"R","W","D","Y","B","G"},
-            new string[] {"D","B","G","W","R","Y"},
+            new string[] {"D","B","R","G","W","Y"},
             new string[] {"G","Y","W","R","D","B"},
         };
     }

@@ -27,7 +27,9 @@ namespace Data
                     new Vector2(1, 1),
                     new Vector2(1, -1),
                     new Vector2(-1, -1),
-                    new Vector2(-1, 1)
+                    new Vector2(-1, 1),
+                    new Vector2(1, 0),
+                    new Vector2(-1, 0),
                 },
                 damage: 10
             ),
@@ -75,13 +77,17 @@ namespace Data
             ["Y"] = new ElementalComponent(
                 element: "Y",
                 pattern: new List<Vector2>{
+                    new Vector2(0, 0),
                     new Vector2(0, 1),
                     new Vector2(1, 1),
-                    new Vector2(-1, 1),
                     new Vector2(1, 0),
+                    new Vector2(1, -1),
+                    new Vector2(0, -1),
+                    new Vector2(-1, -1),
                     new Vector2(-1, 0),
+                    new Vector2(-1, 1)
                 },
-                damage: 8
+                damage: 10
             ),
             ["G"] = new ElementalComponent(
                 element: "G",
@@ -90,9 +96,11 @@ namespace Data
                     new Vector2(0, 1),
                     new Vector2(0, 2),
                     new Vector2(0, -1),
-                    new Vector2(0, -2)
+                    new Vector2(0, -2),
+                    new Vector2(-1, -1),
+                    new Vector2(1, -1),
             },
-                damage: 6
+                damage: 8
             )
         };
     }

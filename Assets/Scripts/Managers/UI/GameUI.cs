@@ -52,11 +52,11 @@ public class GameUI : MonoBehaviour
         spellView.UpdateView(spell, piece);
     }
 
-    public void CloseCurrentPieceDetails()
-    {
-        if (currentOpenPieceDetails != startGuid)
-            GetPieceUIByGuid(currentOpenPieceDetails).ToggleLargeStatsPane(false);
-    }
+    // public void CloseCurrentPieceDetails()
+    // {
+    //     if (currentOpenPieceDetails != startGuid)
+    //         GetPieceUIByGuid(currentOpenPieceDetails).ToggleLargeStatsPane(false);
+    // }
 
     public void TogglePieceUIGlow(Guid pieceGuid)
     {
@@ -100,7 +100,7 @@ public class GameUI : MonoBehaviour
 
             // update health UI for each piece
             if (prePiece.Health != postPiece.Health)
-                GetPieceUIByGuid(kvp.Key).UpdateHealthBar(postPiece.Health, prePiece.Health, postPiece.MaxHealth);
+                GetPieceUIByGuid(kvp.Key).UpdateHealth(postPiece.Health, postPiece.MaxHealth);
         }
     }
 

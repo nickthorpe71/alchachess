@@ -251,7 +251,7 @@ public class GameLogic : MonoBehaviour
     public void ExecuteMove(Tile start, Tile end)
     {
         // close piece details UI
-        ui.CloseCurrentPieceDetails();
+        // ui.CloseCurrentPieceDetails();
 
         // take control away from human player
         localPlayerCanInput = false;

@@ -2544,7 +2544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4525779436491113682
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4771,7 +4771,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 18.7, y: 14.7}
+  m_AnchoredPosition: {x: 16.9, y: 14.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5065909917495497879
@@ -4927,30 +4927,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smallAvatar: {fileID: 4525779436611303547}
-  largeAvatar: {fileID: 4525779437210294788}
   smallAvatarBorder: {fileID: 4525779437171638671}
-  largeAvatarBorder: {fileID: 4525779435994643710}
-  elementsSmall:
-  - {fileID: 4525779436654342659}
-  - {fileID: 4525779437573141401}
-  - {fileID: 4525779436747075797}
-  - {fileID: 4525779436578641537}
-  - {fileID: 4525779437004526501}
-  elementsLarge:
-  - {fileID: 4525779435657426255}
-  - {fileID: 4525779435594529299}
-  - {fileID: 4525779436898263040}
-  - {fileID: 4525779435682668046}
-  - {fileID: 4525779436167596157}
-  healthFrontSmall: {fileID: 4525779436846973285}
-  healthBackSmall: {fileID: 4525779436692416768}
-  healthFrontLarge: {fileID: 4525779436424408231}
-  healthBackLarge: {fileID: 4525779435724072249}
-  healthText: {fileID: 4525779435923006013}
-  spellNameText: {fileID: 4525779437001685931}
   powerText: {fileID: 4525779436381673183}
+  healthText: {fileID: 4525779435923006013}
   glow: {fileID: 4525779436717632040}
-  largeStatsPane: {fileID: 7894969895995094058}
 --- !u!1 &5664854191611670885
 GameObject:
   m_ObjectHideFlags: 0

@@ -480,7 +480,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3254916726491977986
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4928,8 +4928,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smallAvatar: {fileID: 4525779436611303547}
   smallAvatarBorder: {fileID: 4525779437171638671}
-  powerText: {fileID: 4525779436381673183}
-  healthText: {fileID: 4525779435923006013}
+  powerText: {fileID: 2984923377449095802}
+  healthText: {fileID: 4444287818014247205}
   glow: {fileID: 4525779436717632040}
 --- !u!1 &5664854191611670885
 GameObject:

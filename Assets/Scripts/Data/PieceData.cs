@@ -88,7 +88,7 @@ namespace Data
                 maxHealth: 15,
                 power: 1,
                 moveDistance: 1,
-                movePattern: new List<Direction> { Direction.N, Direction.S }
+                movePattern: new List<Direction> { Direction.N, Direction.S, Direction.NE, Direction.SE, Direction.SW, Direction.NW }
             ),
             [PieceLabel.Demon] = new Piece(
                 guid: Guid.NewGuid(),

@@ -7,9 +7,6 @@ namespace Objects
     {
         public GodOfLife(bool isGold) : base(isGold)
         {
-            health = 50;
-            maxHealth = 50;
-            power = 10;
             moveDistance = 1;
             movePattern = MovementPattern();
         }

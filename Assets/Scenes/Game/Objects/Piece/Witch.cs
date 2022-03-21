@@ -7,9 +7,6 @@ namespace Objects
     {
         public Witch(bool isGold) : base(isGold)
         {
-            health = 20;
-            maxHealth = 20;
-            power = 8;
             moveDistance = 3;
             movePattern = MovementPattern();
         }

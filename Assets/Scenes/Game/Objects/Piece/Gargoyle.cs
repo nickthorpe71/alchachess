@@ -7,9 +7,6 @@ namespace Objects
     {
         public Gargoyle(bool isGold) : base(isGold)
         {
-            health = 15;
-            maxHealth = 15;
-            power = 1;
             moveDistance = 1;
             movePattern = MovementPattern();
         }

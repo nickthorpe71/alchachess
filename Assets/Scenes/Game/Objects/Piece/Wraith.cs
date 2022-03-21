@@ -7,9 +7,6 @@ namespace Objects
     {
         public Wraith(bool isGold) : base(isGold)
         {
-            health = 55;
-            maxHealth = 55;
-            power = 12;
             moveDistance = 5;
             movePattern = MovementPattern();
         }

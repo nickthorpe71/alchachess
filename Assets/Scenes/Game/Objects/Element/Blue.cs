@@ -7,24 +7,13 @@ namespace Objects
     {
         public Blue()
         {
-            spellDamage = 5;
-            damagesEnemies = true;
-            healsEnemies = false;
-            damagesAllies = false;
-            healsAllies = true;
-            altersEnvironment = true;
+            destroysOccupant = true;
+            hasKnockback = false;
             environment = new WaterEnv();
             spellPattern = new List<Vector2>
             {
-                new Vector2(0, 0),
-                new Vector2(0, 1),
-                new Vector2(1, 1),
                 new Vector2(1, 0),
-                new Vector2(1, -1),
-                new Vector2(0, -1),
-                new Vector2(-1, -1),
-                new Vector2(-1, 0),
-                new Vector2(-1, 1)
+                new Vector2(-1, 0)
             };
         }
     }

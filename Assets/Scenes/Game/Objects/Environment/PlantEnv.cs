@@ -2,13 +2,10 @@ namespace Objects
 {
     public class PlantEnv : Environment
     {
-        public PlantEnv() : base(remainingLife: 2)
+        public PlantEnv()
         {
             isTraversable = false;
-            damagesOccupant = false;
-            healsOccupant = false;
-            damageAmount = 0;
-            healAmount = 0;
+            destroysOccupant = false;
         }
     }
 }

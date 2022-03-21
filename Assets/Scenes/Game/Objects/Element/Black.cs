@@ -7,21 +7,15 @@ namespace Objects
     {
         public Black()
         {
-            spellDamage = 13;
-            damagesEnemies = true;
-            healsEnemies = false;
-            damagesAllies = true;
-            healsAllies = false;
-            altersEnvironment = false;
+            destroysOccupant = true;
+            hasKnockback = false;
             environment = null;
             spellPattern = new List<Vector2>
             {
                 new Vector2(1, 1),
                 new Vector2(1, -1),
                 new Vector2(-1, -1),
-                new Vector2(-1, 1),
-                new Vector2(1, 0),
-                new Vector2(-1, 0)
+                new Vector2(-1, 1)
             };
         }
     }

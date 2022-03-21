@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,14 +6,9 @@ namespace Objects
 {
     public abstract class Piece
     {
-        public bool isDead { get; private set; }
+        private bool isDead;
         private readonly bool _isGold;
         public bool isGold { get { return _isGold; } }
-        private readonly Guid _guid;
-        public Guid guid { get { return _guid; } }
-        public float health { get; protected set; }
-        protected float maxHealth;
-        protected float power;
         public int moveDistance { get; protected set; }
         public List<Vector2> movePattern { get; protected set; }
 
@@ -22,17 +16,11 @@ namespace Objects
         {
             isDead = false;
             _isGold = isGold;
-            _guid = Guid.NewGuid();
         }
 
-        public void Damage(int amount)
+        public void Kill()
         {
-            health = Mathf.Max(health - amount, 0);
-        }
-
-        public void Heal(int amount)
-        {
-            health = Mathf.Min(health + amount, maxHealth);
+            isDead = true;
         }
 
         public List<Vector2> PossibleMoves(Board board, Tile start, Tile end)

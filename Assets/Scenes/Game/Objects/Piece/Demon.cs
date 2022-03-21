@@ -7,9 +7,6 @@ namespace Objects
     {
         public Demon(bool isGold) : base(isGold)
         {
-            health = 35;
-            maxHealth = 35;
-            power = 8;
             moveDistance = 5;
             movePattern = MovementPattern();
         }

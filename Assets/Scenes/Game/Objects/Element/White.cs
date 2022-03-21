@@ -7,24 +7,16 @@ namespace Objects
     {
         public White()
         {
-            spellDamage = 12;
-            damagesEnemies = false;
-            healsEnemies = true;
-            damagesAllies = false;
-            healsAllies = true;
-            altersEnvironment = false;
+            destroysOccupant = false;
+            hasKnockback = true;
             environment = null;
             spellPattern = new List<Vector2>
             {
-                new Vector2(0, 0),
-                    new Vector2(0, 1),
-                    new Vector2(1, 1),
-                    new Vector2(1, 0),
-                    new Vector2(1, -1),
-                    new Vector2(0, -1),
-                    new Vector2(-1, -1),
-                    new Vector2(-1, 0),
-                    new Vector2(-1, 1)
+                new Vector2(0, 1),
+                new Vector2(1, 0),
+                new Vector2(0, -1),
+                new Vector2(-1, 0)
+
             };
         }
     }

@@ -2,13 +2,10 @@ namespace Objects
 {
     public class FireEnv : Environment
     {
-        public FireEnv() : base(remainingLife: 2)
+        public FireEnv()
         {
             isTraversable = true;
-            damagesOccupant = true;
-            healsOccupant = false;
-            damageAmount = 10;
-            healAmount = 0;
+            destroysOccupant = true;
         }
     }
 }

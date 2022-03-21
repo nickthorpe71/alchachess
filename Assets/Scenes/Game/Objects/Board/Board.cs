@@ -21,7 +21,7 @@ namespace Objects
         {
             try
             {
-                return _tiles[(int)(_width * v2.x + v2.y)];
+                return _tiles[(int)(_height * v2.y + v2.x)];
             }
             catch (IndexOutOfRangeException exception)
             {
@@ -90,8 +90,5 @@ namespace Objects
             _tiles[34] = new Tile(4, 5, new Witch(isGold: false), new Black());
             _tiles[35] = new Tile(5, 5, new Demon(isGold: false), new Blue());
         }
-
-        public int width { get { return _width; } }
-        public int height { get { return _height; } }
     }
 }

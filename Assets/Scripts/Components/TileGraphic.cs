@@ -9,12 +9,10 @@ public class TileGraphic : MonoBehaviour
 
     private void Awake()
     {
-        // instantiate all effects on top of tile
         hovered = InstantiateEffect("Hovered");
         clicked = InstantiateEffect("Clicked");
         aoe = InstantiateEffect("AoE");
         highlighted = InstantiateEffect("Highlighted");
-
         DeactivateAllEffects();
     }
 

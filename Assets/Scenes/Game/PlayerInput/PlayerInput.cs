@@ -1,49 +1,79 @@
+using System;
 using UnityEngine;
+using Objects;
 
 namespace Logic
 {
-    public static class PlayerInput
+    public class PlayerInput
     {
-        static int tileLayerMask = LayerMask.GetMask("Tile");
+        private Vector2 prevClick;
+        private Vector2 prevHover;
+        private int tileLayerMask = LayerMask.GetMask("Tile");
 
-        public static void HandleInput()
+        public PlayerInput()
         {
-            HandleClick();
-            HandleHover();
+            prevClick = NullV2();
+            prevHover = NullV2();
         }
 
-        private static void HandleClick()
+        public void HandleInput(Game game)
+        {
+            HandleClick(game);
+            // HandleHover();
+        }
+
+        private void HandleClick(Game game)
         {
             if (Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, tileLayerMask))
-                    if (hit.transform.tag == "Tile")
-                        OnClick(hit.transform.gameObject);
-            }
+                MouseAction(OnClick, game);
         }
-
-        private static void HandleHover()
+        private void HandleHover(Game game)
+        {
+            MouseAction(OnHover, game);
+        }
+        private void MouseAction(Action<GameObject, Game> onEvent, Game game)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, tileLayerMask))
                 if (hit.transform.tag == "Tile")
-                    OnHover(hit.transform.gameObject);
+                    onEvent(hit.transform.gameObject, game);
         }
 
-        private static void OnClick(GameObject obj)
+        private void OnClick(GameObject obj, Game game)
         {
-            Debug.Log($"Clicked: {obj.name}");
+            Vector2 newClick = new Vector2(obj.transform.position.x, obj.transform.position.z);
+
+            // if we are clicking on the tile already selected
+            if (newClick == prevClick)
+            {
+                Debug.Log("same same");
+                Debug.Log(newClick);
+                prevClick = NullV2();
+            }
+            // if we are clicking on a new tile we don't currently have a tile selected
+            else if (prevClick.x == -1)
+            {
+                Debug.Log("new fresh");
+                Debug.Log(newClick);
+                prevClick = newClick;
+            }
+            // if we are clicking on a new tile and we have a tile selected
+            else
+            {
+                game.SubmitMove(start: prevClick, end: newClick);
+                Debug.Log($"start:{prevClick} end:{newClick}");
+                prevClick = NullV2();
+            }
         }
 
-        private static void OnHover(GameObject obj)
+        private void OnHover(GameObject obj, Game game)
         {
             Debug.Log($"Hovered: {obj.name}");
         }
+
+        private Vector2 NullV2() => new Vector2(-1, -1);
     }
 }
 

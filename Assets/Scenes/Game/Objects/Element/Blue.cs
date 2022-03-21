@@ -13,7 +13,7 @@ namespace Objects
             damagesAllies = false;
             healsAllies = true;
             altersEnvironment = true;
-            duration = 2;
+            environment = new WaterEnv();
             spellPattern = new List<Vector2>
             {
                 new Vector2(0, 0),

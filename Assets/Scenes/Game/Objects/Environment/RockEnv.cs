@@ -1,8 +1,8 @@
 namespace Objects
 {
-    public class RockENv : Environment
+    public class RockEnv : Environment
     {
-        public RockENv() : base(remainingLife: 2)
+        public RockEnv() : base(remainingLife: 2)
         {
             isTraversable = false;
             damagesOccupant = false;

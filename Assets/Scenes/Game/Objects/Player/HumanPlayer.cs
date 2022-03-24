@@ -1,11 +1,8 @@
-namespace Objects
+public class HumanPlayer : GenericPlayer
 {
-    public class HumanPlayer : GenericPlayer
+    public HumanPlayer(bool goldSide)
     {
-        public HumanPlayer(bool goldSide)
-        {
-            isGoldSide = isGoldSide;
-            isHumanPlayer = true;
-        }
+        isGoldSide = isGoldSide;
+        isHumanPlayer = true;
     }
 }

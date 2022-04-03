@@ -18,9 +18,11 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject highlighted;
     private List<GameObject> effects;
 
+    private List<GameObject> emptyList = new List<GameObject>();
+
     public GameObject element { get; private set; }
     public Environment environment { get; private set; }
-    private Piece piece;
+    private Piece piece = null;
 
     private void Awake()
     {
@@ -32,8 +34,12 @@ public class Tile : MonoBehaviour
     {
         if (clicked.activeSelf) return;
 
-        Activate(hovered, effects);
+        Activate(hovered, emptyList);
         SetMarkerHeight(hoverMarker);
+    }
+    public void UnHover()
+    {
+        Deactivate(hovered);
     }
     public void Click()
     {
@@ -74,7 +80,7 @@ public class Tile : MonoBehaviour
         Activate(fireEnvironment, environments);
     }
 
-    public bool CanTraverse() => environment == null || !environment.isTraversable;
+    public bool CanTraverse() => piece == null && (environment == null || !environment.isTraversable);
 
     public void Init(GameObject element)
     {
@@ -85,6 +91,12 @@ public class Tile : MonoBehaviour
     {
         this.piece = piece;
     }
+
+    public Piece GetPiece() => piece;
+
+    public bool HasActiveElement() => element.activeSelf;
+
+    public bool HasPlayersPiece(GenericPlayer player) => piece != null && piece.isGold == player.isGoldSide;
 
     private void SetMarkerHeight(Transform marker)
     {

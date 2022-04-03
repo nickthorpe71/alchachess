@@ -9,12 +9,14 @@ namespace Logic
         private Vector2 savedHover;
         private int tileLayerMask = LayerMask.GetMask("Tile");
 
+        private Vector2 nullV2 = new Vector2(-1, -1);
+
         private Game game;
 
         public PlayerInput(Game game)
         {
-            savedClick = NullV2();
-            savedHover = NullV2();
+            savedClick = nullV2;
+            savedHover = nullV2;
             this.game = game;
         }
 
@@ -39,63 +41,72 @@ namespace Logic
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, tileLayerMask))
+            {
                 if (hit.transform.tag == "Tile")
                     onEvent(hit.transform.gameObject);
+                else if (hit.transform.tag == "OffBoard")
+                    DeactivateSavedHover();
+            }
         }
 
         private void OnClick(GameObject obj)
         {
             Vector2 newClick = new Vector2(obj.transform.position.x, obj.transform.position.z);
-            GameObject clickedTileObj = game.board.GetTile(newClick);
-            Tile clickedTile = clickedTileObj.GetComponent<Tile>();
+            Tile clickedTile = game.board.GetTile(newClick);
 
             // if we are clicking on the tile already selected
             if (newClick == savedClick)
             {
-                savedClick = NullV2();
+                // reset highlighted moves
+                game.ResetHighlights(savedClick);
+
+                savedClick = nullV2;
                 clickedTile.Click();
                 clickedTile.Hover();
             }
             // if we are clicking on a new tile we don't currently have a tile selected
-            else if (savedClick == NullV2())
+            else if (savedClick == nullV2)
             {
                 savedClick = newClick;
-                GameObject currentTile = clickedTileObj;
                 clickedTile.Click();
-                // List<Vector2> possibleMoves = currentTile.GetComponent<Tile>().piece.PossibleMoves(game.board, newClick);
-                // Debug.Log(possibleMoves);
+                if (clickedTile.HasPlayersPiece(game.currentTurn))
+                    game.ShowMoves(newClick);
             }
             // if we are clicking on a new tile and we have a tile selected
             else
             {
-                // game.SubmitMove(start: savedClick, end: newClick);
-
-                // reset savedious tile
+                // reset saved tile
                 game.board.GetTile(savedClick)
                     .GetComponent<Tile>()
                     .ResetEffects(removeClick: true);
 
+                // reset highlighted moves
+                game.ResetHighlights(savedClick);
+
                 savedClick = newClick;
                 clickedTile.Click();
+
+                if (clickedTile.HasPlayersPiece(game.currentTurn))
+                    game.ShowMoves(newClick);
+                else if (clickedTile.HasActiveElement())
+                {
+                    Debug.Log("clicked element");
+                    game.SubmitMove(start: savedClick, end: newClick);
+                }
             }
         }
 
         private void OnHover(GameObject obj)
         {
-            if (obj == null) return;
-
             Vector2 newHover = new Vector2(obj.transform.position.x, obj.transform.position.z);
-            Tile hoveredTile = game.board.GetTile(newHover).GetComponent<Tile>();
+            Tile hoveredTile = game.board.GetTile(newHover);
 
             // if we are hovering on the same thing as before
-            if (newHover != NullV2() && newHover == savedHover)
+            if (newHover != nullV2 && newHover == savedHover)
                 return;
 
-            // if nothing has been hovered yet
-            if (savedHover != NullV2())
-            {
-                game.board.GetTile(savedHover).GetComponent<Tile>().ResetEffects();
-            }
+            // if hovering something new
+            DeactivateSavedHover();
 
             hoveredTile.Hover();
             savedHover = newHover;
@@ -134,7 +145,14 @@ namespace Logic
             // }
         }
 
-        private Vector2 NullV2() => new Vector2(-1, -1);
+        private void DeactivateSavedHover()
+        {
+            if (savedHover != nullV2)
+            {
+                game.board.GetTile(savedHover).UnHover();
+                savedHover = nullV2;
+            }
+        }
     }
 }
 

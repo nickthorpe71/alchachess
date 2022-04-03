@@ -528,7 +528,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3236407780273364456}
   - component: {fileID: 4498989515469241428}
-  - component: {fileID: -6044702869537427055}
+  - component: {fileID: 736594837585922818}
   m_Layer: 0
   m_Name: Witch
   m_TagString: Piece
@@ -565,7 +565,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6146765, y: 2.6063561, z: 0.5247326}
   m_Center: {x: 0.0025038668, y: 1.8280901, z: 0.008254051}
---- !u!114 &-6044702869537427055
+--- !u!114 &736594837585922818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -574,7 +574,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3236407780273364457}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd192cc9e1810d4f9268a5add0fed43, type: 3}
+  m_Script: {fileID: 11500000, guid: 112c46001787fa5428c5c15daefa5c6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3236407781438493765

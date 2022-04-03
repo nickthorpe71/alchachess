@@ -286,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9160657447329540592}
   - component: {fileID: -4855756357867187582}
-  - component: {fileID: 498549103182910630}
+  - component: {fileID: -4043270616566611702}
   m_Layer: 0
   m_Name: Wraith
   m_TagString: Piece
@@ -323,7 +323,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6146765, y: 2.752292, z: 0.8056749}
   m_Center: {x: 0.002503872, y: 1.6311458, z: 0.026433885}
---- !u!114 &498549103182910630
+--- !u!114 &-4043270616566611702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -332,7 +332,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9160657447329540593}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd192cc9e1810d4f9268a5add0fed43, type: 3}
+  m_Script: {fileID: 11500000, guid: 64b81188f59d0e24fb8c5f90a41fb79c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &9160657447506211366

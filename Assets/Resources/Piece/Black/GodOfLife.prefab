@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2345772960283087868}
   - component: {fileID: 4793422083374972178}
-  - component: {fileID: -8357071060648919733}
+  - component: {fileID: -2224080027580482715}
   m_Layer: 0
   m_Name: GodOfLife
   m_TagString: Piece
@@ -47,7 +47,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6146765, y: 1.78, z: 0.8296915}
   m_Center: {x: 0.002503872, y: 1.13, z: 0.014425561}
---- !u!114 &-8357071060648919733
+--- !u!114 &-2224080027580482715
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2345772960283087871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd192cc9e1810d4f9268a5add0fed43, type: 3}
+  m_Script: {fileID: 11500000, guid: a53513eaf0f7ae145ac499bcc18cf502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2345772960755556810

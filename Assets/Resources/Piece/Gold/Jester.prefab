@@ -1290,7 +1290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8980931047729750886}
   - component: {fileID: -1131111393769501911}
-  - component: {fileID: -969866431834254537}
+  - component: {fileID: -1100025149032161067}
   m_Layer: 0
   m_Name: Jester
   m_TagString: Piece
@@ -1327,7 +1327,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6146765, y: 1.6770291, z: 0.68338346}
   m_Center: {x: 0.002503872, y: 1.3634272, z: 0.08757961}
---- !u!114 &-969866431834254537
+--- !u!114 &-1100025149032161067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1336,7 +1336,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5108700250792194860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd192cc9e1810d4f9268a5add0fed43, type: 3}
+  m_Script: {fileID: 11500000, guid: 64b81188f59d0e24fb8c5f90a41fb79c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5189389320735893104

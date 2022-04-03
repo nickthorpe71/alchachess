@@ -497,7 +497,7 @@ GameObject:
   m_Component:
   - component: {fileID: 22508373547447170}
   - component: {fileID: 7008115153455595052}
-  - component: {fileID: 2101035587136453506}
+  - component: {fileID: -260078916758527207}
   m_Layer: 0
   m_Name: Demon
   m_TagString: Piece
@@ -538,7 +538,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6146765, y: 2.4342263, z: 0.6833835}
   m_Center: {x: 0.0025038917, y: 1.7420262, z: 0.0875796}
---- !u!114 &2101035587136453506
+--- !u!114 &-260078916758527207
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -547,7 +547,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 22508373547447171}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd192cc9e1810d4f9268a5add0fed43, type: 3}
+  m_Script: {fileID: 11500000, guid: 38307c35a8550744ba58e9028ea504ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1783151102791802558

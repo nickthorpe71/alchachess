@@ -2,7 +2,7 @@ public class HumanPlayer : GenericPlayer
 {
     public HumanPlayer(bool goldSide)
     {
-        isGoldSide = isGoldSide;
+        isGoldSide = goldSide;
         isHumanPlayer = true;
     }
 }

@@ -17,16 +17,15 @@ public class Game
 
         this.board = board;
 
-        currentTurn = (p1.isGoldSide) ? p1 : p2;
+        currentTurn = p1;
 
         _movesPlayed = new List<Move>();
     }
 
     public void SubmitMove(Vector2 start, Vector2 end)
     {
-        GameObject startTile = board.GetTile(start);
-        GameObject endTile = board.GetTile(end);
-
+        Tile startTile = board.GetTile(start);
+        Tile endTile = board.GetTile(end);
     }
 
     public bool IsEnd() => status != GameStatus.ACTIVE;
@@ -34,5 +33,27 @@ public class Game
     public void SetStatus(GameStatus newStatus)
     {
         status = newStatus;
+    }
+
+    public void ShowMoves(Vector2 selectedPosition)
+    {
+        List<Vector2> possibleMoves = board
+            .GetTile(selectedPosition)
+            .GetPiece()
+            .PossibleMoves(board, selectedPosition);
+
+        foreach (Vector2 move in possibleMoves)
+            board.GetTile(move).Highlight();
+    }
+
+    public void ResetHighlights(Vector2 previousPosition)
+    {
+        List<Vector2> existingMoves = board
+            .GetTile(previousPosition)
+            .GetPiece()
+            .PossibleMoves(board, previousPosition);
+
+        foreach (Vector2 move in existingMoves)
+            board.GetTile(move).ResetEffects();
     }
 }

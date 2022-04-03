@@ -14,7 +14,7 @@ public class LifeCycle : MonoBehaviour
     void Awake()
     {
         p1 = new HumanPlayer(goldSide: true);
-        p1 = new AIPlayer(goldSide: false);
+        p2 = new AIPlayer(goldSide: false);
 
         game = new Game(p1, p2, GetComponent<Board>());
         game.SetStatus(GameStatus.ACTIVE);

@@ -41,6 +41,7 @@ public class Board : MonoBehaviour
             {
                 GameObject element = lifeCycle.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.3f, y), Quaternion.identity);
                 GameObject tile = lifeCycle.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
+                element.transform.parent = tile.transform;
                 tile.GetComponent<Tile>().Init(element);
                 tiles[y][x] = tile;
 
@@ -59,6 +60,7 @@ public class Board : MonoBehaviour
 
                 GameObject piece = lifeCycle.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
                 piece.GetComponent<Piece>().Init(isGold);
+                tile.GetComponent<Tile>().SetPiece(piece.GetComponent<Piece>());
                 pieces.Add(piece);
             }
         }

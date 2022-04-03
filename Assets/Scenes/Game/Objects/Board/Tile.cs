@@ -3,76 +3,75 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
-    private GameObject emptyEnvironment;
-    private GameObject fireEnvironment;
-    private GameObject waterEnvironment;
-    private GameObject plantEnvironment;
-    private GameObject rockEnvironment;
+    [SerializeField] private GameObject emptyEnvironment;
+    [SerializeField] private GameObject fireEnvironment;
+    [SerializeField] private GameObject waterEnvironment;
+    [SerializeField] private GameObject plantEnvironment;
+    [SerializeField] private GameObject rockEnvironment;
     private List<GameObject> environments;
 
-    private GameObject hovered;
-    private GameObject clicked;
-    private GameObject aoe;
-    private GameObject highlighted;
+    [SerializeField] private Transform hoverMarker;
+    [SerializeField] private GameObject hovered;
+    [SerializeField] private Transform clickMarker;
+    [SerializeField] private GameObject clicked;
+    [SerializeField] private GameObject aoe;
+    [SerializeField] private GameObject highlighted;
     private List<GameObject> effects;
 
     public GameObject element { get; private set; }
     public Environment environment { get; private set; }
+    private Piece piece;
 
     private void Awake()
     {
-        hovered = InstantiateEffect("Hovered");
-        clicked = InstantiateEffect("Clicked");
-        aoe = InstantiateEffect("AoE");
-        highlighted = InstantiateEffect("Highlighted");
-        effects = new List<GameObject> { hovered, clicked, aoe, highlighted };
-        ResetEffects();
-
-        emptyEnvironment = InstantiateEnvironment("EmptyEnvironment");
-        fireEnvironment = InstantiateEnvironment("FireEnvironment");
-        waterEnvironment = InstantiateEnvironment("WaterEnvironment");
-        plantEnvironment = InstantiateEnvironment("PlantEnvironment");
-        rockEnvironment = InstantiateEnvironment("RockEnvironment");
+        effects = new List<GameObject> { hovered, aoe, highlighted };
         environments = new List<GameObject> { emptyEnvironment, fireEnvironment, waterEnvironment, plantEnvironment, rockEnvironment };
-        ResetEnvironments();
     }
 
     public void Hover()
     {
-        ControlledActivate(hovered, effects);
+        if (clicked.activeSelf) return;
+
+        Activate(hovered, effects);
+        SetMarkerHeight(hoverMarker);
     }
     public void Click()
     {
-        ControlledActivate(clicked, effects);
+        if (clicked.activeSelf)
+            Deactivate(clicked);
+        else
+            Activate(clicked, effects);
+
+        SetMarkerHeight(clickMarker);
     }
     public void Highlight()
     {
-        ControlledActivate(highlighted, effects);
+        Activate(highlighted, effects);
     }
     public void AOE()
     {
-        ControlledActivate(aoe, effects);
+        Activate(aoe, effects);
     }
 
     public void FireEnvironment()
     {
-        ControlledActivate(fireEnvironment, environments);
+        Activate(fireEnvironment, environments);
     }
     public void WaterEnvironment()
     {
-        ControlledActivate(fireEnvironment, environments);
+        Activate(fireEnvironment, environments);
     }
     public void PlantEnvironment()
     {
-        ControlledActivate(fireEnvironment, environments);
+        Activate(fireEnvironment, environments);
     }
     public void RockEnvironment()
     {
-        ControlledActivate(fireEnvironment, environments);
+        Activate(fireEnvironment, environments);
     }
     public void EmptyEnvironment()
     {
-        ControlledActivate(fireEnvironment, environments);
+        Activate(fireEnvironment, environments);
     }
 
     public bool CanTraverse() => environment == null || !environment.isTraversable;
@@ -82,44 +81,53 @@ public class Tile : MonoBehaviour
         this.element = element;
     }
 
-    private GameObject InstantiateEffect(string effectName)
+    public void SetPiece(Piece piece)
     {
-        Vector3 pos = new Vector3(transform.position.x, 0.27f, transform.position.z);
-        return Instantiate(Resources.Load($"Tile/TileEffect/{effectName}") as GameObject, pos, Quaternion.identity);
+        this.piece = piece;
     }
 
-    private GameObject InstantiateEnvironment(string envName)
+    private void SetMarkerHeight(Transform marker)
     {
-        return Instantiate(Resources.Load($"Tile/Environment/{envName}") as GameObject, transform.position, Quaternion.identity);
+        if (piece != null)
+        {
+            float height = piece.GetComponent<BoxCollider>().size.y;
+            marker.position = new Vector3(transform.position.x, height, transform.position.z);
+        }
+        else
+            marker.position = new Vector3(transform.position.x, 1.2f, transform.position.z);
     }
 
     private void DeactivateAll(List<GameObject> toDeactivate)
     {
-        toDeactivate.ForEach(obj => ControlledDeactivate(obj));
+        toDeactivate.ForEach(obj => Deactivate(obj));
     }
 
-    private void ControlledActivate(GameObject toActivate, List<GameObject> toDeactivate)
+    private void Activate(GameObject toActivate, List<GameObject> toDeactivate)
     {
-        toDeactivate.Remove(toActivate);
-        DeactivateAll(toDeactivate);
+        List<GameObject> deactivate = new List<GameObject>(toDeactivate);
+        deactivate.Remove(toActivate);
+        DeactivateAll(deactivate);
 
         if (!toActivate.activeSelf)
             toActivate.SetActive(true);
     }
 
-    private void ControlledDeactivate(GameObject toDeactivate)
+    private void Deactivate(GameObject toDeactivate)
     {
         if (toDeactivate.activeSelf)
             toDeactivate.SetActive(false);
     }
 
-    public void ResetEffects()
+    public void ResetEffects(bool removeClick = false)
     {
         DeactivateAll(effects);
+
+        if (removeClick)
+            Deactivate(clicked);
     }
 
     public void ResetEnvironments()
     {
-        ControlledActivate(emptyEnvironment, environments);
+        Activate(emptyEnvironment, environments);
     }
 }

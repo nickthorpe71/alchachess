@@ -9,7 +9,6 @@ namespace Objects
         {
             destroysOccupant = true;
             hasKnockback = false;
-            environment = null;
             spellPattern = new List<Vector2>
             {
                 new Vector2(1, 1),
@@ -17,6 +16,11 @@ namespace Objects
                 new Vector2(-1, -1),
                 new Vector2(-1, 1)
             };
+        }
+
+        public override void Cast()
+        {
+            Debug.Log($"cast {gameObject.name} element");
         }
     }
 }

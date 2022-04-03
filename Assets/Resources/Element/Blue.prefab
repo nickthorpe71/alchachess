@@ -24369,11 +24369,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1587008591664600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff92c8c44a333684b9b10860313b17ec, type: 3}
+  m_Script: {fileID: 11500000, guid: ce8db7b7524119a40b77e2c2c5ab3ca7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyAnimPrefab: {fileID: 0}
-  graphics: {fileID: 0}
+  environmentPrefab: {fileID: 3889593000011143921, guid: e1ca6f9c30da14546a3330388b6c91a3, type: 3}
 --- !u!54 &2627225819442526483
 Rigidbody:
   m_ObjectHideFlags: 0

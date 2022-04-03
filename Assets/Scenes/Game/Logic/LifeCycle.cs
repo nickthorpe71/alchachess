@@ -34,7 +34,6 @@ public class LifeCycle : MonoBehaviour
 
     public GameObject Spawn(string objPath, Vector3 pos, Quaternion rot)
     {
-        Debug.Log(objPath);
         return Instantiate(Resources.Load(objPath) as GameObject, pos, rot);
     }
 }

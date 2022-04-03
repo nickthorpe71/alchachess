@@ -9,12 +9,16 @@ namespace Objects
         {
             destroysOccupant = true;
             hasKnockback = false;
-            environment = new WaterEnv();
             spellPattern = new List<Vector2>
             {
                 new Vector2(1, 0),
                 new Vector2(-1, 0)
             };
+        }
+
+        public override void Cast()
+        {
+            Debug.Log($"cast {gameObject.name} element");
         }
     }
 }

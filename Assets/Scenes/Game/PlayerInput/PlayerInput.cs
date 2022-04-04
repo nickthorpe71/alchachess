@@ -58,11 +58,11 @@ namespace Logic
             if (newClick == savedClick)
             {
                 // reset highlighted moves
-                game.ResetHighlights(savedClick);
+                game.SetHighlightedMoves(savedClick, deactivate: true);
 
                 savedClick = nullV2;
-                clickedTile.Click();
-                clickedTile.Hover();
+                clickedTile.Click(deactivate: true);
+                clickedTile.Hover(deactivate: true);
             }
             // if we are clicking on a new tile we don't currently have a tile selected
             else if (savedClick == nullV2)
@@ -70,24 +70,22 @@ namespace Logic
                 savedClick = newClick;
                 clickedTile.Click();
                 if (clickedTile.HasPlayersPiece(game.currentTurn))
-                    game.ShowMoves(newClick);
+                    game.SetHighlightedMoves(newClick);
             }
             // if we are clicking on a new tile and we have a tile selected
             else
             {
                 // reset saved tile
-                game.board.GetTile(savedClick)
-                    .GetComponent<Tile>()
-                    .ResetEffects(removeClick: true);
-
-                // reset highlighted moves
-                game.ResetHighlights(savedClick);
+                Tile savedTile = game.board.GetTile(savedClick);
+                savedTile.Click(deactivate: true);
+                savedTile.Hover(deactivate: true);
+                game.SetHighlightedMoves(savedClick, deactivate: true);
 
                 savedClick = newClick;
                 clickedTile.Click();
 
                 if (clickedTile.HasPlayersPiece(game.currentTurn))
-                    game.ShowMoves(newClick);
+                    game.SetHighlightedMoves(newClick);
                 else if (clickedTile.HasActiveElement())
                 {
                     Debug.Log("clicked element");
@@ -111,45 +109,17 @@ namespace Logic
             hoveredTile.Hover();
             savedHover = newHover;
 
-            // // if hovering a piece
-            // if (currentHover.Contents == TileContents.Piece)
-            // {
-            //     ui.TurnOffCurrentGlow();
-            //     ui.TogglePieceUIGlow(currentHover.Piece.Guid);
-
-            //     if (localPlayerCanInput)
-            //         ui.ToggleSpellUI(false);
-            // }
-            // else // if hovering an element
-            // {
-            //     ui.TurnOffCurrentGlow();
-
-            //     // if piece is clicked and there are elements in our path
-            //     if (currentClicked != null && currentHover.IsHighlighted)
-            //     {
-            //         Spell potentialSpell = SpellC.GetSpellByRecipe(BoardC.GetRecipeByPath(board, new Vector2(currentClicked.X, currentClicked.Y), new Vector2(currentHover.X, currentHover.Y)));
-            //         if (potentialSpell != null)
-            //         {
-            //             // show stats of potential spell
-            //             ui.UpdateSpellUI(potentialSpell, currentClicked.Piece);
-
-            //             // show potential spell AOE
-            //             board.tiles = BoardC.ChangeTilesState(
-            //                 board.tiles,
-            //                 new List<TileState> { TileState.isAOE },
-            //                 true,
-            //                 BoardC.CalculateAOEPatterns(potentialSpell.Pattern, currentHover, currentClicked.Piece.Player)
-            //             );
-            //         }
-            //     }
-            // }
+            if (hoveredTile.IsHighlighted())
+                game.SetAOEMarkers(newHover);
         }
 
         private void DeactivateSavedHover()
         {
             if (savedHover != nullV2)
             {
-                game.board.GetTile(savedHover).UnHover();
+                Tile tile = game.board.GetTile(savedHover);
+                tile.Hover(deactivate: true);
+                game.SetAOEMarkers(savedHover, deactivate: true);
                 savedHover = nullV2;
             }
         }

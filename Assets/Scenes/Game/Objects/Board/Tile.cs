@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject waterEnvironment;
     [SerializeField] private GameObject plantEnvironment;
     [SerializeField] private GameObject rockEnvironment;
-    private List<GameObject> environments;
 
     [SerializeField] private Transform hoverMarker;
     [SerializeField] private GameObject hovered;
@@ -16,71 +14,66 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject clicked;
     [SerializeField] private GameObject aoe;
     [SerializeField] private GameObject highlighted;
-    private List<GameObject> effects;
-
-    private List<GameObject> emptyList = new List<GameObject>();
 
     public GameObject element { get; private set; }
     public Environment environment { get; private set; }
     private Piece piece = null;
 
-    private void Awake()
+    public void Hover(bool deactivate = false)
     {
-        effects = new List<GameObject> { hovered, aoe, highlighted };
-        environments = new List<GameObject> { emptyEnvironment, fireEnvironment, waterEnvironment, plantEnvironment, rockEnvironment };
-    }
-
-    public void Hover()
-    {
-        if (clicked.activeSelf) return;
-
-        Activate(hovered, emptyList);
-        SetMarkerHeight(hoverMarker);
-    }
-    public void UnHover()
-    {
-        Deactivate(hovered);
-    }
-    public void Click()
-    {
-        if (clicked.activeSelf)
-            Deactivate(clicked);
+        if (!deactivate)
+        {
+            Activate(hovered);
+            SetMarkerHeight(hoverMarker);
+        }
         else
-            Activate(clicked, effects);
-
-        SetMarkerHeight(clickMarker);
+            Deactivate(hovered);
     }
-    public void Highlight()
+    public void Click(bool deactivate = false)
     {
-        Activate(highlighted, effects);
+        if (!deactivate)
+        {
+            Activate(clicked);
+            SetMarkerHeight(clickMarker);
+        }
+        else
+            Deactivate(clicked);
     }
-    public void AOE()
+    public void Highlight(bool deactivate = false)
     {
-        Activate(aoe, effects);
+        if (!deactivate)
+            Activate(highlighted);
+        else
+            Deactivate(highlighted);
+    }
+    public void AOE(bool deactivate = false)
+    {
+        if (!deactivate)
+            Activate(aoe);
+        else
+            Deactivate(aoe);
     }
 
     public void FireEnvironment()
     {
-        Activate(fireEnvironment, environments);
+        Activate(fireEnvironment);
     }
     public void WaterEnvironment()
     {
-        Activate(fireEnvironment, environments);
+        Activate(fireEnvironment);
     }
     public void PlantEnvironment()
     {
-        Activate(fireEnvironment, environments);
+        Activate(fireEnvironment);
     }
     public void RockEnvironment()
     {
-        Activate(fireEnvironment, environments);
+        Activate(fireEnvironment);
     }
     public void EmptyEnvironment()
     {
-        Activate(fireEnvironment, environments);
+        Activate(fireEnvironment);
     }
-
-    public bool CanTraverse() => piece == null && (environment == null || !environment.isTraversable);
 
     public void Init(GameObject element)
     {
@@ -94,9 +87,14 @@ public class Tile : MonoBehaviour
 
     public Piece GetPiece() => piece;
 
+    public bool CanTraverse() => piece == null && (environment == null || !environment.isTraversable);
+
+    public bool IsHighlighted() => highlighted.activeSelf;
+
     public bool HasActiveElement() => element.activeSelf;
 
-    public bool HasPlayersPiece(GenericPlayer player) => piece != null && piece.isGold == player.isGoldSide;
+    public bool HasPlayersPiece(GenericPlayer player) => HasPiece() && piece.isGold == player.isGoldSide;
+    public bool HasPiece() => piece != null;
 
     private void SetMarkerHeight(Transform marker)
     {
@@ -109,17 +107,8 @@ public class Tile : MonoBehaviour
             marker.position = new Vector3(transform.position.x, 1.2f, transform.position.z);
     }
 
-    private void DeactivateAll(List<GameObject> toDeactivate)
+    private void Activate(GameObject toActivate)
     {
-        toDeactivate.ForEach(obj => Deactivate(obj));
-    }
-
-    private void Activate(GameObject toActivate, List<GameObject> toDeactivate)
-    {
-        List<GameObject> deactivate = new List<GameObject>(toDeactivate);
-        deactivate.Remove(toActivate);
-        DeactivateAll(deactivate);
-
         if (!toActivate.activeSelf)
             toActivate.SetActive(true);
     }
@@ -130,16 +119,4 @@ public class Tile : MonoBehaviour
             toDeactivate.SetActive(false);
     }
 
-    public void ResetEffects(bool removeClick = false)
-    {
-        DeactivateAll(effects);
-
-        if (removeClick)
-            Deactivate(clicked);
-    }
-
-    public void ResetEnvironments()
-    {
-        Activate(emptyEnvironment, environments);
-    }
 }

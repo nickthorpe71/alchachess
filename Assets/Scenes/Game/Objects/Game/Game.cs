@@ -35,25 +35,25 @@ public class Game
         status = newStatus;
     }
 
-    public void ShowMoves(Vector2 selectedPosition)
+    public void SetHighlightedMoves(Vector2 startPos, bool deactivate = false)
     {
-        List<Vector2> possibleMoves = board
-            .GetTile(selectedPosition)
+        Tile tile = board.GetTile(startPos);
+        if (!tile.HasPiece()) return;
+
+        List<Vector2> possibleMoves = tile
             .GetPiece()
-            .PossibleMoves(board, selectedPosition);
+            .PossibleMoves(board, startPos);
 
         foreach (Vector2 move in possibleMoves)
-            board.GetTile(move).Highlight();
+            board.GetTile(move).Highlight(deactivate);
     }
 
-    public void ResetHighlights(Vector2 previousPosition)
+    public void SetAOEMarkers(Vector2 startPos, bool deactivate = false)
     {
-        List<Vector2> existingMoves = board
-            .GetTile(previousPosition)
-            .GetPiece()
-            .PossibleMoves(board, previousPosition);
+        Tile hoveredTile = board.GetTile(startPos);
+        Element element = hoveredTile.element.GetComponent<Element>();
 
-        foreach (Vector2 move in existingMoves)
-            board.GetTile(move).ResetEffects();
+        foreach (Vector2 aoe in element.GetSpellPattern(board, startPos))
+            board.GetTile(aoe).AOE(deactivate);
     }
 }

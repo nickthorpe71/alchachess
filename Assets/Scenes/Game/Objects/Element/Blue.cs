@@ -16,6 +16,11 @@ namespace Objects
             };
         }
 
+        private void Awake()
+        {
+            SetDestroyAnim("Blue");
+        }
+
         public override void Cast()
         {
             Debug.Log($"cast {gameObject.name} element");

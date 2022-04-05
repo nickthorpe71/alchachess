@@ -81,16 +81,14 @@ namespace Logic
                 savedTile.Hover(deactivate: true);
                 game.SetHighlightedMoves(savedClick, deactivate: true);
 
-                savedClick = newClick;
                 clickedTile.Click();
 
                 if (clickedTile.HasPlayersPiece(game.currentTurn))
                     game.SetHighlightedMoves(newClick);
                 else if (clickedTile.HasActiveElement())
-                {
-                    Debug.Log("clicked element");
                     game.SubmitMove(start: savedClick, end: newClick);
-                }
+
+                savedClick = newClick;
             }
         }
 

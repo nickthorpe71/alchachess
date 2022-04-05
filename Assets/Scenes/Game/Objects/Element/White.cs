@@ -18,6 +18,12 @@ namespace Objects
             };
         }
 
+        private void Awake()
+        {
+            SetDestroyAnim("White");
+        }
+
+
         public override void Cast()
         {
             Debug.Log($"cast {gameObject.name} element");

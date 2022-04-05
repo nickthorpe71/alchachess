@@ -15,6 +15,8 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject aoe;
     [SerializeField] private GameObject highlighted;
 
+    public Vector2 pos { get; private set; }
+
     public GameObject element { get; private set; }
     public Environment environment { get; private set; }
     private Piece piece = null;
@@ -75,9 +77,10 @@ public class Tile : MonoBehaviour
         Activate(fireEnvironment);
     }
 
-    public void Init(GameObject element)
+    public void Init(GameObject element, Vector2 pos)
     {
         this.element = element;
+        this.pos = pos;
     }
 
     public void SetPiece(Piece piece)
@@ -86,6 +89,13 @@ public class Tile : MonoBehaviour
     }
 
     public Piece GetPiece() => piece;
+
+    public void TransferPiece(Tile to)
+    {
+        to.SetPiece(piece);
+        Debug.Log(piece);
+        piece.Move(to.pos);
+    }
 
     public bool CanTraverse() => piece == null && (environment == null || !environment.isTraversable);
 

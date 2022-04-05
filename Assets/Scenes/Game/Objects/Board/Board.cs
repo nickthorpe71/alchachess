@@ -51,7 +51,7 @@ public class Board : MonoBehaviour
                 GameObject tileObj = lifeCycle.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
                 element.transform.parent = tileObj.transform;
                 Tile tile = tileObj.GetComponent<Tile>();
-                tile.Init(element);
+                tile.Init(element, new Vector2(x, y));
                 tiles[y][x] = tile;
 
                 if (piecePattern[y][x] == "None") continue;

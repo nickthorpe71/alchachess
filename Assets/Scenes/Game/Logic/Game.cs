@@ -26,6 +26,17 @@ public class Game
     {
         Tile startTile = board.GetTile(start);
         Tile endTile = board.GetTile(end);
+
+        // track move
+        Move move = new Move(currentTurn, startTile, endTile);
+        _movesPlayed.Add(move);
+
+        startTile.TransferPiece(to: endTile);
+
+        // remove tile effects from board
+        endTile.Hover(deactivate: true);
+        endTile.Click(deactivate: true);
+        SetAOEMarkers(endTile.pos, deactivate: true);
     }
 
     public bool IsEnd() => status != GameStatus.ACTIVE;
@@ -35,25 +46,25 @@ public class Game
         status = newStatus;
     }
 
-    public void SetHighlightedMoves(Vector2 startPos, bool deactivate = false)
+    public void SetHighlightedMoves(Vector2 pos, bool deactivate = false)
     {
-        Tile tile = board.GetTile(startPos);
+        Tile tile = board.GetTile(pos);
         if (!tile.HasPiece()) return;
 
         List<Vector2> possibleMoves = tile
             .GetPiece()
-            .PossibleMoves(board, startPos);
+            .PossibleMoves(board, pos);
 
         foreach (Vector2 move in possibleMoves)
             board.GetTile(move).Highlight(deactivate);
     }
 
-    public void SetAOEMarkers(Vector2 startPos, bool deactivate = false)
+    public void SetAOEMarkers(Vector2 pos, bool deactivate = false)
     {
-        Tile hoveredTile = board.GetTile(startPos);
+        Tile hoveredTile = board.GetTile(pos);
         Element element = hoveredTile.element.GetComponent<Element>();
 
-        foreach (Vector2 aoe in element.GetSpellPattern(board, startPos))
+        foreach (Vector2 aoe in element.GetSpellPattern(board, pos))
             board.GetTile(aoe).AOE(deactivate);
     }
 }

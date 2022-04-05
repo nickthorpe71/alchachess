@@ -20,6 +20,12 @@ public class Piece : MonoBehaviour
         isDead = true;
     }
 
+    public void Move(Vector2 newPos)
+    {
+        //TODO: create coroutine to animate move
+        gameObject.transform.position = new Vector3(newPos.x, 0, newPos.y);
+    }
+
     public List<Vector2> PossibleMoves(Board board, Vector2 pos)
     {
         List<Vector2> possibleMoves = new List<Vector2>();

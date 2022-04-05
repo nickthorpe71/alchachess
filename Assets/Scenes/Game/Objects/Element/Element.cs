@@ -9,7 +9,34 @@ public abstract class Element : MonoBehaviour
     public GameObject environmentPrefab;
     public List<Vector2> spellPattern { get; protected set; }
 
+    private GameObject _destroyAnimPrefab;
+
+    protected void SetDestroyAnim(string elementName)
+    {
+        _destroyAnimPrefab = Resources.Load($"Element/DestroyAnimations/{elementName}DestroyAnim") as GameObject;
+    }
+
     public abstract void Cast();
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Piece")
+            Deactivate();
+    }
+
+    public void Deactivate()
+    {
+        GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
+        Destroy(destroyAnim, 2);
+        gameObject.SetActive(false);
+    }
+
+    public void Activate()
+    {
+        GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
+        Destroy(destroyAnim, 2);
+        gameObject.SetActive(true);
+    }
 
     public List<Vector2> GetSpellPattern(Board board, Vector2 pos)
     {

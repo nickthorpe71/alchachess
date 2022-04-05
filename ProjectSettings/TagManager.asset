@@ -9,6 +9,7 @@ TagManager:
   - Element
   - HoverMarker
   - OffBoard
+  - Graphic
   layers:
   - Default
   - TransparentFX

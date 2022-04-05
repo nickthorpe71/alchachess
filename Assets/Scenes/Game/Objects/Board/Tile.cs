@@ -93,8 +93,8 @@ public class Tile : MonoBehaviour
     public void TransferPiece(Tile to)
     {
         to.SetPiece(piece);
-        Debug.Log(piece);
-        piece.Move(to.pos);
+        piece.Move(startPos: pos, endPos: to.pos);
+        piece = null;
     }
 
     public bool CanTraverse() => piece == null && (environment == null || !environment.isTraversable);

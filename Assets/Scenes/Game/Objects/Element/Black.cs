@@ -17,15 +17,5 @@ namespace Objects
                 new Vector2(-1, 1)
             };
         }
-
-        private void Awake()
-        {
-            SetDestroyAnim("Black");
-        }
-
-        public override void Cast()
-        {
-            Debug.Log($"cast {gameObject.name} element");
-        }
     }
 }

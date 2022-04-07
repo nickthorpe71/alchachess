@@ -57,20 +57,19 @@ namespace Logic
             // if we are clicking on the tile already selected
             if (newClick == savedClick)
             {
-                // reset highlighted moves
                 game.SetHighlightedMoves(savedClick, deactivate: true);
-
                 savedClick = nullV2;
                 clickedTile.Click(deactivate: true);
-                clickedTile.Hover(deactivate: true);
             }
             // if we are clicking on a new tile we don't currently have a tile selected
             else if (savedClick == nullV2)
             {
-                savedClick = newClick;
-                clickedTile.Click();
                 if (clickedTile.HasPlayersPiece(game.currentTurn))
+                {
                     game.SetHighlightedMoves(newClick);
+                    savedClick = newClick;
+                    clickedTile.Click();
+                }
             }
             // if we are clicking on a new tile and we have a tile selected
             else
@@ -81,14 +80,19 @@ namespace Logic
                 savedTile.Hover(deactivate: true);
                 game.SetHighlightedMoves(savedClick, deactivate: true);
 
-                clickedTile.Click();
-
                 if (clickedTile.HasPlayersPiece(game.currentTurn))
+                {
                     game.SetHighlightedMoves(newClick);
+                    clickedTile.Click();
+                    savedClick = newClick;
+                }
                 else if (clickedTile.HasActiveElement())
-                    game.SubmitMove(start: savedClick, end: newClick);
+                {
+                    if (savedTile.HasPlayersPiece(game.currentTurn))
+                        game.SubmitMove(start: savedClick, end: newClick);
 
-                savedClick = newClick;
+                    savedClick = nullV2;
+                }
             }
         }
 

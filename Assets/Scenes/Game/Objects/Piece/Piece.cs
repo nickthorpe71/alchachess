@@ -27,13 +27,15 @@ public class Piece : MonoBehaviour
         isDead = true;
     }
 
-    public void Move(Vector2 startPos, Vector2 endPos)
+    public void Move(Vector2 startPos, Vector2 endPos, bool warp = true)
     {
-
-        StartCoroutine(MoveRoutine(startPos, endPos));
+        if (warp)
+            StartCoroutine(WarpRoutine(startPos, endPos));
+        else
+            Debug.Log("Lerp piece");
     }
 
-    private IEnumerator MoveRoutine(Vector2 startPos, Vector2 endPos)
+    private IEnumerator WarpRoutine(Vector2 startPos, Vector2 endPos)
     {
         GameObject anim1 = Instantiate(_warpAnim, transform.position, Quaternion.identity);
         Destroy(anim1, 2);
@@ -43,31 +45,50 @@ public class Piece : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         gameObject.transform.position = new Vector3(endPos.x, 0, endPos.y);
-
-
-
-        // GameObject anim2 = Instantiate(_warpAnim, transform.position, Quaternion.identity);
-        // Destroy(anim2, 2);
-        // yield return new WaitForSeconds(0.25f);
         _graphic.SetActive(true);
     }
 
     public List<Vector2> PossibleMoves(Board board, Vector2 pos)
     {
         List<Vector2> possibleMoves = new List<Vector2>();
-        Vector2[] activeDirections = movePattern
-            .Select(move => new Vector2(pos.x + move.x, pos.y + move.y))
-            .ToArray();
+        List<Vector2> activeDirections = new List<Vector2>(movePattern);
+        IEnumerable<Vector2> patternWithStartAdjust = movePattern
+            .Select(move => new Vector2(pos.x + move.x, pos.y + move.y));
 
-        for (int layer = 1; layer <= moveDistance; layer++)
+        for (int layer = 0; layer < moveDistance; layer++)
         {
-            Vector2[] validMoves = activeDirections
-                .Select(dir => new Vector2(layer * dir.x, layer * dir.y))
-                .Where(move => board.IsInBounds(move) && board.GetTile(move).CanTraverse())
+            List<int> toRemove = new List<int>();
+
+            // find all valid moves
+            Vector2[] validMoves = patternWithStartAdjust
+                .Select((dir, index) => new Vector2(
+                    dir.x + layer * activeDirections[index].x,
+                    dir.y + layer * activeDirections[index].y
+                ))
+                .Where((dir, index) =>
+                {
+                    bool inBounds = board.IsInBounds(dir);
+                    bool canTraverse = false;
+                    if (inBounds)
+                    {
+                        canTraverse = board.GetTile(dir).CanTraverse();
+                        if (!canTraverse)
+                            toRemove.Add(index);
+                    }
+                    return inBounds && canTraverse;
+                })
                 .ToArray();
+
+            // remove intraversable directions from further consideration
+            activeDirections = activeDirections
+                .Where((_, index) => !toRemove.Contains(index))
+                .ToList();
+            patternWithStartAdjust = patternWithStartAdjust
+                .Where((_, index) => !toRemove.Contains(index));
 
             possibleMoves.AddRange(validMoves);
         }
+
         return possibleMoves;
     }
 }

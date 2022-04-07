@@ -27,15 +27,12 @@ public class Game
         Tile startTile = board.GetTile(start);
         Tile endTile = board.GetTile(end);
 
-        // track move
+        bool validMove = startTile.GetPiece().PossibleMoves(board, start).Contains(end);
+        if (!validMove) return;
+
         Move move = new Move(currentTurn, startTile, endTile);
         _movesPlayed.Add(move);
-
         startTile.TransferPiece(to: endTile);
-
-        // remove tile effects from board
-        endTile.Hover(deactivate: true);
-        endTile.Click(deactivate: true);
         SetAOEMarkers(endTile.pos, deactivate: true);
     }
 
@@ -64,7 +61,7 @@ public class Game
         Tile hoveredTile = board.GetTile(pos);
         Element element = hoveredTile.element.GetComponent<Element>();
 
-        foreach (Vector2 aoe in element.GetSpellPattern(board, pos))
+        foreach (Vector2 aoe in board.ValidateSpellPattern(element.spellPattern, pos))
             board.GetTile(aoe).AOE(deactivate);
     }
 }

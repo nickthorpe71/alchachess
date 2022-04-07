@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 
 public class Board : MonoBehaviour
 {
@@ -18,6 +20,43 @@ public class Board : MonoBehaviour
         bool inRow = pos.x < width && pos.x >= 0;
         bool inColumn = pos.y < height && pos.y >= 0;
         return inRow && inColumn;
+    }
+
+    public void CastSpell(Element element)
+    {
+        StartCoroutine(CastRoutine(element));
+    }
+    private IEnumerator CastRoutine(Element element)
+    {
+        Vector2 v2Tov3 = new Vector2(element.transform.position.x, element.transform.position.z);
+        foreach (Vector2 pos in ValidateSpellPattern(element.spellPattern, v2Tov3))
+        {
+            // plan spell animation
+            SpawnAnim(element.spellAnim, new Vector3(pos.x, 0.45f, pos.y), 2);
+
+            yield return new WaitForSeconds(0.1f);
+
+            // change environment
+
+            // move and pieces in range
+
+            // or
+
+            // destroy and pieces in range
+        }
+    }
+
+    public void SpawnAnim(GameObject prefab, Vector3 pos, int deathTime)
+    {
+        GameObject anim = Instantiate(prefab, pos, Quaternion.identity);
+        Destroy(anim, deathTime);
+    }
+
+    public List<Vector2> ValidateSpellPattern(List<Vector2> spellPattern, Vector2 pos)
+    {
+        return spellPattern
+            .Select(target => new Vector2(target.x + pos.x, target.y + pos.y))
+            .Where(target => IsInBounds(target)).ToList();
     }
 
     public void Init(LifeCycle lifeCycle)
@@ -40,6 +79,15 @@ public class Board : MonoBehaviour
             new string[] {"Demon","Witch","GodOfLife","Wraith","Witch","Demon"}
         };
 
+        // string[][] pieceTestPattern = new string[][] {
+        //     new string[] {"None","None","None","None","None","None"},
+        //     new string[] {"None","None","GodOfLife","None","None","None"},
+        //     new string[] {"None","None","None","None","None","None"},
+        //     new string[] {"None","None","None","None","None","None"},
+        //     new string[] {"None","None","None","None","None","None"},
+        //     new string[] {"None","None","None","None","None","None"}
+        // };
+
         tiles = new Tile[_height][];
 
         for (int y = 0; y < _height; y++)
@@ -48,6 +96,7 @@ public class Board : MonoBehaviour
             for (int x = 0; x < _width; x++)
             {
                 GameObject element = lifeCycle.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.3f, y), Quaternion.identity);
+                element.GetComponent<Element>().Init(this, elementPattern[y][x]);
                 GameObject tileObj = lifeCycle.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
                 element.transform.parent = tileObj.transform;
                 Tile tile = tileObj.GetComponent<Tile>();

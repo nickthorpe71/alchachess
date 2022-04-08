@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject waterEnvironment;
     [SerializeField] private GameObject plantEnvironment;
     [SerializeField] private GameObject rockEnvironment;
+    public Environment activeEnvironment { get; private set; }
 
     [SerializeField] private Transform hoverMarker;
     [SerializeField] private GameObject hovered;
@@ -18,7 +20,7 @@ public class Tile : MonoBehaviour
     public Vector2 pos { get; private set; }
 
     public GameObject element { get; private set; }
-    public Environment environment { get; private set; }
+    // public Environment environment { get; private set; }
     private Piece piece = null;
 
     public void Hover(bool deactivate = false)
@@ -56,39 +58,119 @@ public class Tile : MonoBehaviour
             Deactivate(aoe);
     }
 
-    public void FireEnvironment()
+    public void ApplySpellToEnvironment(string spellColor)
     {
-        Activate(fireEnvironment);
+        switch (spellColor)
+        {
+            case "Red":
+                FireEnvironment();
+                break;
+            case "Blue":
+                WaterEnvironment();
+                break;
+            case "Green":
+                PlantEnvironment();
+                break;
+            case "Yellow":
+                RockEnvironment();
+                break;
+            case "Black":
+                BlackEnvironment();
+                break;
+            case "White":
+                break;
+            default:
+                break;
+        }
     }
-    public void WaterEnvironment()
+    private void FireEnvironment()
     {
-        Activate(fireEnvironment);
+        if (emptyEnvironment.activeSelf)
+            SwapEnvironments(emptyEnvironment, fireEnvironment);
+        else if (fireEnvironment.activeSelf)
+            return;
+        else if (waterEnvironment.activeSelf)
+            SwapEnvironments(waterEnvironment, emptyEnvironment);
+        else if (plantEnvironment.activeSelf)
+            SwapEnvironments(plantEnvironment, fireEnvironment);
+        else if (rockEnvironment.activeSelf)
+            return;
     }
-    public void PlantEnvironment()
+    private void WaterEnvironment()
     {
-        Activate(fireEnvironment);
+        if (emptyEnvironment.activeSelf)
+            SwapEnvironments(emptyEnvironment, waterEnvironment);
+        else if (fireEnvironment.activeSelf)
+            SwapEnvironments(fireEnvironment, emptyEnvironment);
+        else if (waterEnvironment.activeSelf)
+            return;
+        else if (plantEnvironment.activeSelf)
+            return;
+        else if (rockEnvironment.activeSelf)
+            SwapEnvironments(rockEnvironment, waterEnvironment);
     }
-    public void RockEnvironment()
+    private void PlantEnvironment()
     {
-        Activate(fireEnvironment);
+        if (emptyEnvironment.activeSelf)
+            SwapEnvironments(emptyEnvironment, plantEnvironment);
+        else if (fireEnvironment.activeSelf)
+            return;
+        else if (waterEnvironment.activeSelf)
+            SwapEnvironments(waterEnvironment, plantEnvironment);
+        else if (plantEnvironment.activeSelf)
+            return;
+        else if (rockEnvironment.activeSelf)
+            SwapEnvironments(rockEnvironment, plantEnvironment);
     }
-    public void EmptyEnvironment()
+    private void RockEnvironment()
     {
-        Activate(fireEnvironment);
+        if (emptyEnvironment.activeSelf)
+            SwapEnvironments(emptyEnvironment, rockEnvironment);
+        else if (fireEnvironment.activeSelf)
+            SwapEnvironments(fireEnvironment, rockEnvironment);
+        else if (waterEnvironment.activeSelf)
+            return;
+        else if (plantEnvironment.activeSelf)
+            return;
+        else if (rockEnvironment.activeSelf)
+            SwapEnvironments(rockEnvironment, plantEnvironment);
+    }
+    private void BlackEnvironment()
+    {
+        new List<GameObject>(){
+            fireEnvironment,
+            waterEnvironment,
+            plantEnvironment,
+            rockEnvironment
+        }.ForEach(env => Deactivate(env));
+
+        Activate(emptyEnvironment);
+        activeEnvironment = null;
+    }
+    private void SwapEnvironments(GameObject toDeactivate, GameObject toActivate)
+    {
+        Deactivate(toDeactivate);
+        Activate(toActivate);
+        activeEnvironment = toActivate.GetComponent<Environment>();
     }
 
     public void Init(GameObject element, Vector2 pos)
     {
         this.element = element;
         this.pos = pos;
+        activeEnvironment = null;
     }
 
     public void SetPiece(Piece piece)
     {
         this.piece = piece;
     }
-
     public Piece GetPiece() => piece;
+    public void KillPiece()
+    {
+        piece.Kill();
+        piece = null;
+    }
 
     public void TransferPiece(Tile to)
     {
@@ -97,7 +179,10 @@ public class Tile : MonoBehaviour
         piece = null;
     }
 
-    public bool CanTraverse() => piece == null && (environment == null || !environment.isTraversable);
+    public bool CanTraverse() =>
+        piece == null
+        && !plantEnvironment.activeSelf
+        && !rockEnvironment.activeSelf;
 
     public bool IsHighlighted() => highlighted.activeSelf;
 
@@ -128,5 +213,4 @@ public class Tile : MonoBehaviour
         if (toDeactivate.activeSelf)
             toDeactivate.SetActive(false);
     }
-
 }

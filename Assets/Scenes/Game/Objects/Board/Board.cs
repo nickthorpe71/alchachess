@@ -31,18 +31,26 @@ public class Board : MonoBehaviour
         Vector2 v2Tov3 = new Vector2(element.transform.position.x, element.transform.position.z);
         foreach (Vector2 pos in ValidateSpellPattern(element.spellPattern, v2Tov3))
         {
+            Tile tile = GetTile(pos);
             // plan spell animation
             SpawnAnim(element.spellAnim, new Vector3(pos.x, 0.45f, pos.y), 2);
 
             yield return new WaitForSeconds(0.1f);
 
             // change environment
+            tile.ApplySpellToEnvironment(element.color);
 
-            // move and pieces in range
-
-            // or
-
-            // destroy and pieces in range
+            // apply spell/environmental effects
+            if (element.hasKnockback)
+            {
+                // move any pieces in range
+                //  - check if piece went into an environment that would destroy it
+                //  - check of there is a chain of moving pieces
+            }
+            else if (element.destroysOccupant && tile.HasPiece())
+            {
+                tile.KillPiece();
+            }
         }
     }
 

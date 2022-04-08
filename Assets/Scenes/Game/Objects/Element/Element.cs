@@ -8,20 +8,20 @@ public abstract class Element : MonoBehaviour
     public bool destroysOccupant { get; protected set; }
     public bool hasKnockback { get; protected set; }
     public List<Vector2> spellPattern { get; protected set; }
+    public string color { get; private set; }
     private GameObject _destroyAnimPrefab;
-    private GameObject _environmentPrefab;
     public GameObject spellAnim { get; private set; }
     private GameObject _castAnim;
     private GameObject _graphic;
     private Board _board;
 
-    public void Init(Board board, string elementName)
+    public void Init(Board board, string color)
     {
         _board = board;
-        _destroyAnimPrefab = Resources.Load($"Element/DestroyAnimations/{elementName}DestroyAnim") as GameObject;
-        _environmentPrefab = Resources.Load($"Tile/Environment/{elementName}Environment") as GameObject;
-        spellAnim = Resources.Load($"Element/SpellAnims/{elementName}SpellAnim") as GameObject;
-        _castAnim = Resources.Load($"Element/CastAnims/{elementName}CastAnim") as GameObject;
+        this.color = color;
+        _destroyAnimPrefab = Resources.Load($"Element/DestroyAnimations/{color}DestroyAnim") as GameObject;
+        spellAnim = Resources.Load($"Element/SpellAnims/{color}SpellAnim") as GameObject;
+        _castAnim = Resources.Load($"Element/CastAnims/{color}CastAnim") as GameObject;
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
     }
 

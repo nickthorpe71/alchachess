@@ -25,6 +25,7 @@ public class Piece : MonoBehaviour
     public void Kill()
     {
         isDead = true;
+        transform.position = new Vector3(-2, 0, 3);
     }
 
     public void Move(Vector2 startPos, Vector2 endPos, bool warp = true)

@@ -34,6 +34,8 @@ public abstract class Element : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!_graphic.activeSelf) return;
+
         if (other.gameObject.tag == "Piece")
         {
             Deactivate();
@@ -53,7 +55,7 @@ public abstract class Element : MonoBehaviour
     public void Activate()
     {
         if (_graphic.activeSelf) return;
-
+        Debug.Log("in");
         GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
         Destroy(destroyAnim, 2);
         _graphic.SetActive(true);

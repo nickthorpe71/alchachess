@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Tile : MonoBehaviour
 {
@@ -18,11 +19,32 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject highlighted;
 
     public Vector2 pos { get; private set; }
-
     public GameObject element { get; private set; }
-    // public Environment environment { get; private set; }
     private Piece piece = null;
 
+    // GENERAL
+    public void Init(GameObject element, Vector2 pos)
+    {
+        this.element = element;
+        this.pos = pos;
+        activeEnvironment = null;
+    }
+    public bool CanTraverse() =>
+        piece == null
+        && !plantEnvironment.activeSelf
+        && !rockEnvironment.activeSelf;
+    private void Activate(GameObject toActivate)
+    {
+        if (!toActivate.activeSelf)
+            toActivate.SetActive(true);
+    }
+    private void Deactivate(GameObject toDeactivate)
+    {
+        if (toDeactivate.activeSelf)
+            toDeactivate.SetActive(false);
+    }
+
+    // PLAY INPUT EFFECTS
     public void Hover(bool deactivate = false)
     {
         if (!deactivate)
@@ -57,9 +79,23 @@ public class Tile : MonoBehaviour
         else
             Deactivate(aoe);
     }
+    public bool IsHighlighted() => highlighted.activeSelf;
+    private void SetMarkerHeight(Transform marker)
+    {
+        if (piece != null)
+        {
+            float height = piece.GetComponent<BoxCollider>().size.y;
+            marker.position = new Vector3(transform.position.x, height, transform.position.z);
+        }
+        else
+            marker.position = new Vector3(transform.position.x, 1.2f, transform.position.z);
+    }
 
+    // ENVIRONMENTS
     public void ApplySpellToEnvironment(string spellColor)
     {
+        DeactivateElement();
+
         switch (spellColor)
         {
             case "Red":
@@ -153,14 +189,18 @@ public class Tile : MonoBehaviour
         Activate(toActivate);
         activeEnvironment = toActivate.GetComponent<Environment>();
     }
-
-    public void Init(GameObject element, Vector2 pos)
+    public bool HasActiveEnvironment()
     {
-        this.element = element;
-        this.pos = pos;
-        activeEnvironment = null;
+        bool hasActiveElement = new List<GameObject>(){
+            fireEnvironment,
+            waterEnvironment,
+            plantEnvironment,
+            rockEnvironment
+        }.Aggregate(false, (any, val) => any || val.activeSelf);
+        return hasActiveElement;
     }
 
+    // PIECE
     public void SetPiece(Piece piece)
     {
         this.piece = piece;
@@ -171,46 +211,24 @@ public class Tile : MonoBehaviour
         piece.Kill();
         piece = null;
     }
-
     public void TransferPiece(Tile to)
     {
         to.SetPiece(piece);
         piece.Move(startPos: pos, endPos: to.pos);
         piece = null;
     }
-
-    public bool CanTraverse() =>
-        piece == null
-        && !plantEnvironment.activeSelf
-        && !rockEnvironment.activeSelf;
-
-    public bool IsHighlighted() => highlighted.activeSelf;
-
-    public bool HasActiveElement() => element.activeSelf;
-
     public bool HasPlayersPiece(GenericPlayer player) => HasPiece() && piece.isGold == player.isGoldSide;
     public bool HasPiece() => piece != null;
 
-    private void SetMarkerHeight(Transform marker)
+    // ELEMENT
+    public void ActivateElement()
     {
-        if (piece != null)
-        {
-            float height = piece.GetComponent<BoxCollider>().size.y;
-            marker.position = new Vector3(transform.position.x, height, transform.position.z);
-        }
-        else
-            marker.position = new Vector3(transform.position.x, 1.2f, transform.position.z);
+        if (!HasActiveEnvironment() && !HasPiece())
+            element.GetComponent<Element>().Activate();
     }
-
-    private void Activate(GameObject toActivate)
+    public void DeactivateElement()
     {
-        if (!toActivate.activeSelf)
-            toActivate.SetActive(true);
+        element.GetComponent<Element>().Deactivate();
     }
-
-    private void Deactivate(GameObject toDeactivate)
-    {
-        if (toDeactivate.activeSelf)
-            toDeactivate.SetActive(false);
-    }
+    public bool HasActiveElement() => element.activeSelf;
 }

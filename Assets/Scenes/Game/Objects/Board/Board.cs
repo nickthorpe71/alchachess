@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -14,7 +15,12 @@ public class Board : MonoBehaviour
 
 
     public Tile GetTile(Vector2 pos) => tiles[(int)pos.y][(int)pos.x];
-
+    private void LoopBoard(Action<Tile> action)
+    {
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < height; x++)
+                action(tiles[y][x]);
+    }
     public bool IsInBounds(Vector2 pos)
     {
         bool inRow = pos.x < width && pos.x >= 0;
@@ -52,6 +58,9 @@ public class Board : MonoBehaviour
                 tile.KillPiece();
             }
         }
+
+        yield return new WaitForSeconds(1f);
+        RepopulateElements();
     }
 
     public void SpawnAnim(GameObject prefab, Vector3 pos, int deathTime)
@@ -65,6 +74,11 @@ public class Board : MonoBehaviour
         return spellPattern
             .Select(target => new Vector2(target.x + pos.x, target.y + pos.y))
             .Where(target => IsInBounds(target)).ToList();
+    }
+
+    private void RepopulateElements()
+    {
+        LoopBoard(tile => tile.ActivateElement());
     }
 
     public void Init(LifeCycle lifeCycle)
@@ -112,7 +126,7 @@ public class Board : MonoBehaviour
                 tiles[y][x] = tile;
 
                 if (piecePattern[y][x] == "None") continue;
-                element.SetActive(false);
+                element.GetComponent<Element>().Deactivate();
                 bool isGold = true;
                 Quaternion rot = Quaternion.identity;
                 string side = "Gold";

@@ -94,6 +94,8 @@ public class Tile : MonoBehaviour
     // ENVIRONMENTS
     public void ApplySpellToEnvironment(string spellColor)
     {
+        if (piece != null) return;
+
         DeactivateElement();
 
         switch (spellColor)
@@ -211,10 +213,10 @@ public class Tile : MonoBehaviour
         piece.Kill();
         piece = null;
     }
-    public void TransferPiece(Tile to)
+    public void TransferPiece(Tile to, bool warp = true)
     {
         to.SetPiece(piece);
-        piece.Move(startPos: pos, endPos: to.pos);
+        piece.Move(startPos: pos, endTile: to, warp);
         piece = null;
     }
     public bool HasPlayersPiece(GenericPlayer player) => HasPiece() && piece.isGold == player.isGoldSide;
@@ -230,5 +232,5 @@ public class Tile : MonoBehaviour
     {
         element.GetComponent<Element>().Deactivate();
     }
-    public bool HasActiveElement() => element.activeSelf;
+    public bool HasActiveElement() => element.GetComponent<Element>().IsActive();
 }

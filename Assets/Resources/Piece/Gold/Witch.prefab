@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1548613948619334882}
   - component: {fileID: 1548613948601102402}
-  - component: {fileID: 1548613948619472481}
   m_Layer: 0
   m_Name: SM_Gargoyle_stand
   m_TagString: Untagged
@@ -180,20 +179,6 @@ LODGroup:
     renderers:
     - renderer: {fileID: 1548613948617434634}
   m_Enabled: 1
---- !u!64 &1548613948619472481
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548613948619372738}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300008, guid: c82716bfd8a6f054c9e170361148a556, type: 3}
 --- !u!1 &1548613948619372740
 GameObject:
   m_ObjectHideFlags: 0

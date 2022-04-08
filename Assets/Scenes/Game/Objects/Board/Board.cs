@@ -34,8 +34,8 @@ public class Board : MonoBehaviour
     }
     private IEnumerator CastRoutine(Element element)
     {
-        Vector2 v2Tov3 = new Vector2(element.transform.position.x, element.transform.position.z);
-        foreach (Vector2 pos in ValidateSpellPattern(element.spellPattern, v2Tov3))
+        Vector2 elementPos = new Vector2(element.transform.position.x, element.transform.position.z);
+        foreach (Vector2 pos in ValidateSpellPattern(element.spellPattern, elementPos))
         {
             Tile tile = GetTile(pos);
             // plan spell animation
@@ -46,16 +46,35 @@ public class Board : MonoBehaviour
             // change environment
             tile.ApplySpellToEnvironment(element.color);
 
-            // apply spell/environmental effects
-            if (element.hasKnockback)
+            if (tile.HasPiece())
             {
-                // move any pieces in range
-                //  - check if piece went into an environment that would destroy it
-                //  - check of there is a chain of moving pieces
-            }
-            else if (element.destroysOccupant && tile.HasPiece())
-            {
-                tile.KillPiece();
+                // apply spell/environmental effects
+                if (element.hasKnockback)
+                {
+                    // determine direction
+                    Vector2 direction = tile.pos - elementPos;
+                    // look at tile one more in that direction
+                    Vector2 toCheck = tile.pos + direction;
+
+                    // if position past target tile is in bounds and can be traversed
+                    if (IsInBounds(toCheck))
+                    {
+                        Tile nextTile = GetTile(toCheck);
+                        if (nextTile.CanTraverse())
+                            tile.TransferPiece(nextTile, warp: false);
+                    }
+                    else // if that is the edge of the board move piece and kill
+                    {
+                        tile.GetPiece().KnockOffBoard(direction);
+                        pieces.Remove(tile.GetPiece());
+                        tile.SetPiece(null);
+                    }
+                }
+                else if (element.destroysOccupant)
+                {
+                    pieces.Remove(tile.GetPiece());
+                    tile.KillPiece();
+                }
             }
         }
 
@@ -101,15 +120,6 @@ public class Board : MonoBehaviour
             new string[] {"Demon","Witch","GodOfLife","Wraith","Witch","Demon"}
         };
 
-        // string[][] pieceTestPattern = new string[][] {
-        //     new string[] {"None","None","None","None","None","None"},
-        //     new string[] {"None","None","GodOfLife","None","None","None"},
-        //     new string[] {"None","None","None","None","None","None"},
-        //     new string[] {"None","None","None","None","None","None"},
-        //     new string[] {"None","None","None","None","None","None"},
-        //     new string[] {"None","None","None","None","None","None"}
-        // };
-
         tiles = new Tile[_height][];
 
         for (int y = 0; y < _height; y++)
@@ -117,7 +127,8 @@ public class Board : MonoBehaviour
             tiles[y] = new Tile[_width];
             for (int x = 0; x < _width; x++)
             {
-                GameObject element = lifeCycle.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.3f, y), Quaternion.identity);
+                // instantiate tile and element
+                GameObject element = lifeCycle.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.45f, y), Quaternion.identity);
                 element.GetComponent<Element>().Init(this, elementPattern[y][x]);
                 GameObject tileObj = lifeCycle.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
                 element.transform.parent = tileObj.transform;
@@ -125,24 +136,27 @@ public class Board : MonoBehaviour
                 tile.Init(element, new Vector2(x, y));
                 tiles[y][x] = tile;
 
-                if (piecePattern[y][x] == "None") continue;
-                element.GetComponent<Element>().Deactivate();
-                bool isGold = true;
-                Quaternion rot = Quaternion.identity;
-                string side = "Gold";
-
-                if (y > 1) // if we are looking at the black side
+                // if there is a piece to instantiate
+                if (piecePattern[y][x] != "None")
                 {
-                    isGold = false;
-                    rot.y = 180;
-                    side = "Black";
-                }
+                    element.GetComponent<Element>().Deactivate(playAnim: false);
+                    bool isGold = true;
+                    Quaternion rot = Quaternion.identity;
+                    string side = "Gold";
 
-                GameObject pieceObj = lifeCycle.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
-                Piece piece = pieceObj.GetComponent<Piece>();
-                piece.Init(isGold);
-                tile.SetPiece(piece);
-                pieces.Add(piece);
+                    if (y > 1) // if we are looking at the black side
+                    {
+                        isGold = false;
+                        rot.y = 180;
+                        side = "Black";
+                    }
+
+                    GameObject pieceObj = lifeCycle.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
+                    Piece piece = pieceObj.GetComponent<Piece>();
+                    piece.Init(isGold);
+                    tile.SetPiece(piece);
+                    pieces.Add(piece);
+                }
             }
         }
     }

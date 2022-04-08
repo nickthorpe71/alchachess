@@ -6,12 +6,23 @@ using Logic;
 
 public class Piece : MonoBehaviour
 {
+    // State
     public bool isDead { get; private set; }
     public bool isGold { get; private set; }
+
+    // Stats
     public int moveDistance { get; protected set; }
     public List<Vector2> movePattern { get; protected set; }
+
+    // Graphics
     private GameObject _warpAnim;
     private GameObject _graphic;
+
+    // Movement
+    private bool _isMoving = false;
+    private Vector3 _newPosition;
+    private float _moveSpeed = 3;
+
 
     public void Init(bool isGold)
     {
@@ -22,31 +33,72 @@ public class Piece : MonoBehaviour
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
     }
 
-    public void Kill()
+    void Update()
     {
-        isDead = true;
-        transform.position = new Vector3(-2, 0, 3);
+        PieceMovementUpdate();
     }
 
-    public void Move(Vector2 startPos, Vector2 endPos, bool warp = true)
+    public void PieceMovementUpdate()
+    {
+        if (!_isMoving) return;
+
+        float step = _moveSpeed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, _newPosition, step);
+
+        if (transform.position == _newPosition)
+            _isMoving = false;
+    }
+
+    public void Move(Vector2 startPos, Tile endTile, bool warp = true)
     {
         if (warp)
-            StartCoroutine(WarpRoutine(startPos, endPos));
+            StartCoroutine(WarpRoutine(startPos, endTile));
         else
-            Debug.Log("Lerp piece");
+        {
+            _newPosition = Helpers.V2toV3(endTile.pos, 0);
+            _isMoving = true;
+            StartCoroutine(CheckDestinationDestroy(endTile));
+        }
     }
 
-    private IEnumerator WarpRoutine(Vector2 startPos, Vector2 endPos)
+    IEnumerator WarpRoutine(Vector2 startPos, Tile endTile)
     {
-        GameObject anim1 = Instantiate(_warpAnim, transform.position, Quaternion.identity);
-        Destroy(anim1, 2);
+        GameObject warpAnim = Instantiate(_warpAnim, transform.position, Quaternion.identity);
+        Destroy(warpAnim, 2);
         yield return new WaitForSeconds(0.25f);
         _graphic.SetActive(false);
 
-        yield return new WaitForSeconds(0.5f);
-
-        gameObject.transform.position = new Vector3(endPos.x, 0, endPos.y);
+        gameObject.transform.position = new Vector3(endTile.pos.x, 0, endTile.pos.y);
         _graphic.SetActive(true);
+
+        StartCoroutine(CheckDestinationDestroy(endTile));
+    }
+
+    IEnumerator CheckDestinationDestroy(Tile destination)
+    {
+        if (destination.activeEnvironment != null && destination.activeEnvironment.destroysOccupant)
+        {
+            yield return new WaitForSeconds(0.5f);
+            // TODO: play destroy anim
+            destination.KillPiece();
+        }
+    }
+
+    public void KnockOffBoard(Vector2 direction)
+    {
+        Vector3 newPos = transform.position + Helpers.V2toV3(direction, 0.5f);
+        StartCoroutine(KnockOffRoutine(newPos));
+    }
+    IEnumerator KnockOffRoutine(Vector3 newPos)
+    {
+        _newPosition = newPos;
+        _isMoving = true;
+        yield return new WaitForSeconds(0.3f);
+        newPos.y = -6;
+        _newPosition = newPos;
+        _isMoving = true;
+        yield return new WaitForSeconds(3f);
+        Kill();
     }
 
     public List<Vector2> PossibleMoves(Board board, Vector2 pos)
@@ -92,4 +144,12 @@ public class Piece : MonoBehaviour
 
         return possibleMoves;
     }
+
+    public void Kill()
+    {
+        isDead = true;
+        transform.position = new Vector3(-2, 0, 3);
+    }
+
+
 }

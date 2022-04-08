@@ -59,9 +59,13 @@ public class Game
     public void SetAOEMarkers(Vector2 pos, bool deactivate = false)
     {
         Tile hoveredTile = board.GetTile(pos);
-        Element element = hoveredTile.element.GetComponent<Element>();
 
-        foreach (Vector2 aoe in board.ValidateSpellPattern(element.spellPattern, pos))
-            board.GetTile(aoe).AOE(deactivate);
+        if (hoveredTile.HasActiveElement())
+        {
+            Element element = hoveredTile.element.GetComponent<Element>();
+
+            foreach (Vector2 aoe in board.ValidateSpellPattern(element.spellPattern, pos))
+                board.GetTile(aoe).AOE(deactivate);
+        }
     }
 }

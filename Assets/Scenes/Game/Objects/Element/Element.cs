@@ -13,17 +13,20 @@ public abstract class Element : MonoBehaviour
     public GameObject spellAnim { get; private set; }
     private GameObject _castAnim;
     private GameObject _graphic;
+    private SphereCollider _sphereCollider;
     private Board _board;
 
     public void Init(Board board, string color)
     {
         _board = board;
+        _sphereCollider = GetComponent<SphereCollider>();
         this.color = color;
         _destroyAnimPrefab = Resources.Load($"Element/DestroyAnimations/{color}DestroyAnim") as GameObject;
         spellAnim = Resources.Load($"Element/SpellAnims/{color}SpellAnim") as GameObject;
         _castAnim = Resources.Load($"Element/CastAnims/{color}CastAnim") as GameObject;
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
     }
+    public bool IsActive() => _graphic.activeSelf;
 
     private IEnumerator Cast()
     {
@@ -43,21 +46,26 @@ public abstract class Element : MonoBehaviour
         }
     }
 
-    public void Deactivate()
+    public void Deactivate(bool playAnim = true)
     {
         if (!_graphic.activeSelf) return;
-
-        GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
-        Destroy(destroyAnim, 2);
+        _sphereCollider.enabled = false;
         _graphic.SetActive(false);
+
+        if (playAnim)
+        {
+            GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
+            Destroy(destroyAnim, 2);
+        }
     }
 
     public void Activate()
     {
         if (_graphic.activeSelf) return;
-        Debug.Log("in");
+
         GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
         Destroy(destroyAnim, 2);
+        _sphereCollider.enabled = true;
         _graphic.SetActive(true);
     }
 }

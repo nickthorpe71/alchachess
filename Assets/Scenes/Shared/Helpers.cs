@@ -17,5 +17,6 @@ namespace Logic
             }
             return null;
         }
+        public static Vector3 V2toV3(Vector2 pos, float height) => new Vector3(pos.x, height, pos.y);
     }
 }

@@ -11,8 +11,10 @@ namespace Objects
             hasKnockback = true;
             spellPattern = new List<Vector2>
             {
-                new Vector2(0, 1),
-                new Vector2(0, -1)
+                new Vector2(1, 1),
+                new Vector2(1, -1),
+                new Vector2(-1, -1),
+                new Vector2(-1, 1),
             };
         }
     }

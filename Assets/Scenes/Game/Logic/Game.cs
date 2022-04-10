@@ -8,6 +8,7 @@ public class Game
     public GenericPlayer currentTurn { get; private set; }
     public GameStatus status { get; private set; }
     private List<Move> _movesPlayed;
+    public bool localPlayerCanInput { get; private set; }
 
     public Game(GenericPlayer p1, GenericPlayer p2, Board board)
     {
@@ -20,6 +21,21 @@ public class Game
         currentTurn = p1;
 
         _movesPlayed = new List<Move>();
+        SetCanInput();
+    }
+
+    public List<Tile> GetTilePiecesForPlayer(GenericPlayer player)
+    {
+        List<Tile> tilesWithPieces = new List<Tile>();
+        board.LoopBoard(tile =>
+        {
+            if (tile.HasPiece() && (tile.GetPiece().isGold == player.isGoldSide))
+            {
+                tilesWithPieces.Add(tile);
+            }
+        });
+
+        return tilesWithPieces;
     }
 
     public void SubmitMove(Vector2 start, Vector2 end)
@@ -30,6 +46,7 @@ public class Game
         bool validMove = startTile.GetPiece().PossibleMoves(board, start).Contains(end);
         if (!validMove) return;
 
+        localPlayerCanInput = false;
         Move move = new Move(currentTurn, startTile, endTile);
         _movesPlayed.Add(move);
         startTile.TransferPiece(to: endTile);
@@ -37,6 +54,25 @@ public class Game
     }
 
     public bool IsEnd() => status != GameStatus.ACTIVE;
+
+    public void NextTurn()
+    {
+        currentTurn = (currentTurn == _players[0]) ? _players[1] : _players[0];
+        SetCanInput();
+
+        if (!currentTurn.isHumanPlayer)
+        {
+            currentTurn.TakeTurn(this);
+        }
+
+        // TODO: FOR TESTING ONLY
+        localPlayerCanInput = true;
+    }
+
+    private void SetCanInput()
+    {
+        localPlayerCanInput = currentTurn.isLocalPlayer;
+    }
 
     public void SetStatus(GameStatus newStatus)
     {

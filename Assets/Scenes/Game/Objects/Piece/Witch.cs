@@ -5,7 +5,7 @@ public class Witch : Piece
 {
     void Start()
     {
-        moveDistance = 3;
+        moveDistance = 2;
         movePattern = MovementPattern();
     }
 
@@ -13,9 +13,13 @@ public class Witch : Piece
     {
         return new List<Vector2>
             {
+                new Vector2(0, 1),
                 new Vector2(1, 1),
+                new Vector2(1, 0),
                 new Vector2(1, -1),
+                new Vector2(0, -1),
                 new Vector2(-1, -1),
+                new Vector2(-1, 0),
                 new Vector2(-1, 1)
             };
     }

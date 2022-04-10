@@ -94,8 +94,6 @@ public class Tile : MonoBehaviour
     // ENVIRONMENTS
     public void ApplySpellToEnvironment(string spellColor)
     {
-        if (piece != null) return;
-
         DeactivateElement();
 
         switch (spellColor)
@@ -107,15 +105,18 @@ public class Tile : MonoBehaviour
                 WaterEnvironment();
                 break;
             case "Green":
-                PlantEnvironment();
+                if (piece == null)
+                    PlantEnvironment();
                 break;
             case "Yellow":
-                RockEnvironment();
+                if (piece == null)
+                    RockEnvironment();
                 break;
             case "Black":
-                BlackEnvironment();
+                NullifyEnvironment();
                 break;
             case "White":
+                NullifyEnvironment();
                 break;
             default:
                 break;
@@ -158,7 +159,7 @@ public class Tile : MonoBehaviour
         else if (plantEnvironment.activeSelf)
             return;
         else if (rockEnvironment.activeSelf)
-            SwapEnvironments(rockEnvironment, plantEnvironment);
+            SwapEnvironments(rockEnvironment, emptyEnvironment);
     }
     private void RockEnvironment()
     {
@@ -169,11 +170,11 @@ public class Tile : MonoBehaviour
         else if (waterEnvironment.activeSelf)
             return;
         else if (plantEnvironment.activeSelf)
-            return;
+            SwapEnvironments(plantEnvironment, emptyEnvironment);
         else if (rockEnvironment.activeSelf)
-            SwapEnvironments(rockEnvironment, plantEnvironment);
+            return;
     }
-    private void BlackEnvironment()
+    private void NullifyEnvironment()
     {
         new List<GameObject>(){
             fireEnvironment,

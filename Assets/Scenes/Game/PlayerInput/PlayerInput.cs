@@ -10,7 +10,6 @@ namespace Logic
         private int tileLayerMask = LayerMask.GetMask("Tile");
 
         private Vector2 nullV2 = new Vector2(-1, -1);
-
         private Game game;
 
         public PlayerInput(Game game)
@@ -19,13 +18,18 @@ namespace Logic
             savedHover = nullV2;
             this.game = game;
         }
-
         public void HandleInput()
         {
-            HandleClick();
-            HandleHover();
+            if (game.localPlayerCanInput)
+            {
+                HandleClick();
+                HandleHover();
+            }
+            else if (savedHover.x > -1)
+            {
+                DeactivateSavedHover();
+            }
         }
-
         private void HandleClick()
         {
             if (Input.GetMouseButtonDown(0))

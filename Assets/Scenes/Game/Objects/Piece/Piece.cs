@@ -9,6 +9,7 @@ public class Piece : MonoBehaviour
     // State
     public bool isDead { get; private set; }
     public bool isGold { get; private set; }
+    public bool isBeingKnockedBack { get; set; }
 
     // Stats
     public int moveDistance { get; protected set; }
@@ -28,6 +29,7 @@ public class Piece : MonoBehaviour
     {
         isDead = false;
         this.isGold = isGold;
+        isBeingKnockedBack = false;
 
         _warpAnim = Resources.Load("Piece/Anims/WarpAnim") as GameObject;
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
@@ -55,6 +57,7 @@ public class Piece : MonoBehaviour
             StartCoroutine(WarpRoutine(startPos, endTile));
         else
         {
+            isBeingKnockedBack = true;
             _newPosition = Helpers.V2toV3(endTile.pos, 0);
             _isMoving = true;
             StartCoroutine(CheckDestinationDestroy(endTile));

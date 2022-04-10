@@ -28,11 +28,11 @@ public abstract class Element : MonoBehaviour
     }
     public bool IsActive() => _graphic.activeSelf;
 
-    private IEnumerator Cast()
+    private IEnumerator Cast(Piece caster)
     {
         _board.SpawnAnim(_castAnim, new Vector3(transform.position.x, 0.45f, transform.position.z), 2);
         yield return new WaitForSeconds(1.2f);
-        _board.CastSpell(this);
+        _board.CastSpell(this, caster);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,8 +41,9 @@ public abstract class Element : MonoBehaviour
 
         if (other.gameObject.tag == "Piece")
         {
+            Piece caster = other.GetComponent<Piece>();
             Deactivate();
-            StartCoroutine(Cast());
+            StartCoroutine(Cast(caster));
         }
     }
 

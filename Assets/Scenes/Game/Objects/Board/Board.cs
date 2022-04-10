@@ -8,14 +8,15 @@ public class Board : MonoBehaviour
 {
     private Tile[][] tiles;
     private List<Piece> pieces = new List<Piece>();
-    private readonly int _width = 6;
+    private readonly int _width = 10;
     public int width { get { return _width; } }
-    private readonly int _height = 6;
+    private readonly int _height = 10;
     public int height { get { return _height; } }
+    private Game _game;
 
 
     public Tile GetTile(Vector2 pos) => tiles[(int)pos.y][(int)pos.x];
-    private void LoopBoard(Action<Tile> action)
+    public void LoopBoard(Action<Tile> action)
     {
         for (int y = 0; y < height; y++)
             for (int x = 0; x < height; x++)
@@ -28,11 +29,11 @@ public class Board : MonoBehaviour
         return inRow && inColumn;
     }
 
-    public void CastSpell(Element element)
+    public void CastSpell(Element element, Piece caster)
     {
-        StartCoroutine(CastRoutine(element));
+        StartCoroutine(CastRoutine(element, caster));
     }
-    private IEnumerator CastRoutine(Element element)
+    private IEnumerator CastRoutine(Element element, Piece caster)
     {
         Vector2 elementPos = new Vector2(element.transform.position.x, element.transform.position.z);
         foreach (Vector2 pos in ValidateSpellPattern(element.spellPattern, elementPos))
@@ -78,8 +79,17 @@ public class Board : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         RepopulateElements();
+        if (!caster.isBeingKnockedBack)
+        {
+            yield return new WaitForSeconds(1f);
+            _game.NextTurn();
+        }
+        else
+        {
+            caster.isBeingKnockedBack = false;
+        }
     }
 
     public void SpawnAnim(GameObject prefab, Vector3 pos, int deathTime)
@@ -100,24 +110,35 @@ public class Board : MonoBehaviour
         LoopBoard(tile => tile.ActivateElement());
     }
 
-    public void Init(LifeCycle lifeCycle)
+    public void Init(LifeCycle lifeCycle, Game game)
     {
+        _game = game;
+
         string[][] elementPattern = new string[][] {
-            new string[] {"Blue","Black","Red","White","Yellow","Green"},
-            new string[] {"Yellow","White","Green","Red","Blue","Black"},
-            new string[] {"Green","Blue","Yellow","Black","White","Red"},
-            new string[] {"Red","White","Black","Yellow","Blue","Green"},
-            new string[] {"Black","Blue","Red","Green","White","Yellow"},
-            new string[] {"Green","Yellow","White","Red","Black","Blue"}
+            new string[] {"White","Red", "Black","Green","Blue","Red", "Black","White", "Yellow", "Black"},
+            new string[] {"White","Red", "Green","Black","Blue","Black","Yellow", "White", "Black", "Red"},
+            new string[] {"Blue","Black","White","Yellow","Green", "Black","Red", "Green", "Blue", "Black"},
+            new string[] {"White", "Black","Green","Red","Black","Blue","Yellow", "Black", "Yellow", "Black"},
+            new string[] {"Yellow","Blue","Black","Red", "Black", "Green","White", "White", "Black", "Red"},
+            new string[] {"White","Green", "Black","Red","Black","Blue","Yellow", "Black", "Yellow", "Black"},
+            new string[] {"Yellow","Blue","Black","Black","Red", "Black","Green","White", "White", "Red"},
+            new string[] {"Red", "Black","Green","Yellow","Black","White","Black","Blue", "Blue", "Green"},
+            new string[] {"White", "Red", "Yellow","Black","Black","Blue", "Black","Green","Red","White",},
+            new string[] {"Black","Yellow", "White", "Red", "Black","Blue", "Black","Green","Red","White"},
         };
 
         string[][] piecePattern = new string[][] {
-            new string[] {"Demon","Witch","Wraith","GodOfLife","Witch","Demon"},
-            new string[] {"Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle"},
-            new string[] {"Demon","Witch","GodOfLife","Wraith","Witch","Demon"}
+            new string[] {"None","None","None","None","Demon","Witch","None","None","None","None"},
+            new string[] {"None","None","None","Gargoyle","None","None","Gargoyle","None","None","None"},
+            new string[] {"None","None","Gargoyle","None","None","None","None","Gargoyle","None","None"},
+            new string[] {"None","Gargoyle","None","None","None","None","None","None","Gargoyle","None"},
+            new string[] {"Gargoyle","None","None","None","None","None","None","None","None","Gargoyle"},
+            new string[] {"Gargoyle","None","None","None","None","None","None","None","None","Gargoyle"},
+            new string[] {"None","Gargoyle","None","None","None","None","None","None","Gargoyle","None"},
+            new string[] {"None","None","Gargoyle","None","None","None","None","Gargoyle","None","None"},
+            new string[] {"None","None","None","Gargoyle","None","None","Gargoyle","None","None","None"},
+            new string[] {"None","None","None","None","Witch","Demon","None","None","None","None"}
+
         };
 
         tiles = new Tile[_height][];
@@ -144,7 +165,7 @@ public class Board : MonoBehaviour
                     Quaternion rot = Quaternion.identity;
                     string side = "Gold";
 
-                    if (y > 1) // if we are looking at the black side
+                    if (y > height / 2 - 1) // if we are looking at the black side
                     {
                         isGold = false;
                         rot.y = 180;

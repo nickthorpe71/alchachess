@@ -13,8 +13,8 @@ public class LifeCycle : MonoBehaviour
 
     void Awake()
     {
-        p1 = new HumanPlayer(goldSide: true);
-        p2 = new AIPlayer(goldSide: false);
+        p1 = new HumanPlayer(goldSide: true, isLocalPlayer: true);
+        p2 = new AIPlayer(goldSide: false, isLocalPlayer: false);
 
         game = new Game(p1, p2, GetComponent<Board>());
         game.SetStatus(GameStatus.ACTIVE);
@@ -24,7 +24,7 @@ public class LifeCycle : MonoBehaviour
 
     void Start()
     {
-        game.board.Init(this);
+        game.board.Init(this, game);
     }
 
     void Update()

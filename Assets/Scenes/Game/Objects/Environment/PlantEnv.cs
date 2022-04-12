@@ -4,7 +4,7 @@ namespace Objects
     {
         public PlantEnv()
         {
-            isTraversable = false;
+            isTraversable = true;
             destroysOccupant = false;
         }
     }

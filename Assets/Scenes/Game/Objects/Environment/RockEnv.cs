@@ -4,7 +4,7 @@ namespace Objects
     {
         public RockEnv()
         {
-            isTraversable = false;
+            isTraversable = true;
             destroysOccupant = false;
         }
     }

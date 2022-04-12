@@ -29,10 +29,7 @@ public class Tile : MonoBehaviour
         this.pos = pos;
         activeEnvironment = null;
     }
-    public bool CanTraverse() =>
-        piece == null
-        && !plantEnvironment.activeSelf
-        && !rockEnvironment.activeSelf;
+    public bool CanTraverse() => piece == null;
     private void Activate(GameObject toActivate)
     {
         if (!toActivate.activeSelf)

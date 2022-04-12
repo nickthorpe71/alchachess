@@ -8,7 +8,7 @@ public class Board : MonoBehaviour
 {
     private Tile[][] tiles;
     private List<Piece> pieces = new List<Piece>();
-    private readonly int _width = 10;
+    private readonly int _width = 6;
     public int width { get { return _width; } }
     private readonly int _height = 10;
     public int height { get { return _height; } }
@@ -19,7 +19,7 @@ public class Board : MonoBehaviour
     public void LoopBoard(Action<Tile> action)
     {
         for (int y = 0; y < height; y++)
-            for (int x = 0; x < height; x++)
+            for (int x = 0; x < width; x++)
                 action(tiles[y][x]);
     }
     public bool IsInBounds(Vector2 pos)
@@ -115,29 +115,29 @@ public class Board : MonoBehaviour
         _game = game;
 
         string[][] elementPattern = new string[][] {
-            new string[] {"White","Red", "Black","Green","Blue","Red", "Black","White", "Yellow", "Black"},
-            new string[] {"White","Red", "Green","Black","Blue","Black","Yellow", "White", "Black", "Red"},
-            new string[] {"Blue","Black","White","Yellow","Green", "Black","Red", "Green", "Blue", "Black"},
-            new string[] {"White", "Black","Green","Red","Black","Blue","Yellow", "Black", "Yellow", "Black"},
-            new string[] {"Yellow","Blue","Black","Red", "Black", "Green","White", "White", "Black", "Red"},
-            new string[] {"White","Green", "Black","Red","Black","Blue","Yellow", "Black", "Yellow", "Black"},
-            new string[] {"Yellow","Blue","Black","Black","Red", "Black","Green","White", "White", "Red"},
-            new string[] {"Red", "Black","Green","Yellow","Black","White","Black","Blue", "Blue", "Green"},
-            new string[] {"White", "Red", "Yellow","Black","Black","Blue", "Black","Green","Red","White",},
-            new string[] {"Black","Yellow", "White", "Red", "Black","Blue", "Black","Green","Red","White"},
+            new string[] {"Black","Blue","Red","Red", "Blue","Black"},
+            new string[] {"Green","White","Yellow","Yellow","White", "Green"},
+            new string[] {"White","Yellow","Red", "Red","Yellow", "White"},
+            new string[] {"Green","Blue","Black","Black","Blue", "Green"},
+            new string[] {"Black","Blue", "Green", "Red","Yellow", "White"},
+            new string[] {"White","Yellow","Red","Green","Blue", "Black"},
+            new string[] {"Green","Blue","Black","Black","Blue", "Green"},
+            new string[] {"White","Yellow","Red", "Red","Yellow", "White"},
+            new string[] {"Green","White","Yellow","Yellow","White", "Green"},
+            new string[] {"Black","Blue","Red","Red", "Blue","Black"},
         };
 
         string[][] piecePattern = new string[][] {
-            new string[] {"None","None","None","None","Demon","Witch","None","None","None","None"},
-            new string[] {"None","None","None","Gargoyle","None","None","Gargoyle","None","None","None"},
-            new string[] {"None","None","Gargoyle","None","None","None","None","Gargoyle","None","None"},
-            new string[] {"None","Gargoyle","None","None","None","None","None","None","Gargoyle","None"},
-            new string[] {"Gargoyle","None","None","None","None","None","None","None","None","Gargoyle"},
-            new string[] {"Gargoyle","None","None","None","None","None","None","None","None","Gargoyle"},
-            new string[] {"None","Gargoyle","None","None","None","None","None","None","Gargoyle","None"},
-            new string[] {"None","None","Gargoyle","None","None","None","None","Gargoyle","None","None"},
-            new string[] {"None","None","None","Gargoyle","None","None","Gargoyle","None","None","None"},
-            new string[] {"None","None","None","None","Witch","Demon","None","None","None","None"}
+            new string[] {"Demon","Demon","Witch","Witch","Demon","Demon"},
+            new string[] {"Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle"},
+            new string[] {"None","None","None","None","None","None"},
+            new string[] {"None","None","None","None","None","None"},
+            new string[] {"None","None","None","None","None","None"},
+            new string[] {"None","None","None","None","None","None"},
+            new string[] {"None","None","None","None","None","None"},
+            new string[] {"None","None","None","None","None","None"},
+            new string[] {"Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle"},
+            new string[] {"Demon","Demon","Witch","Witch","Demon","Demon"}
 
         };
 

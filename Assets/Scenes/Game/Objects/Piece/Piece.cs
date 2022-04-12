@@ -128,19 +128,19 @@ public class Piece : MonoBehaviour
                     if (inBounds)
                     {
                         canTraverse = board.GetTile(dir).CanTraverse();
-                        if (!canTraverse)
-                            toRemove.Add(index);
+                        // if (!canTraverse)
+                        //     toRemove.Add(index);
                     }
                     return inBounds && canTraverse;
                 })
                 .ToArray();
 
-            // remove intraversable directions from further consideration
-            activeDirections = activeDirections
-                .Where((_, index) => !toRemove.Contains(index))
-                .ToList();
-            patternWithStartAdjust = patternWithStartAdjust
-                .Where((_, index) => !toRemove.Contains(index));
+            // // remove intraversable directions from further consideration
+            // activeDirections = activeDirections
+            //     .Where((_, index) => !toRemove.Contains(index))
+            //     .ToList();
+            // patternWithStartAdjust = patternWithStartAdjust
+            //     .Where((_, index) => !toRemove.Contains(index));
 
             possibleMoves.AddRange(validMoves);
         }

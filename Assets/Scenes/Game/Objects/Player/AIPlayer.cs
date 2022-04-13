@@ -19,7 +19,7 @@ public class AIPlayer : GenericPlayer
             Debug.Log(tile.GetPiece().gameObject.name);
         }
 
-        // get list of possible moves
+        // get list of possible moves for each piece
         // play each move out and score it
         // make move of highest score
     }

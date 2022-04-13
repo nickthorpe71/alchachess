@@ -90,7 +90,7 @@ namespace Logic
                     clickedTile.Click();
                     savedClick = newClick;
                 }
-                else if (clickedTile.HasActiveElement())
+                else
                 {
                     if (savedTile.HasPlayersPiece(game.currentTurn))
                         game.SubmitMove(start: savedClick, end: newClick);

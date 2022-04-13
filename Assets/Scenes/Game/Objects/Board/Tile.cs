@@ -102,12 +102,10 @@ public class Tile : MonoBehaviour
                 WaterEnvironment();
                 break;
             case "Green":
-                if (piece == null)
-                    PlantEnvironment();
+                PlantEnvironment();
                 break;
             case "Yellow":
-                if (piece == null)
-                    RockEnvironment();
+                RockEnvironment();
                 break;
             case "Black":
                 NullifyEnvironment();
@@ -198,6 +196,14 @@ public class Tile : MonoBehaviour
             rockEnvironment
         }.Aggregate(false, (any, val) => any || val.activeSelf);
         return hasActiveElement;
+    }
+    public bool IsImmuneToElement(Element element)
+    {
+        if (element.color == "Red" && rockEnvironment.activeSelf)
+            return true;
+        if (element.color == "Blue" && plantEnvironment.activeSelf)
+            return true;
+        return false;
     }
 
     // PIECE

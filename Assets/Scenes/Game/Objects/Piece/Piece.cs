@@ -107,40 +107,26 @@ public class Piece : MonoBehaviour
     public List<Vector2> PossibleMoves(Board board, Vector2 pos)
     {
         List<Vector2> possibleMoves = new List<Vector2>();
-        List<Vector2> activeDirections = new List<Vector2>(movePattern);
         IEnumerable<Vector2> patternWithStartAdjust = movePattern
             .Select(move => new Vector2(pos.x + move.x, pos.y + move.y));
 
         for (int layer = 0; layer < moveDistance; layer++)
         {
-            List<int> toRemove = new List<int>();
-
             // find all valid moves
             Vector2[] validMoves = patternWithStartAdjust
                 .Select((dir, index) => new Vector2(
-                    dir.x + layer * activeDirections[index].x,
-                    dir.y + layer * activeDirections[index].y
+                    dir.x + layer * movePattern[index].x,
+                    dir.y + layer * movePattern[index].y
                 ))
                 .Where((dir, index) =>
                 {
                     bool inBounds = board.IsInBounds(dir);
                     bool canTraverse = false;
                     if (inBounds)
-                    {
                         canTraverse = board.GetTile(dir).CanTraverse();
-                        // if (!canTraverse)
-                        //     toRemove.Add(index);
-                    }
                     return inBounds && canTraverse;
                 })
                 .ToArray();
-
-            // // remove intraversable directions from further consideration
-            // activeDirections = activeDirections
-            //     .Where((_, index) => !toRemove.Contains(index))
-            //     .ToList();
-            // patternWithStartAdjust = patternWithStartAdjust
-            //     .Where((_, index) => !toRemove.Contains(index));
 
             possibleMoves.AddRange(validMoves);
         }

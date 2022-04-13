@@ -33,7 +33,7 @@ public class Board : MonoBehaviour
     {
         StartCoroutine(CastRoutine(element, caster));
     }
-    private IEnumerator CastRoutine(Element element, Piece caster)
+    IEnumerator CastRoutine(Element element, Piece caster)
     {
         Vector2 elementPos = new Vector2(element.transform.position.x, element.transform.position.z);
         foreach (Vector2 pos in ValidateSpellPattern(element.spellPattern, elementPos))
@@ -47,7 +47,7 @@ public class Board : MonoBehaviour
             // change environment
             tile.ApplySpellToEnvironment(element.color);
 
-            if (tile.HasPiece())
+            if (tile.HasPiece() && !tile.IsImmuneToElement(element))
             {
                 // apply spell/environmental effects
                 if (element.hasKnockback)
@@ -79,17 +79,10 @@ public class Board : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(2f);
-        RepopulateElements();
         if (!caster.isBeingKnockedBack)
-        {
-            yield return new WaitForSeconds(1f);
             _game.NextTurn();
-        }
         else
-        {
             caster.isBeingKnockedBack = false;
-        }
     }
 
     public void SpawnAnim(GameObject prefab, Vector3 pos, int deathTime)
@@ -105,12 +98,12 @@ public class Board : MonoBehaviour
             .Where(target => IsInBounds(target)).ToList();
     }
 
-    private void RepopulateElements()
+    public void RepopulateElements()
     {
         LoopBoard(tile => tile.ActivateElement());
     }
 
-    public void Init(LifeCycle lifeCycle, Game game)
+    public void Init(Game game)
     {
         _game = game;
 
@@ -149,9 +142,9 @@ public class Board : MonoBehaviour
             for (int x = 0; x < _width; x++)
             {
                 // instantiate tile and element
-                GameObject element = lifeCycle.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.45f, y), Quaternion.identity);
+                GameObject element = game.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.45f, y), Quaternion.identity);
                 element.GetComponent<Element>().Init(this, elementPattern[y][x]);
-                GameObject tileObj = lifeCycle.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
+                GameObject tileObj = game.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
                 element.transform.parent = tileObj.transform;
                 Tile tile = tileObj.GetComponent<Tile>();
                 tile.Init(element, new Vector2(x, y));
@@ -172,7 +165,7 @@ public class Board : MonoBehaviour
                         side = "Black";
                     }
 
-                    GameObject pieceObj = lifeCycle.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
+                    GameObject pieceObj = game.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
                     Piece piece = pieceObj.GetComponent<Piece>();
                     piece.Init(isGold);
                     tile.SetPiece(piece);

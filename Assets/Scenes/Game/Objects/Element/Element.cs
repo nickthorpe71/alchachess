@@ -9,30 +9,36 @@ public abstract class Element : MonoBehaviour
     public bool hasKnockback { get; protected set; }
     public List<Vector2> spellPattern { get; protected set; }
     public string color { get; private set; }
-    private GameObject _destroyAnimPrefab;
-    public string spellAnim { get; private set; }
-    private GameObject _castAnim;
+    private string _destroyAnimPath;
+    public string spellAnimPath { get; private set; }
+    private string _castAnimPath;
     private GameObject _graphic;
     private SphereCollider _sphereCollider;
-    private BoardData _board;
+    private Game game;
 
-    public void Init(BoardData board, string color)
+    public void Init(Game game, string color)
     {
-        _board = board;
+        this.game = game;
         _sphereCollider = GetComponent<SphereCollider>();
         this.color = color;
-        _destroyAnimPrefab = Resources.Load($"Element/DestroyAnimations/{color}DestroyAnim") as GameObject;
-        spellAnim = $"Element/SpellAnims/{color}SpellAnim";
-        _castAnim = Resources.Load($"Element/CastAnims/{color}CastAnim") as GameObject;
+        _destroyAnimPath = $"Element/DestroyAnimations/{color}DestroyAnim";
+        spellAnimPath = $"Element/SpellAnims/{color}SpellAnim";
+        _castAnimPath = $"Element/CastAnims/{color}CastAnim";
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
     }
     public bool IsActive() => _graphic.activeSelf;
 
     private IEnumerator Cast(Piece caster)
     {
-        // _board.SpawnAnim(_castAnim, new Vector3(transform.position.x, 0.45f, transform.position.z), 2);
+        GameObject castAnim = game.Spawn(
+            _castAnimPath,
+            new Vector3(transform.position.x, 0.45f, transform.position.z),
+            Quaternion.identity);
+        Destroy(castAnim, 2);
+
         yield return new WaitForSeconds(1.2f);
-        // _board.CastSpell(this, caster);
+
+        game.board.CastSpell(this, caster);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -55,7 +61,7 @@ public abstract class Element : MonoBehaviour
 
         if (playAnim)
         {
-            GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
+            GameObject destroyAnim = game.Spawn(_destroyAnimPath, transform.position, Quaternion.identity);
             Destroy(destroyAnim, 2);
         }
     }
@@ -64,7 +70,7 @@ public abstract class Element : MonoBehaviour
     {
         if (_graphic.activeSelf) return;
 
-        GameObject destroyAnim = Instantiate(_destroyAnimPrefab, transform.position, Quaternion.identity);
+        GameObject destroyAnim = game.Spawn(_destroyAnimPath, transform.position, Quaternion.identity);
         Destroy(destroyAnim, 2);
         _sphereCollider.enabled = true;
         _graphic.SetActive(true);

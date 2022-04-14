@@ -34,6 +34,11 @@ public class Game : MonoBehaviour
         inputSystem.HandleInput();
     }
 
+    public GameObject Spawn(string objPath, Vector3 pos, Quaternion rot)
+    {
+        return Instantiate(Resources.Load(objPath) as GameObject, pos, rot);
+    }
+
     public void SubmitMove(Vector2 start, Vector2 end)
     {
         Tile startTile = BoardCalculation.GetTile(board.boardData, start);

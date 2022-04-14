@@ -9,8 +9,9 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        game = GetComponent<Game>();
         boardData = new BoardData();
-        BoardCalculation.ResetBoard(boardData);
+        BoardCalculation.ResetBoard(game, boardData);
     }
 
     public void CastSpell(Element element, Piece caster)
@@ -26,7 +27,7 @@ public class Board : MonoBehaviour
             Tile tile = BoardCalculation.GetTile(boardData, pos);
 
             // plan spell animation
-            GameCalculation.Spawn(element.spellAnim, new Vector3(pos.x, 0.45f, pos.y), Quaternion.identity);
+            game.Spawn(element.spellAnimPath, new Vector3(pos.x, 0.45f, pos.y), Quaternion.identity);
 
             yield return new WaitForSeconds(0.1f);
 

@@ -45,7 +45,7 @@ public static class BoardCalculation
         LoopBoard(boardData, tile => tile.ActivateElement());
     }
 
-    public static void ResetBoard(BoardData boardData)
+    public static void ResetBoard(Game game, BoardData boardData)
     {
         string[][] elementPattern = new string[][] {
             new string[] {"Black","Blue","Red","Red", "Blue","Black"},
@@ -82,9 +82,9 @@ public static class BoardCalculation
             for (int x = 0; x < boardData.width; x++)
             {
                 // instantiate tile and element
-                GameObject element = GameCalculation.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.45f, y), Quaternion.identity);
-                element.GetComponent<Element>().Init(boardData, elementPattern[y][x]);
-                GameObject tileObj = GameCalculation.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
+                GameObject element = game.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.45f, y), Quaternion.identity);
+                element.GetComponent<Element>().Init(game, elementPattern[y][x]);
+                GameObject tileObj = game.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
                 element.transform.parent = tileObj.transform;
                 Tile tile = tileObj.GetComponent<Tile>();
                 tile.Init(element, new Vector2(x, y));
@@ -105,7 +105,7 @@ public static class BoardCalculation
                         side = "Black";
                     }
 
-                    GameObject pieceObj = GameCalculation.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
+                    GameObject pieceObj = game.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
                     Piece piece = pieceObj.GetComponent<Piece>();
                     piece.Init(isGold);
                     tile.SetPiece(piece);

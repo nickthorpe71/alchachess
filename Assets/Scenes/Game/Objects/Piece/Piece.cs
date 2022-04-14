@@ -104,7 +104,7 @@ public class Piece : MonoBehaviour
         Kill();
     }
 
-    public List<Vector2> PossibleMoves(Board board, Vector2 pos)
+    public List<Vector2> PossibleMoves(BoardData boardData, Vector2 pos)
     {
         List<Vector2> possibleMoves = new List<Vector2>();
         IEnumerable<Vector2> patternWithStartAdjust = movePattern
@@ -120,10 +120,10 @@ public class Piece : MonoBehaviour
                 ))
                 .Where((dir, index) =>
                 {
-                    bool inBounds = board.IsInBounds(dir);
+                    bool inBounds = BoardCalculation.IsInBounds(boardData, dir);
                     bool canTraverse = false;
                     if (inBounds)
-                        canTraverse = board.GetTile(dir).CanTraverse();
+                        canTraverse = BoardCalculation.GetTile(boardData, dir).CanTraverse();
                     return inBounds && canTraverse;
                 })
                 .ToArray();

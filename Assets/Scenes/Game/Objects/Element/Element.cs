@@ -10,19 +10,19 @@ public abstract class Element : MonoBehaviour
     public List<Vector2> spellPattern { get; protected set; }
     public string color { get; private set; }
     private GameObject _destroyAnimPrefab;
-    public GameObject spellAnim { get; private set; }
+    public string spellAnim { get; private set; }
     private GameObject _castAnim;
     private GameObject _graphic;
     private SphereCollider _sphereCollider;
-    private Board _board;
+    private BoardData _board;
 
-    public void Init(Board board, string color)
+    public void Init(BoardData board, string color)
     {
         _board = board;
         _sphereCollider = GetComponent<SphereCollider>();
         this.color = color;
         _destroyAnimPrefab = Resources.Load($"Element/DestroyAnimations/{color}DestroyAnim") as GameObject;
-        spellAnim = Resources.Load($"Element/SpellAnims/{color}SpellAnim") as GameObject;
+        spellAnim = $"Element/SpellAnims/{color}SpellAnim";
         _castAnim = Resources.Load($"Element/CastAnims/{color}CastAnim") as GameObject;
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
     }
@@ -30,9 +30,9 @@ public abstract class Element : MonoBehaviour
 
     private IEnumerator Cast(Piece caster)
     {
-        _board.SpawnAnim(_castAnim, new Vector3(transform.position.x, 0.45f, transform.position.z), 2);
+        // _board.SpawnAnim(_castAnim, new Vector3(transform.position.x, 0.45f, transform.position.z), 2);
         yield return new WaitForSeconds(1.2f);
-        _board.CastSpell(this, caster);
+        // _board.CastSpell(this, caster);
     }
 
     private void OnTriggerEnter(Collider other)

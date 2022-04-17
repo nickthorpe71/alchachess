@@ -1,14 +1,14 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Logic;
 
-public abstract class Element : MonoBehaviour
+public class Element : MonoBehaviour
 {
-    public bool destroysOccupant { get; protected set; }
-    public bool hasKnockback { get; protected set; }
-    public List<Vector2> spellPattern { get; protected set; }
-    public string color { get; private set; }
+    protected bool destroysOccupant;
+    protected bool hasKnockback;
+    protected List<Vector2> spellPattern;
+    protected string color;
     private string _destroyAnimPath;
     public string spellAnimPath { get; private set; }
     private string _castAnimPath;
@@ -26,6 +26,19 @@ public abstract class Element : MonoBehaviour
         _castAnimPath = $"Element/CastAnims/{color}CastAnim";
         _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
     }
+    public ElementData GetData()
+    {
+        return new ElementData(
+            destroysOccupant,
+            hasKnockback,
+            spellPattern,
+            color
+        );
+    }
+    public bool DestroysOccupant() => destroysOccupant;
+    public bool HasKnockback() => hasKnockback;
+    public List<Vector2> GetSpellPattern() => spellPattern;
+    public string GetColor() => color;
     public bool IsActive() => _graphic.activeSelf;
 
     private IEnumerator Cast(Piece caster)

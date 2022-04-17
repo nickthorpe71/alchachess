@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class Environment : MonoBehaviour
+public class EnvironmentData
 {
     public bool isTraversable { get; protected set; }
     public bool destroysOccupant { get; protected set; }

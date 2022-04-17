@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 6599965234663460724}
   - component: {fileID: 6599965234663460725}
   - component: {fileID: 6599965234663460726}
-  - component: {fileID: -9020129432173063106}
   m_Layer: 3
   m_Name: RockEnvironment
-  m_TagString: Untagged
+  m_TagString: RockEnvironment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,15 +81,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-9020129432173063106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6599965234663460712}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5f2fc4e474068c46b7a9b5c9f29f853, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

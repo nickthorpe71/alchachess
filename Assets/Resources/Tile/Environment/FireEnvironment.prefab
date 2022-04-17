@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 3833499635915806211}
   - component: {fileID: 3833499635915806208}
   - component: {fileID: 3833499635915806209}
-  - component: {fileID: -2089259959242530021}
   m_Layer: 3
   m_Name: FireEnvironment
-  m_TagString: Untagged
+  m_TagString: FireEnvironment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,15 +81,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-2089259959242530021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3833499635915806223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07a8c7984d854df4a928df0cbabe15d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -1,10 +1,10 @@
 public class MoveData
 {
     public GenericPlayer player { get; }
-    public Tile start { get; }
-    public Tile end { get; }
+    public TileData start { get; }
+    public TileData end { get; }
 
-    public MoveData(GenericPlayer player, Tile start, Tile end)
+    public MoveData(GenericPlayer player, TileData start, TileData end)
     {
         this.player = player;
         this.start = start;

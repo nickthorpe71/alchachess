@@ -1,11 +1,8 @@
-namespace Objects
+public class WaterEnv : EnvironmentData
 {
-    public class WaterEnv : Environment
+    public WaterEnv()
     {
-        public WaterEnv()
-        {
-            isTraversable = true;
-            destroysOccupant = true;
-        }
+        isTraversable = true;
+        destroysOccupant = true;
     }
 }

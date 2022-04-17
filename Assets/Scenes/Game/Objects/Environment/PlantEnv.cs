@@ -1,11 +1,8 @@
-namespace Objects
+public class PlantEnv : EnvironmentData
 {
-    public class PlantEnv : Environment
+    public PlantEnv()
     {
-        public PlantEnv()
-        {
-            isTraversable = true;
-            destroysOccupant = false;
-        }
+        isTraversable = true;
+        destroysOccupant = false;
     }
 }

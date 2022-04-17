@@ -1,16 +1,15 @@
-using System.Collections.Generic;
+using UnityEngine;
 
-public class BoardData
+public class BoardData : MonoBehaviour
 {
-    public Tile[][] tiles { get; set; }
-    public List<Piece> pieces { get; set; }
-    private readonly int _width = 6;
-    public int width { get { return _width; } }
-    private readonly int _height = 10;
-    public int height { get { return _height; } }
+    private readonly TileData[][] tileData;
+    private readonly PieceData[] pieceData;
+    private readonly int width;
+    private readonly int height;
 
-    public BoardData()
+    public BoardData(TileData[][] tileData, PieceData[] pieceData, int width, int height)
     {
-        pieces = new List<Piece>();
+
     }
+
 }

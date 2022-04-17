@@ -1,11 +1,8 @@
-namespace Objects
+public class FireEnv : EnvironmentData
 {
-    public class FireEnv : Environment
+    public FireEnv()
     {
-        public FireEnv()
-        {
-            isTraversable = true;
-            destroysOccupant = true;
-        }
+        isTraversable = true;
+        destroysOccupant = true;
     }
 }

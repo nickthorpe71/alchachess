@@ -1,11 +1,8 @@
-namespace Objects
+public class RockEnv : EnvironmentData
 {
-    public class RockEnv : Environment
+    public RockEnv()
     {
-        public RockEnv()
-        {
-            isTraversable = true;
-            destroysOccupant = false;
-        }
+        isTraversable = true;
+        destroysOccupant = false;
     }
 }

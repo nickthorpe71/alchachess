@@ -4,7 +4,7 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
     // Data
-    public GameData gameData { get; private set; }
+    private GameData data;
 
     // State
     public bool localPlayerCanInput { get; private set; }
@@ -21,8 +21,8 @@ public class Game : MonoBehaviour
         HumanPlayer p1 = new HumanPlayer(goldSide: true, isLocalPlayer: true);
         AIPlayer p2 = new AIPlayer(goldSide: false, isLocalPlayer: false);
 
-        gameData = new GameData(p1, p2);
-        gameData.SetStatus(GameStatus.ACTIVE);
+        data = new GameData(p1, p2);
+        data.SetStatus(GameStatus.ACTIVE);
 
         board = GetComponent<Board>();
         inputSystem = new PlayerInput(this);
@@ -41,23 +41,23 @@ public class Game : MonoBehaviour
 
     public void SubmitMove(Vector2 start, Vector2 end)
     {
-        Tile startTile = BoardCalculation.GetTile(board.boardData, start);
-        Tile endTile = BoardCalculation.GetTile(board.boardData, end);
+        Tile startTile = board.GetTile(start);
+        Tile endTile = board.GetTile(end);
 
-        bool validMove = startTile.GetPiece().PossibleMoves(board.boardData, start).Contains(end);
+        bool validMove = startTile.GetPiece().PossibleMoves(board).Contains(end);
         if (!validMove) return;
 
         localPlayerCanInput = false;
-        MoveData move = new MoveData(gameData.currentTurn, startTile, endTile);
-        gameData.AddPlayedMove(move);
+        MoveData move = new MoveData(data.currentTurn, startTile.GetData(), endTile.GetData());
+        data.AddPlayedMove(move);
         startTile.TransferPiece(to: endTile);
-        board.SetAOEMarkers(endTile.pos, deactivate: true);
+        board.SetAOEMarkers(endTile.GetPos(), deactivate: true);
 
         if (!endTile.HasActiveElement())
             NextTurn();
     }
 
-    public bool IsEnd() => gameData.status != GameStatus.ACTIVE;
+    public bool IsEnd() => data.status != GameStatus.ACTIVE;
 
     public void NextTurn()
     {
@@ -66,14 +66,14 @@ public class Game : MonoBehaviour
     IEnumerator NextTurnRoutine()
     {
         yield return new WaitForSeconds(1);
-        BoardCalculation.RepopulateElements(board.boardData);
+        board.RepopulateElements();
         yield return new WaitForSeconds(1);
 
-        gameData.currentTurn = (gameData.currentTurn == gameData.players[0]) ? gameData.players[1] : gameData.players[0];
+        data.currentTurn = (data.currentTurn == data.players[0]) ? data.players[1] : data.players[0];
         SetCanInput();
 
-        if (!gameData.currentTurn.isHumanPlayer)
-            gameData.currentTurn.TakeTurn(this);
+        if (!data.currentTurn.isHumanPlayer)
+            data.currentTurn.TakeTurn(this);
 
         // TODO: THIS SHOULD ONLY BE IF THERE ARE 2 LOCAL PLAYERS
         localPlayerCanInput = true;
@@ -81,11 +81,13 @@ public class Game : MonoBehaviour
 
     private void SetCanInput()
     {
-        localPlayerCanInput = gameData.currentTurn.isLocalPlayer;
+        localPlayerCanInput = data.currentTurn.isLocalPlayer;
     }
 
     public void SetStatus(GameStatus newStatus)
     {
-        gameData.SetStatus(newStatus);
+        data.SetStatus(newStatus);
     }
+
+    public GenericPlayer GetCurrentTurn() => data.currentTurn;
 }

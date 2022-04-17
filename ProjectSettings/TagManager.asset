@@ -10,6 +10,11 @@ TagManager:
   - HoverMarker
   - OffBoard
   - Graphic
+  - WaterEnvironment
+  - FireEnvironment
+  - PlantEnvironment
+  - RockEnvironment
+  - EmptyEnvironment
   layers:
   - Default
   - TransparentFX

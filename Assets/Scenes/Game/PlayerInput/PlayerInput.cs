@@ -54,7 +54,7 @@ public class PlayerInput
     private void OnClick(GameObject obj)
     {
         Vector2 newClick = new Vector2(obj.transform.position.x, obj.transform.position.z);
-        Tile clickedTile = BoardCalculation.GetTile(game.board.boardData, newClick);
+        Tile clickedTile = game.board.GetTile(newClick);
 
         // if we are clicking on the tile already selected
         if (newClick == savedClick)
@@ -66,7 +66,7 @@ public class PlayerInput
         // if we are clicking on a new tile we don't currently have a tile selected
         else if (savedClick == nullV2)
         {
-            if (clickedTile.HasPlayersPiece(game.gameData.currentTurn))
+            if (clickedTile.HasPlayersPiece(game.GetCurrentTurn()))
             {
                 game.board.SetHighlightedMoves(newClick);
                 savedClick = newClick;
@@ -77,12 +77,12 @@ public class PlayerInput
         else
         {
             // reset saved tile
-            Tile savedTile = BoardCalculation.GetTile(game.board.boardData, savedClick);
+            Tile savedTile = game.board.GetTile(savedClick);
             savedTile.Click(deactivate: true);
             savedTile.Hover(deactivate: true);
             game.board.SetHighlightedMoves(savedClick, deactivate: true);
 
-            if (clickedTile.HasPlayersPiece(game.gameData.currentTurn))
+            if (clickedTile.HasPlayersPiece(game.GetCurrentTurn()))
             {
                 game.board.SetHighlightedMoves(newClick);
                 clickedTile.Click();
@@ -90,7 +90,7 @@ public class PlayerInput
             }
             else
             {
-                if (savedTile.HasPlayersPiece(game.gameData.currentTurn))
+                if (savedTile.HasPlayersPiece(game.GetCurrentTurn()))
                     game.SubmitMove(start: savedClick, end: newClick);
 
                 savedClick = nullV2;
@@ -101,7 +101,7 @@ public class PlayerInput
     private void OnHover(GameObject obj)
     {
         Vector2 newHover = new Vector2(obj.transform.position.x, obj.transform.position.z);
-        Tile hoveredTile = BoardCalculation.GetTile(game.board.boardData, newHover);
+        Tile hoveredTile = game.board.GetTile(newHover);
 
         // if we are hovering on the same thing as before
         if (newHover != nullV2 && newHover == savedHover)
@@ -121,7 +121,7 @@ public class PlayerInput
     {
         if (savedHover != nullV2)
         {
-            Tile tile = BoardCalculation.GetTile(game.board.boardData, savedHover);
+            Tile tile = game.board.GetTile(savedHover);
             tile.Hover(deactivate: true);
             game.board.SetAOEMarkers(savedHover, deactivate: true);
             savedHover = nullV2;

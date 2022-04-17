@@ -4,13 +4,22 @@ using System.Linq;
 
 public class Tile : MonoBehaviour
 {
+    // Environment
     [SerializeField] private GameObject emptyEnvironment;
     [SerializeField] private GameObject fireEnvironment;
     [SerializeField] private GameObject waterEnvironment;
     [SerializeField] private GameObject plantEnvironment;
     [SerializeField] private GameObject rockEnvironment;
-    public Environment activeEnvironment { get; private set; }
+    private Dictionary<string, EnvironmentData> environmentDataMap = new Dictionary<string, EnvironmentData>()
+    {
+        ["FireEnvironment"] = new FireEnv(),
+        ["WaterEnvironment"] = new WaterEnv(),
+        ["PlantEnvironment"] = new PlantEnv(),
+        ["RockEnvironment"] = new RockEnv(),
+        ["EmptyEnvironment"] = null
+    };
 
+    // Cursor Effects
     [SerializeField] private Transform hoverMarker;
     [SerializeField] private GameObject hovered;
     [SerializeField] private Transform clickMarker;
@@ -18,18 +27,35 @@ public class Tile : MonoBehaviour
     [SerializeField] private GameObject aoe;
     [SerializeField] private GameObject highlighted;
 
-    public Vector2 pos { get; private set; }
-    public GameObject element { get; private set; }
-    private Piece piece = null;
+    private GameObject elementObj;
+    private GameObject pieceObj;
+    private Element element;
+    private Piece piece;
+    private EnvironmentData activeEnvironment;
+    private Vector2 pos;
 
     // GENERAL
     public void Init(GameObject element, Vector2 pos)
     {
-        this.element = element;
+        elementObj = element;
+        this.element = element.GetComponent<Element>();
         this.pos = pos;
         activeEnvironment = null;
     }
     public bool CanTraverse() => piece == null;
+    public Vector2 GetPos() => pos;
+    public Element GetElement() => element;
+    public TileData GetData()
+    {
+        PieceData validatedPiece = HasPiece() ? piece.GetData() : null;
+
+        return new TileData(
+            activeEnvironment,
+            pos,
+            element.GetData(),
+            validatedPiece
+        );
+    }
     private void Activate(GameObject toActivate)
     {
         if (!toActivate.activeSelf)
@@ -185,7 +211,7 @@ public class Tile : MonoBehaviour
     {
         Deactivate(toDeactivate);
         Activate(toActivate);
-        activeEnvironment = toActivate.GetComponent<Environment>();
+        activeEnvironment = environmentDataMap[toActivate.tag];
     }
     public bool HasActiveEnvironment()
     {
@@ -197,11 +223,12 @@ public class Tile : MonoBehaviour
         }.Aggregate(false, (any, val) => any || val.activeSelf);
         return hasActiveElement;
     }
+    public bool EnvironmentDestroysOccupant() => activeEnvironment.destroysOccupant;
     public bool IsImmuneToElement(Element element)
     {
-        if (element.color == "Red" && rockEnvironment.activeSelf)
+        if (element.GetColor() == "Red" && rockEnvironment.activeSelf)
             return true;
-        if (element.color == "Blue" && plantEnvironment.activeSelf)
+        if (element.GetColor() == "Blue" && plantEnvironment.activeSelf)
             return true;
         return false;
     }
@@ -210,6 +237,8 @@ public class Tile : MonoBehaviour
     public void SetPiece(Piece piece)
     {
         this.piece = piece;
+        if (piece != null)
+            pieceObj = piece.gameObject;
     }
     public Piece GetPiece() => piece;
     public void KillPiece()
@@ -223,7 +252,7 @@ public class Tile : MonoBehaviour
         piece.Move(startPos: pos, endTile: to, warp);
         piece = null;
     }
-    public bool HasPlayersPiece(GenericPlayer player) => HasPiece() && piece.isGold == player.isGoldSide;
+    public bool HasPlayersPiece(GenericPlayer player) => HasPiece() && piece.IsGold() == player.isGoldSide;
     public bool HasPiece() => piece != null;
 
     // ELEMENT

@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Objects
+public class Black : Element
 {
-    public class Black : Element
+    public Black()
     {
-        public Black()
-        {
-            destroysOccupant = true;
-            hasKnockback = false;
-            spellPattern = new List<Vector2>
+        destroysOccupant = true;
+        hasKnockback = false;
+        spellPattern = new List<Vector2>
             {
                 new Vector2(1, 1),
                 new Vector2(1, -1),
@@ -20,6 +18,5 @@ namespace Objects
                 new Vector2(0, -1),
                 new Vector2(0, 1)
             };
-        }
     }
 }

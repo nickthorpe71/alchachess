@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class TileData
 {
-    private readonly ElementData elementData;
-    private readonly PieceData pieceData;
-    private readonly EnvironmentData activeEnvironment;
-    private readonly Vector2 pos;
+    public readonly ElementData elementData;
+    public readonly PieceData pieceData;
+    public readonly EnvironmentData activeEnvironment;
+    public readonly Vector2 pos;
 
     public TileData(EnvironmentData activeEnvironment, Vector2 pos, ElementData element, PieceData piece)
     {

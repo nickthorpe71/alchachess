@@ -1,8 +1,8 @@
 public class MoveData
 {
-    public GenericPlayer player { get; }
-    public TileData start { get; }
-    public TileData end { get; }
+    public readonly GenericPlayer player;
+    public readonly TileData start;
+    public readonly TileData end;
 
     public MoveData(GenericPlayer player, TileData start, TileData end)
     {

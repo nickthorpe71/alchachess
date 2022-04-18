@@ -9,7 +9,8 @@ public class AIPlayer : GenericPlayer
 
     public override void TakeTurn(Game game)
     {
-        // ScoredMove bestMove = AICalculation.BestMove(game, this);
-        // game.SubmitMove(bestMove.start.GetPos(), bestMove.end.pos);
+        ScoredMove bestMove = AICalculation.BestMove(game, this);
+        MoveData randomMove = AICalculation.RandomMove(game, this);
+        game.SubmitMove(randomMove.start.pos, randomMove.end.pos);
     }
 }

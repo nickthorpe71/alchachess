@@ -9,7 +9,10 @@ public class BoardData : MonoBehaviour
 
     public BoardData(TileData[][] tileData, PieceData[] pieceData, int width, int height)
     {
-
+        this.tileData = tileData;
+        this.pieceData = pieceData;
+        this.width = width;
+        this.height = height;
     }
 
 }

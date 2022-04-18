@@ -9,7 +9,7 @@ public class Board : MonoBehaviour
     Game game;
     private readonly int _width = 6;
     public int width { get { return _width; } }
-    private readonly int _height = 10;
+    private readonly int _height = 8;
     public int height { get { return _height; } }
     private Tile[][] tiles;
     private List<Piece> pieces;
@@ -94,7 +94,11 @@ public class Board : MonoBehaviour
         if (!caster.isBeingKnockedBack)
             game.NextTurn();
         else
+        {
             caster.isBeingKnockedBack = false;
+            yield return new WaitForSeconds(1);
+            RepopulateElements();
+        }
     }
 
     public void SetHighlightedMoves(Vector2 pos, bool deactivate = false)
@@ -171,8 +175,6 @@ public class Board : MonoBehaviour
             new string[] {"Green","White","Yellow","Yellow","White", "Green"},
             new string[] {"White","Yellow","Red", "Red","Yellow", "White"},
             new string[] {"Green","Blue","Black","Black","Blue", "Green"},
-            new string[] {"Red","Blue", "Green", "Black","White", "Yellow"},
-            new string[] {"Yellow","White","Black","Green","Blue", "Red"},
             new string[] {"Green","Blue","Black","Black","Blue", "Green"},
             new string[] {"White","Yellow","Red", "Red","Yellow", "White"},
             new string[] {"Green","White","Yellow","Yellow","White", "Green"},
@@ -180,16 +182,14 @@ public class Board : MonoBehaviour
         };
 
         string[][] piecePattern = new string[][] {
-            new string[] {"Demon","Demon","Witch","Witch","Demon","Demon"},
-            new string[] {"Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle"},
+            new string[] {"Demon","Gargoyle","Witch","Witch","Gargoyle","Demon"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
-            new string[] {"Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle","Gargoyle"},
-            new string[] {"Demon","Demon","Witch","Witch","Demon","Demon"}
+            new string[] {"Demon","Gargoyle","Witch","Witch","Gargoyle","Demon"}
 
         };
 

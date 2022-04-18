@@ -5,6 +5,40 @@ using System.Linq;
 
 public static class AICalculation
 {
+    public static MoveData RandomMove(Game game, GenericPlayer aiPlayer)
+    {
+        MoveData trueRandomMove = TrueRandomMove(game, aiPlayer);
+
+        // TODO: check that this move doesn't kill any of this ai's own pieces
+        // TODO: then return only a move that doesn't kill its own piece
+
+        return trueRandomMove;
+    }
+
+    public static MoveData TrueRandomMove(Game game, GenericPlayer aiPlayer)
+    {
+        var rnd = new System.Random();
+        return game.board.GetTilePiecesForPlayer(aiPlayer)
+            // get all pieces for AI
+            .Select(tile => tile.GetPiece()
+            // get all possible moves for those pieces
+            .PossibleMoves(game.board)
+            // create movedata for each possible move
+            .Select(possibleMove => new MoveData
+                (
+                    aiPlayer,
+                    tile.GetData(),
+                    game.board.GetTile(possibleMove).GetData()
+                )
+            ))
+            // merge all lists into one list
+            .SelectMany(moveDataList => moveDataList)
+            // order randomly
+            .OrderBy(x => rnd.Next())
+            // take the first item in the list
+            .ToList()[0];
+    }
+
     public static ScoredMove BestMove(Game game, GenericPlayer aiPlayer)
     {
         List<Tile> tilesWithPieces = game.board.GetTilePiecesForPlayer(aiPlayer);
@@ -24,15 +58,15 @@ public static class AICalculation
         return new ScoredMove(aiPlayer, tilesWithPieces[0].GetData(), tilesWithPieces[1].GetData(), 0);
     }
 
-    //TODO:
-    // will also need:
-    // - a way to apply the spells effect to the board so we can check multiple moves into the future
-
     private static ScoredMove ScoreMove(GenericPlayer aiPlayer, Board board, Tile start, Tile end)
     {
         // 1. check if move will cast a spell
         if (end.HasActiveElement())
         {
+            BoardData boardData = board.GetData();
+
+            Debug.Log(boardData);
+
             // 2. check what spell will be cast on move
             Element element = end.GetElement().GetComponent<Element>();
 

@@ -15,13 +15,15 @@ public class Game : MonoBehaviour
 
     // Systems
     private PlayerInput inputSystem;
-    private Graphics graphics;
+    private GameUI ui;
 
     // References
     public Board board { get; private set; }
 
     void Awake()
     {
+        ui = GetComponent<GameUI>();
+
         HumanPlayer p1 = new HumanPlayer(goldSide: true, isLocalPlayer: true);
         AIPlayer p2 = new AIPlayer(goldSide: false, isLocalPlayer: false);
 
@@ -72,15 +74,37 @@ public class Game : MonoBehaviour
 
     public void NextTurn()
     {
-        StartCoroutine(NextTurnRoutine());
+        if (IsGameOver())
+            StartCoroutine(GameOverRoutine(currentTurn.isLocalPlayer));
+        else
+            StartCoroutine(NextTurnRoutine());
     }
+
+    private bool IsGameOver()
+    {
+        int opponentPieceCount = board.GetTilePiecesForPlayer(GetOppositePlayer()).Count;
+        return opponentPieceCount == 0;
+    }
+
+    IEnumerator GameOverRoutine(bool localPlayerWon)
+    {
+        if (localPlayerWon)
+            ui.DisplayWin();
+        else
+            ui.DisplayLose();
+
+        yield return new WaitForSeconds(5);
+
+        Context.instance.LoadScene("MainMenu");
+    }
+
     IEnumerator NextTurnRoutine()
     {
         yield return new WaitForSeconds(1);
         board.RepopulateElements();
         yield return new WaitForSeconds(1);
 
-        currentTurn = (currentTurn == players[0]) ? players[1] : players[0];
+        currentTurn = GetOppositePlayer();
         SetCanInput();
 
         if (!currentTurn.isHumanPlayer)
@@ -93,6 +117,10 @@ public class Game : MonoBehaviour
     private void SetCanInput()
     {
         localPlayerCanInput = currentTurn.isLocalPlayer;
+    }
+    private GenericPlayer GetOppositePlayer()
+    {
+        return (currentTurn == players[0]) ? players[1] : players[0];
     }
 
     public void SetStatus(GameStatus newStatus)

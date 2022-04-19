@@ -38,7 +38,6 @@ public class Board : MonoBehaviour
 
         return new BoardData(tileData, pieceData, width, height);
     }
-
     public void CastSpell(Element element, Piece caster)
     {
         StartCoroutine(CastRoutine(element, caster));

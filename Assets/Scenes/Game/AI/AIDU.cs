@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 /// <summary>
-/// ADU = AI Data Utilities
+/// AIDU = AI Data Utilities
 /// Abrievated because it's used frequently in AICalculation
 /// </summary>
 public static class AIDU

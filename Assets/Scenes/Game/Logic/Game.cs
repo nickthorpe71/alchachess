@@ -1,10 +1,14 @@
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 
 public class Game : MonoBehaviour
 {
     // Data
-    private GameData data;
+    private GenericPlayer[] players;
+    public GenericPlayer currentTurn { get; private set; }
+    public GameStatus status { get; private set; }
+    private List<MoveData> _movesPlayed;
 
     // State
     public bool localPlayerCanInput { get; private set; }
@@ -21,8 +25,15 @@ public class Game : MonoBehaviour
         HumanPlayer p1 = new HumanPlayer(goldSide: true, isLocalPlayer: true);
         AIPlayer p2 = new AIPlayer(goldSide: false, isLocalPlayer: false);
 
-        data = new GameData(p1, p2);
-        data.SetStatus(GameStatus.ACTIVE);
+        players = new GenericPlayer[2];
+        players[0] = p1;
+        players[1] = p2;
+
+        SetStatus(GameStatus.ACTIVE);
+
+        currentTurn = p1;
+
+        _movesPlayed = new List<MoveData>();
 
         board = GetComponent<Board>();
         inputSystem = new PlayerInput(this);
@@ -48,8 +59,8 @@ public class Game : MonoBehaviour
         if (!validMove) return;
 
         localPlayerCanInput = false;
-        MoveData move = new MoveData(data.currentTurn, startTile.GetData(), endTile.GetData());
-        data.AddPlayedMove(move);
+        MoveData move = new MoveData(currentTurn, startTile.GetData(), endTile.GetData());
+        _movesPlayed.Add(move);
         startTile.TransferPiece(to: endTile);
         board.SetAOEMarkers(endTile.GetPos(), deactivate: true);
 
@@ -57,7 +68,7 @@ public class Game : MonoBehaviour
             NextTurn();
     }
 
-    public bool IsEnd() => data.status != GameStatus.ACTIVE;
+    public bool IsEnd() => status != GameStatus.ACTIVE;
 
     public void NextTurn()
     {
@@ -69,25 +80,25 @@ public class Game : MonoBehaviour
         board.RepopulateElements();
         yield return new WaitForSeconds(1);
 
-        data.currentTurn = (data.currentTurn == data.players[0]) ? data.players[1] : data.players[0];
+        currentTurn = (currentTurn == players[0]) ? players[1] : players[0];
         SetCanInput();
 
-        if (!data.currentTurn.isHumanPlayer)
-            data.currentTurn.TakeTurn(this);
+        if (!currentTurn.isHumanPlayer)
+            currentTurn.TakeTurn(this);
 
-        // TODO: THIS SHOULD ONLY BE IF THERE ARE 2 LOCAL PLAYERS
-        localPlayerCanInput = true;
+        // // TODO: THIS SHOULD ONLY BE IF THERE ARE 2 LOCAL PLAYERS
+        // localPlayerCanInput = true;
     }
 
     private void SetCanInput()
     {
-        localPlayerCanInput = data.currentTurn.isLocalPlayer;
+        localPlayerCanInput = currentTurn.isLocalPlayer;
     }
 
     public void SetStatus(GameStatus newStatus)
     {
-        data.SetStatus(newStatus);
+        status = newStatus;
     }
 
-    public GenericPlayer GetCurrentTurn() => data.currentTurn;
+    public GenericPlayer GetCurrentTurn() => currentTurn;
 }

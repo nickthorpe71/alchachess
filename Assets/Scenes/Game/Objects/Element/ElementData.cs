@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class ElementData
 {
-    private readonly bool destroysOccupant;
-    private readonly bool hasKnockback;
-    private readonly List<Vector2> spellPattern;
-    private readonly string color;
+    public readonly bool destroysOccupant;
+    public readonly bool hasKnockback;
+    public readonly List<Vector2> spellPattern;
+    public readonly string color;
 
     public ElementData(bool destroysOccupant, bool hasKnockback, List<Vector2> spellPattern, string color)
     {

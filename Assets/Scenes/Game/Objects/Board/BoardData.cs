@@ -1,11 +1,9 @@
-using UnityEngine;
-
-public class BoardData : MonoBehaviour
+public class BoardData
 {
-    private readonly TileData[][] tileData;
-    private readonly PieceData[] pieceData;
-    private readonly int width;
-    private readonly int height;
+    public readonly TileData[][] tileData;
+    public readonly PieceData[] pieceData;
+    public readonly int width;
+    public readonly int height;
 
     public BoardData(TileData[][] tileData, PieceData[] pieceData, int width, int height)
     {
@@ -13,6 +11,16 @@ public class BoardData : MonoBehaviour
         this.pieceData = pieceData;
         this.width = width;
         this.height = height;
+    }
+
+    public BoardData Clone()
+    {
+        return new BoardData(
+            tileData,
+            pieceData,
+            width,
+            height
+        );
     }
 
 }

@@ -147,5 +147,4 @@ public class Piece : MonoBehaviour
     }
 
     public bool IsGold() => isGold;
-
 }

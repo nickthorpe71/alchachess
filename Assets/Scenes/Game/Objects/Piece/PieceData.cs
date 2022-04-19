@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class PieceData
 {
-    private readonly int moveDistance;
-    private readonly List<Vector2> movePattern;
-    private readonly bool isGold;
-    private readonly bool isDead;
+    public readonly int moveDistance;
+    public readonly List<Vector2> movePattern;
+    public readonly bool isGold;
+    public readonly bool isDead;
 
     public PieceData(int moveDistance, List<Vector2> movePattern, bool isGold, bool isDead)
     {

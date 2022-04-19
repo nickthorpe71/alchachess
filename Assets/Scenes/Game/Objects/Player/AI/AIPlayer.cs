@@ -11,6 +11,6 @@ public class AIPlayer : GenericPlayer
     {
         ScoredMove bestMove = AICalculation.BestMove(game, this);
         MoveData randomMove = AICalculation.RandomMove(game, this);
-        game.SubmitMove(randomMove.start.pos, randomMove.end.pos);
+        game.SubmitMove(bestMove.start.pos, bestMove.end.pos);
     }
 }

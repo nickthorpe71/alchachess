@@ -2,7 +2,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using Logic;
 
 public class Piece : MonoBehaviour
 {

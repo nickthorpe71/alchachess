@@ -5,13 +5,17 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
-
+    // General
     private bool isGold;
     private bool isDead;
+    private BoxCollider _hitBox;
 
     // Graphics
     private GameObject _warpAnim;
     private GameObject _graphic;
+    [SerializeField] private GameObject blueModel;
+    [SerializeField] private GameObject redModel;
+    private Animator _animator;
 
     // Movement
     public bool isBeingKnockedBack { get; set; }
@@ -27,8 +31,15 @@ public class Piece : MonoBehaviour
         this.isGold = isGold;
         isBeingKnockedBack = false;
 
-        _warpAnim = Resources.Load("Piece/Anims/WarpAnim") as GameObject;
-        _graphic = Helpers.FindComponentInChildWithTag<Transform>(gameObject, "Graphic").gameObject;
+        _warpAnim = Resources.Load("Piece/Anims/Shared/WarpAnim") as GameObject;
+
+        _graphic = isGold ? blueModel : redModel;
+        blueModel.SetActive(isGold);
+        redModel.SetActive(!isGold);
+
+        _animator = _graphic.GetComponent<Animator>();
+
+        _hitBox = GetComponent<BoxCollider>();
     }
     public PieceData GetData()
     {
@@ -47,7 +58,12 @@ public class Piece : MonoBehaviour
 
     public void PieceMovementUpdate()
     {
-        if (!_isMoving) return;
+        if (!_isMoving)
+        {
+            if (isBeingKnockedBack)
+                SetKnockback(false);
+            return;
+        }
 
         float step = _moveSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, _newPosition, step);
@@ -72,12 +88,14 @@ public class Piece : MonoBehaviour
     IEnumerator WarpRoutine(Vector2 startPos, Tile endTile)
     {
         GameObject warpAnim = Instantiate(_warpAnim, transform.position, Quaternion.identity);
+        _animator.SetTrigger("warp");
         Destroy(warpAnim, 2);
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.45f);
         _graphic.SetActive(false);
 
         gameObject.transform.position = new Vector3(endTile.GetPos().x, 0, endTile.GetPos().y);
         _graphic.SetActive(true);
+        _animator.SetTrigger("endWarp");
 
         StartCoroutine(CheckDestinationDestroy(endTile));
     }
@@ -99,6 +117,8 @@ public class Piece : MonoBehaviour
     }
     IEnumerator KnockOffRoutine(Vector3 newPos)
     {
+
+        _animator.SetBool("isDead", true);
         _newPosition = newPos;
         _isMoving = true;
         yield return new WaitForSeconds(0.3f);
@@ -107,6 +127,40 @@ public class Piece : MonoBehaviour
         _isMoving = true;
         yield return new WaitForSeconds(3f);
         Kill();
+    }
+
+    public void SetKnockback(bool isKnockedBack)
+    {
+        _animator.SetBool("knockedBack", isKnockedBack);
+    }
+
+    public void StartCastAnim(string spellColor)
+    {
+        string triggerName = "";
+
+        switch (spellColor)
+        {
+            case "Red":
+                triggerName = "summon";
+                break;
+            case "Blue":
+                triggerName = "summon";
+                break;
+            case "Green":
+                triggerName = "radialCast";
+                break;
+            case "Yellow":
+                triggerName = "radialCast";
+                break;
+            case "Black":
+                triggerName = "summon";
+                break;
+            case "White":
+                triggerName = "radialCast";
+                break;
+        }
+
+        _animator.SetTrigger(triggerName);
     }
 
     public List<Vector2> PossibleMoves(Board board)
@@ -141,8 +195,15 @@ public class Piece : MonoBehaviour
 
     public void Kill()
     {
+        _animator.SetBool("isDead", true);
         isDead = true;
-        transform.position = new Vector3(-2, 0, 3);
+        _hitBox.enabled = false;
+        StartCoroutine(KillRoutine());
+    }
+    IEnumerator KillRoutine()
+    {
+        yield return new WaitForSeconds(4);
+        transform.position = new Vector3(-12, 0, 3);
     }
 
     public bool IsGold() => isGold;

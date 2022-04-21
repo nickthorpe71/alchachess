@@ -51,6 +51,7 @@ public class Element : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
 
         game.board.CastSpell(this, caster);
+        caster.StartCastAnim(color);
     }
 
     private void OnTriggerEnter(Collider other)

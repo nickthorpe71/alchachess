@@ -88,6 +88,8 @@ public class Game : MonoBehaviour
 
     IEnumerator GameOverRoutine(bool localPlayerWon)
     {
+        yield return new WaitForSeconds(3);
+
         if (localPlayerWon)
             ui.DisplayWin();
         else
@@ -102,7 +104,7 @@ public class Game : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         board.RepopulateElements();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
 
         currentTurn = GetOppositePlayer();
         SetCanInput();

@@ -44,6 +44,8 @@ public class Board : MonoBehaviour
     }
     IEnumerator CastRoutine(Element element, Piece caster)
     {
+        yield return new WaitForSeconds(0.3f);
+
         Vector2 elementPos = new Vector2(element.transform.position.x, element.transform.position.z);
         List<Vector2> validatedSpellPattern = ValidateSpellPattern(element.GetSpellPattern(), elementPos);
         foreach (Vector2 pos in validatedSpellPattern)
@@ -53,7 +55,7 @@ public class Board : MonoBehaviour
             // plan spell animation
             game.Spawn(element.spellAnimPath, new Vector3(pos.x, 0.45f, pos.y), Quaternion.identity);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.12f);
 
             // change environment
             tile.ApplySpellToEnvironment(element.GetColor());
@@ -73,7 +75,11 @@ public class Board : MonoBehaviour
                     {
                         Tile nextTile = GetTile(toCheck);
                         if (nextTile.CanTraverse())
+                        {
+                            tile.GetPiece().SetKnockback(true);
                             tile.TransferPiece(nextTile, warp: false);
+                        }
+
                     }
                     else // if that is the edge of the board move piece and kill
                     {
@@ -172,24 +178,23 @@ public class Board : MonoBehaviour
         string[][] elementPattern = new string[][] {
             new string[] {"Black","Blue","Red","Red", "Blue","Black"},
             new string[] {"Green","White","Yellow","Yellow","White", "Green"},
-            new string[] {"White","Yellow","Red", "Red","Yellow", "White"},
+            new string[] {"Yellow","White","Red", "Red","White", "Yellow"},
             new string[] {"Green","Blue","Black","Black","Blue", "Green"},
             new string[] {"Green","Blue","Black","Black","Blue", "Green"},
-            new string[] {"White","Yellow","Red", "Red","Yellow", "White"},
+            new string[] {"Yellow","White","Red", "Red","White", "Yellow"},
             new string[] {"Green","White","Yellow","Yellow","White", "Green"},
             new string[] {"Black","Blue","Red","Red", "Blue","Black"},
         };
 
         string[][] piecePattern = new string[][] {
-            new string[] {"Demon","Gargoyle","Witch","Witch","Gargoyle","Demon"},
+            new string[] {"Kaido","Shanks","Luffy","WhiteBeard","Shanks","Kaido"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
             new string[] {"None","None","None","None","None","None"},
-            new string[] {"Demon","Gargoyle","Witch","Witch","Gargoyle","Demon"}
-
+            new string[] {"Kaido","Shanks","WhiteBeard","Luffy","Shanks","Kaido"}
         };
 
         tiles = new Tile[height][];
@@ -214,16 +219,14 @@ public class Board : MonoBehaviour
                     element.GetComponent<Element>().Deactivate(playAnim: false);
                     bool isGold = true;
                     Quaternion rot = Quaternion.identity;
-                    string side = "Gold";
 
                     if (y > height / 2 - 1) // if we are looking at the black side
                     {
                         isGold = false;
                         rot.y = 180;
-                        side = "Black";
                     }
 
-                    GameObject pieceObj = game.Spawn($"Piece/{side}/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
+                    GameObject pieceObj = game.Spawn($"Piece/{piecePattern[y][x]}", new Vector3(x, 0, y), rot);
                     Piece piece = pieceObj.GetComponent<Piece>();
                     piece.Init(isGold);
                     tile.SetPiece(piece);

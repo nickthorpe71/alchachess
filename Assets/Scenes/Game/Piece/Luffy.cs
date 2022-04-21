@@ -5,7 +5,7 @@ public class Luffy : Piece
 {
     void Start()
     {
-        moveDistance = 5;
+        moveDistance = 2;
         movePattern = MovementPattern();
     }
 

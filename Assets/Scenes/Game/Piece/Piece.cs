@@ -202,7 +202,7 @@ public class Piece : MonoBehaviour
     }
     IEnumerator KillRoutine()
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2.5f);
         transform.position = new Vector3(-12, 0, 3);
     }
 

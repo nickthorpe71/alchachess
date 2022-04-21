@@ -42,6 +42,8 @@ public class Element : MonoBehaviour
 
     private IEnumerator Cast(Piece caster)
     {
+        yield return new WaitForSeconds(0.5f);
+
         GameObject castAnim = game.Spawn(
             _castAnimPath,
             new Vector3(transform.position.x, 0.45f, transform.position.z),
@@ -74,7 +76,8 @@ public class Element : MonoBehaviour
 
         if (playAnim)
         {
-            GameObject destroyAnim = game.Spawn(_destroyAnimPath, transform.position, Quaternion.identity);
+            Vector3 destroyAnimPos = new Vector3(transform.position.x, transform.position.y + 0.4f, transform.position.z);
+            GameObject destroyAnim = game.Spawn(_destroyAnimPath, destroyAnimPos, Quaternion.identity);
             Destroy(destroyAnim, 2);
         }
     }

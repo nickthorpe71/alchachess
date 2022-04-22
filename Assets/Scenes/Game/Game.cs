@@ -102,15 +102,17 @@ public class Game : MonoBehaviour
 
     IEnumerator NextTurnRoutine()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2.6f);
         board.RepopulateElements();
-        yield return new WaitForSeconds(2);
 
         currentTurn = GetOppositePlayer();
         SetCanInput();
 
         if (!currentTurn.isHumanPlayer)
+        {
+            yield return new WaitForSeconds(2);
             currentTurn.TakeTurn(this);
+        }
 
         // // TODO: THIS SHOULD ONLY BE IF THERE ARE 2 LOCAL PLAYERS
         // localPlayerCanInput = true;

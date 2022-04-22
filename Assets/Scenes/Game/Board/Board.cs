@@ -101,7 +101,7 @@ public class Board : MonoBehaviour
         else
         {
             caster.isBeingKnockedBack = false;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
             RepopulateElements();
         }
     }
@@ -209,6 +209,7 @@ public class Board : MonoBehaviour
                 element.GetComponent<Element>().Init(game, elementPattern[y][x]);
                 GameObject tileObj = game.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
                 element.transform.parent = tileObj.transform;
+
                 Tile tile = tileObj.GetComponent<Tile>();
                 tile.Init(element, new Vector2(x, y));
                 tiles[y][x] = tile;
@@ -220,7 +221,8 @@ public class Board : MonoBehaviour
                     bool isGold = true;
                     Quaternion rot = Quaternion.identity;
 
-                    if (y > height / 2 - 1) // if we are looking at the black side
+                    // if we are looking at the black side
+                    if (y > height / 2 - 1)
                     {
                         isGold = false;
                         rot.y = 180;

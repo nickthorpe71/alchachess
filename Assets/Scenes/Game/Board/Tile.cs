@@ -263,7 +263,7 @@ public class Tile : MonoBehaviour
     }
     public void DeactivateElement()
     {
-        element.GetComponent<Element>().Deactivate();
+        element.GetComponent<Element>().Deactivate(playAnim: false);
     }
     public bool HasActiveElement() => element.GetComponent<Element>().IsActive();
 }

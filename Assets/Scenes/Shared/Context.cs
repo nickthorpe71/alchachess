@@ -5,6 +5,9 @@ public class Context : MonoBehaviour
 {
     public static Context instance { get; private set; }
 
+    private GenericPlayer localPlayer;
+    private GenericPlayer opponentPlayer;
+
     private void Awake()
     {
         if (instance != null && instance != this)

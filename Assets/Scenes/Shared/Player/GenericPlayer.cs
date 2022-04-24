@@ -10,9 +10,14 @@ public abstract class GenericPlayer
 
     public abstract void TakeTurn(Game game);
 
-    public GenericPlayer(string[] pieces = null)
+    public GenericPlayer()
     {
-        pieceList = (pieces == null) ? DefaultPieceList() : pieces;
+        pieceList = DefaultPieceList();
+    }
+
+    public GenericPlayer(string[] pieces)
+    {
+        pieceList = pieces;
     }
 
     private string[] DefaultPieceList()

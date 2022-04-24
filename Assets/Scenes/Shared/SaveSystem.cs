@@ -31,8 +31,14 @@ public static class SaveSystem
         }
         else
         {
-            Debug.LogError($"Save file not found at {path}");
+            Debug.Log($"Save file not found at {path}");
             return null;
         }
+    }
+
+    public static bool HasExistingPlayerData()
+    {
+        string path = Application.persistentDataPath + playerFileName;
+        return (File.Exists(path));
     }
 }

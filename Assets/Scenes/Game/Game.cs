@@ -97,7 +97,7 @@ public class Game : MonoBehaviour
 
         yield return new WaitForSeconds(5);
 
-        Context.instance.LoadScene("MainMenu");
+        GlobalSceneLoader.LoadScene("MainMenu");
     }
 
     IEnumerator NextTurnRoutine()

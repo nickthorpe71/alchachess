@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityCore.Audio;
 
 public class Element : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Element : MonoBehaviour
     private GameObject _graphic;
     private SphereCollider _sphereCollider;
     private Game game;
+    protected UnityCore.Audio.AudioType spellSFX;
 
     public void Init(Game game, string color)
     {
@@ -44,6 +46,7 @@ public class Element : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
+        AudioController.instance.Play(UnityCore.Audio.AudioType.SFX_CAST, _volume: 0.32f);
         GameObject castAnim = game.Spawn(
             _castAnimPath,
             new Vector3(transform.position.x, 0.45f, transform.position.z),
@@ -54,6 +57,7 @@ public class Element : MonoBehaviour
 
         game.board.CastSpell(this, caster);
         caster.StartCastAnim(color);
+        AudioController.instance.Play(spellSFX, _volume: 0.65f);
     }
 
     private void OnTriggerEnter(Collider other)

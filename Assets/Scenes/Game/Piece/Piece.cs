@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityCore.Audio;
 
 public class Piece : MonoBehaviour
 {
@@ -88,6 +89,7 @@ public class Piece : MonoBehaviour
     IEnumerator WarpRoutine(Vector2 startPos, Tile endTile)
     {
         GameObject warpAnim = Instantiate(_warpAnim, transform.position, Quaternion.identity);
+        AudioController.instance.Play(UnityCore.Audio.AudioType.SFX_WARP, _volume: 0.38f);
         _animator.SetTrigger("warp");
         Destroy(warpAnim, 2);
         yield return new WaitForSeconds(0.45f);
@@ -117,7 +119,6 @@ public class Piece : MonoBehaviour
     }
     IEnumerator KnockOffRoutine(Vector3 newPos)
     {
-
         _animator.SetBool("isDead", true);
         _newPosition = newPos;
         _isMoving = true;

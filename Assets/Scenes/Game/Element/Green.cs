@@ -7,6 +7,7 @@ public class Green : Element
     {
         destroysOccupant = false;
         hasKnockback = true;
+        spellSFX = UnityCore.Audio.AudioType.SFX_GREEN_HIT;
         spellPattern = new List<Vector2>
             {
                 new Vector2(1, 1),

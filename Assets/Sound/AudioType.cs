@@ -4,6 +4,7 @@ namespace UnityCore
     {
         public enum AudioType
         {
+            NONE,
             MUSIC_MAIN_MENU,
             MUSIC_BATTLE,
             SFX_BLACK_HIT,

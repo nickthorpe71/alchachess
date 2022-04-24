@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityCore.Audio;
 
 public class Game : MonoBehaviour
 {
@@ -40,6 +41,11 @@ public class Game : MonoBehaviour
         board = GetComponent<Board>();
         inputSystem = new PlayerInput(this);
         SetCanInput();
+    }
+
+    private void Start()
+    {
+        AudioController.instance.Play(UnityCore.Audio.AudioType.MUSIC_BATTLE, true, 5, 0.45f);
     }
 
     void Update()
@@ -88,6 +94,8 @@ public class Game : MonoBehaviour
 
     IEnumerator GameOverRoutine(bool localPlayerWon)
     {
+        AudioController.instance.Stop(UnityCore.Audio.AudioType.MUSIC_BATTLE, true, 8);
+
         yield return new WaitForSeconds(3);
 
         if (localPlayerWon)
@@ -102,7 +110,7 @@ public class Game : MonoBehaviour
 
     IEnumerator NextTurnRoutine()
     {
-        yield return new WaitForSeconds(2.6f);
+        yield return new WaitForSeconds(2.4f);
         board.RepopulateElements();
 
         currentTurn = GetOppositePlayer();
@@ -110,7 +118,7 @@ public class Game : MonoBehaviour
 
         if (!currentTurn.isHumanPlayer)
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
             currentTurn.TakeTurn(this);
         }
 

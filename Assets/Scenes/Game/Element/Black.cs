@@ -7,6 +7,7 @@ public class Black : Element
     {
         destroysOccupant = true;
         hasKnockback = false;
+        spellSFX = UnityCore.Audio.AudioType.SFX_BLACK_HIT;
         spellPattern = new List<Vector2>
             {
                 new Vector2(1, 1),

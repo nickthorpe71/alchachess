@@ -7,18 +7,22 @@ using System.Collections.Generic;
 public class Board : MonoBehaviour
 {
     Game game;
-    private readonly int _width = 6;
+    private readonly int _width = 8;
     public int width { get { return _width; } }
     private readonly int _height = 8;
     public int height { get { return _height; } }
     private Tile[][] tiles;
     private List<Piece> pieces;
+    private GameObject castAnim;
+    private GameObject spellAnim;
 
     private void Awake()
     {
         game = GetComponent<Game>();
         pieces = new List<Piece>();
         ResetBoard(game);
+        castAnim = Resources.Load("Piece/Anim/CastAnim") as GameObject;
+        spellAnim = Resources.Load("Piece/Anim/SpellAnim") as GameObject;
     }
 
     public BoardData GetData()
@@ -38,71 +42,24 @@ public class Board : MonoBehaviour
 
         return new BoardData(tileData, pieceData, width, height);
     }
-    public void CastSpell(Element element, Piece caster)
+    public void CastSpell(Tile tile, Piece caster)
     {
-        StartCoroutine(CastRoutine(element, caster));
+        StartCoroutine(CastRoutine(tile, caster));
     }
-    IEnumerator CastRoutine(Element element, Piece caster)
+    IEnumerator CastRoutine(Tile tile, Piece caster)
     {
         yield return new WaitForSeconds(0.3f);
 
-        Vector2 elementPos = new Vector2(element.transform.position.x, element.transform.position.z);
-        List<Vector2> validatedSpellPattern = ValidateSpellPattern(element.GetSpellPattern(), elementPos);
+        List<Vector2> validatedSpellPattern = ValidateSpellPattern(tile.GetPattern(), tile.GetPos);
+
         foreach (Vector2 pos in validatedSpellPattern)
         {
-            Tile tile = GetTile(pos);
+            // play spell animation
+            Instantiate(spellAnim, new Vector3(pos.x, 0.45f, pos.y), Quaternion.identity)
 
-            // plan spell animation
-            game.Spawn(element.spellAnimPath, new Vector3(pos.x, 0.45f, pos.y), Quaternion.identity);
-
-            yield return new WaitForSeconds(0.12f);
-
-            // change environment
-            tile.ApplySpellToEnvironment(element.GetColor());
-
-            if (tile.HasPiece() && !tile.IsImmuneToElement(element))
-            {
-                // apply spell/environmental effects
-                if (element.HasKnockback())
-                {
-                    // determine direction
-                    Vector2 direction = tile.GetPos() - elementPos;
-                    // look at tile one more in that direction
-                    Vector2 toCheck = tile.GetPos() + direction;
-
-                    // if position past target tile is in bounds and can be traversed
-                    if (IsInBounds(toCheck))
-                    {
-                        Tile nextTile = GetTile(toCheck);
-                        if (nextTile.CanTraverse())
-                        {
-                            tile.GetPiece().SetKnockback(true);
-                            tile.TransferPiece(nextTile, warp: false);
-                        }
-
-                    }
-                    else // if that is the edge of the board move piece and kill
-                    {
-                        tile.GetPiece().KnockOffBoard(direction);
-                        pieces.Remove(tile.GetPiece());
-                        tile.SetPiece(null);
-                    }
-                }
-                else if (element.DestroysOccupant())
-                {
-                    pieces.Remove(tile.GetPiece());
-                    tile.KillPiece();
-                }
-            }
-        }
-
-        if (!caster.isBeingKnockedBack)
-            game.NextTurn();
-        else
-        {
-            caster.isBeingKnockedBack = false;
-            yield return new WaitForSeconds(3);
-            RepopulateElements();
+            // destroy pieces
+            pieces.Remove(tile.GetPiece());
+            tile.KillPiece();
         }
     }
 
@@ -120,15 +77,8 @@ public class Board : MonoBehaviour
     }
     public void SetAOEMarkers(Vector2 pos, bool deactivate = false)
     {
-        Tile hoveredTile = GetTile(pos);
-
-        if (hoveredTile.HasActiveElement())
-        {
-            Element element = hoveredTile.GetElement();
-
-            foreach (Vector2 aoe in ValidateSpellPattern(element.GetSpellPattern(), pos))
-                GetTile(aoe).AOE(deactivate);
-        }
+        foreach (Vector2 aoe in ValidateSpellPattern(GetTile(pos).GetPattern(), pos))
+            GetTile(aoe).AOE(deactivate);
     }
 
     public Tile GetTile(Vector2 pos) => tiles[(int)pos.y][(int)pos.x];
@@ -168,33 +118,28 @@ public class Board : MonoBehaviour
             .Where(target => IsInBounds(target)).ToList();
     }
 
-    public void RepopulateElements()
-    {
-        LoopBoard(tile => tile.ActivateElement());
-    }
-
     public void ResetBoard(Game game)
     {
-        string[][] elementPattern = new string[][] {
-            new string[] {"Black","Blue","Red","Red", "Blue","Black"},
-            new string[] {"Green","White","Yellow","Yellow","White", "Green"},
-            new string[] {"Yellow","White","Red", "Red","White", "Yellow"},
-            new string[] {"Green","Blue","Black","Black","Blue", "Green"},
-            new string[] {"Green","Blue","Black","Black","Blue", "Green"},
-            new string[] {"Yellow","White","Red", "Red","White", "Yellow"},
-            new string[] {"Green","White","Yellow","Yellow","White", "Green"},
-            new string[] {"Black","Blue","Red","Red", "Blue","Black"},
+        TilePat[][] tilePatterns = new TilePat[][] {
+            new TilePat[] {TilePat.X,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X},
+            new TilePat[] {TilePat.X,TilePat.H,TilePat.H,TilePat.H,TilePat.H,TilePat.X,TilePat.X,TilePat.X},
         };
 
-        string[][] piecePattern = new string[][] {
-            new string[] {"Kaido","Shanks","Luffy","WhiteBeard","Shanks","Kaido"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"None","None","None","None","None","None"},
-            new string[] {"Kaido","Shanks","WhiteBeard","Luffy","Shanks","Kaido"}
+        PieceName[][] piecePattern = new PieceName[][] {
+            new PieceName[] {PieceName.Kaido,PieceName.WhiteBeard,PieceName.Shanks,PieceName.Luffy,PieceName.Luffy,PieceName.Shanks,PieceName.WhiteBeard,PieceName.Kaido},
+            new PieceName[] {PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None},
+            new PieceName[] {PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None},
+            new PieceName[] {PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None},
+            new PieceName[] {PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None},
+            new PieceName[] {PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None},
+            new PieceName[] {PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None,PieceName.None},
+            new PieceName[] {PieceName.Kaido,PieceName.WhiteBeard,PieceName.Shanks,PieceName.Luffy,PieceName.Luffy,PieceName.Shanks,PieceName.WhiteBeard,PieceName.Kaido}
         };
 
         tiles = new Tile[height][];
@@ -204,20 +149,15 @@ public class Board : MonoBehaviour
             tiles[y] = new Tile[width];
             for (int x = 0; x < width; x++)
             {
-                // instantiate tile and element
-                GameObject element = game.Spawn($"Element/{elementPattern[y][x]}", new Vector3(x, 0.45f, y), Quaternion.identity);
-                element.GetComponent<Element>().Init(game, elementPattern[y][x]);
+                // instantiate tile
                 GameObject tileObj = game.Spawn("Tile/Tile", new Vector3(x, 0, y), Quaternion.identity);
-                element.transform.parent = tileObj.transform;
-
                 Tile tile = tileObj.GetComponent<Tile>();
-                tile.Init(element, new Vector2(x, y));
+                tile.Init(new Vector2(x, y), tilePatterns[y][x]);
                 tiles[y][x] = tile;
 
                 // if there is a piece to instantiate
-                if (piecePattern[y][x] != "None")
+                if (piecePattern[y][x] != PieceName.None)
                 {
-                    element.GetComponent<Element>().Deactivate(playAnim: false);
                     bool isGold = true;
                     Quaternion rot = Quaternion.identity;
 
@@ -237,4 +177,9 @@ public class Board : MonoBehaviour
             }
         }
     }
+}
+
+enum TilePat
+{
+    H, V, T, O, X
 }

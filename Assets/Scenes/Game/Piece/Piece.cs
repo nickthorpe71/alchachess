@@ -209,3 +209,12 @@ public class Piece : MonoBehaviour
 
     public bool IsGold() => isGold;
 }
+
+enum PieceName
+{
+    Shanks,
+    Kaido,
+    Luffy,
+    WhiteBeard,
+    None
+}

@@ -380,7 +380,7 @@ MonoBehaviour:
   - source: {fileID: 1156503370425225203}
     audio:
     - type: 1
-      clip: {fileID: 8300000, guid: 92ea82de269fb544dafa20fcac2a24fb, type: 3}
+      clip: {fileID: 8300000, guid: 7333344329b67c34b87ee9f0fd81a58e, type: 3}
     - type: 2
       clip: {fileID: 8300000, guid: de7590af2f1612c49adec95e64af1fdc, type: 3}
   - source: {fileID: 7067175630736901680}
